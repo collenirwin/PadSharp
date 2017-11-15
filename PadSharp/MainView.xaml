@@ -1,0 +1,89 @@
+﻿<Window x:Class="PadSharp.MainView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        Name="window" Title="{StaticResource appName}"
+        Height="350" Width="525"
+        WindowStartupLocation="Manual"
+        Icon="./Resources/favicon.ico"
+        Closing="window_Closing"
+        DataContext="{Binding RelativeSource={RelativeSource Self}}">
+    
+    <Window.Resources>
+        <Style TargetType="Button">
+            <Setter Property="Background" Value="Beige"/>
+        </Style>
+        <Style TargetType="TextBox">
+            <Setter Property="BorderThickness" Value="0"/>
+        </Style>
+        <Style TargetType="TextBlock">
+            <Setter Property="Padding" Value="5,0,5,0"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Height" Value="auto"/>
+            <Setter Property="Foreground" Value="{DynamicResource fontColor}"/>
+        </Style>
+        <Style TargetType="MenuItem">
+            <Setter Property="Background" Value="{DynamicResource menuColor}"/>
+            <Setter Property="Foreground" Value="{DynamicResource fontColor}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource menuColor}"/>
+			<Setter Property="ItemsPanel" Value="{StaticResource MenuItemPanelTemplate}"/>
+        </Style>
+    </Window.Resources>
+    
+    <Window.InputBindings>
+        <KeyBinding Modifiers="Ctrl" Key="N" Command="{Binding newCommand}"/>
+        <KeyBinding Modifiers="Ctrl" Key="O" Command="{Binding openCommand}"/>
+        <KeyBinding Modifiers="Ctrl" Key="S" Command="{Binding saveCommand}"/>
+
+        <KeyBinding Modifiers="Ctrl" Key="Z" Command="{Binding undoCommand}"/>
+        <KeyBinding Modifiers="Ctrl" Key="Y" Command="{Binding redoCommand}"/>
+        <KeyBinding Modifiers="Ctrl" Key="C" Command="{Binding copyCommand}"/>
+        <KeyBinding Modifiers="Ctrl" Key="X" Command="{Binding cutCommand}"/>
+        <KeyBinding Modifiers="Ctrl" Key="V" Command="{Binding pasteCommand}"/>
+        <KeyBinding Modifiers="Ctrl" Key="F" Command="{Binding findCommand}"/>
+        <KeyBinding Modifiers="Ctrl" Key="H" Command="{Binding findAndReplaceCommand}"/>
+    </Window.InputBindings>
+    
+    <DockPanel FocusManager.FocusedElement="{Binding ElementName=textbox}">
+        <DockPanel DockPanel.Dock="Top" Background="{DynamicResource menuColor}">
+            <Menu DockPanel.Dock="Left" Name="menu" Height="{StaticResource buttonHeight}" Margin="0">
+                <MenuItem Height="{Binding Height, ElementName=menu}" Template="{DynamicResource MenuItemTemplate}">
+                    <MenuItem.Header>
+                        <TextBlock Text="File" VerticalAlignment="Center"/>
+                    </MenuItem.Header>
+                    <MenuItem Header="New" InputGestureText="Ctrl+N" Command="{Binding newCommand}"/>
+                    <MenuItem Header="New Window" Command="{Binding newWindowCommand}"/>
+                    <MenuItem Header="Open" InputGestureText="Ctrl+O" Command="{Binding openCommand}"/>
+                    <MenuItem Header="Open in Explorer" Command="{Binding openInExplorerCommand}"/>
+                    <MenuItem Header="Save" InputGestureText="Ctrl+S" Command="{Binding saveCommand}"/>
+                    <MenuItem Header="Save As" Command="{Binding saveAsCommand}"/>
+                    <MenuItem Header="Exit" Command="{Binding exitCommand}"/>
+                </MenuItem>
+                <MenuItem Height="{Binding Height, ElementName=menu}" Template="{DynamicResource MenuItemTemplate}">
+                    <MenuItem.Header>
+                        <TextBlock Text="Edit" VerticalAlignment="Center"/>
+                    </MenuItem.Header>
+                    <MenuItem Header="Undo" InputGestureText="Ctrl+Z" Command="{Binding undoCommand}"/>
+                    <MenuItem Header="Redo" InputGestureText="Ctrl+Y" Command="{Binding redoCommand}"/>
+                    <MenuItem Header="Cut" InputGestureText="Ctrl+X" Command="{Binding cutCommand}"/>
+                    <MenuItem Header="Copy" InputGestureText="Ctrl+C" Command="{Binding copyCommand}"/>
+                    <MenuItem Header="Paste" InputGestureText="Ctrl+V" Command="{Binding pasteCommand}"/>
+                    <MenuItem Header="Find" InputGestureText="Ctrl+F" Command="{Binding findCommand}"/>
+                    <MenuItem Header="Find + Replace" InputGestureText="Ctrl+H" Command="{Binding findAndReplaceCommand}"/>
+                </MenuItem>
+            </Menu>
+
+            <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" HorizontalAlignment="Right">
+                <TextBlock Text="{Binding file.Name, FallbackValue='Not Saved'}" ToolTip="{Binding file.FullName}" Foreground="#ccc"/>
+            </StackPanel>
+        </DockPanel>
+
+        <TextBox Name="textbox" AcceptsReturn="True" TextWrapping="Wrap"
+                 FontSize="16"
+                 Background="{DynamicResource editorColor}"
+                 Foreground="{DynamicResource editorFontColor}"
+                 ScrollViewer.CanContentScroll="True"
+                 ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                 ScrollViewer.VerticalScrollBarVisibility="Auto"/>
+    </DockPanel>
+</Window>
