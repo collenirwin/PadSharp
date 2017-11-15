@@ -109,7 +109,7 @@ namespace PadSharp
             
         }
 
-        #region Menu Events
+        #region Menu Actions
 
         #region File
 

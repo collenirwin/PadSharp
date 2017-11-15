@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         Name="window" Title="{StaticResource appName}"
         Height="350" Width="525"
+        MinHeight="200" MinWidth="350"
         WindowStartupLocation="Manual"
         Icon="./Resources/favicon.ico"
         Closing="window_Closing"
@@ -45,38 +46,68 @@
     </Window.InputBindings>
     
     <DockPanel FocusManager.FocusedElement="{Binding ElementName=textbox}">
-        <DockPanel DockPanel.Dock="Top" Background="{DynamicResource menuColor}">
-            <Menu DockPanel.Dock="Left" Name="menu" Height="{StaticResource buttonHeight}" Margin="0">
-                <MenuItem Height="{Binding Height, ElementName=menu}" Template="{DynamicResource MenuItemTemplate}">
-                    <MenuItem.Header>
-                        <TextBlock Text="File" VerticalAlignment="Center"/>
-                    </MenuItem.Header>
-                    <MenuItem Header="New" InputGestureText="Ctrl+N" Command="{Binding newCommand}"/>
-                    <MenuItem Header="New Window" Command="{Binding newWindowCommand}"/>
-                    <MenuItem Header="Open" InputGestureText="Ctrl+O" Command="{Binding openCommand}"/>
-                    <MenuItem Header="Open in Explorer" Command="{Binding openInExplorerCommand}"/>
-                    <MenuItem Header="Save" InputGestureText="Ctrl+S" Command="{Binding saveCommand}"/>
-                    <MenuItem Header="Save As" Command="{Binding saveAsCommand}"/>
-                    <MenuItem Header="Exit" Command="{Binding exitCommand}"/>
-                </MenuItem>
-                <MenuItem Height="{Binding Height, ElementName=menu}" Template="{DynamicResource MenuItemTemplate}">
-                    <MenuItem.Header>
-                        <TextBlock Text="Edit" VerticalAlignment="Center"/>
-                    </MenuItem.Header>
-                    <MenuItem Header="Undo" InputGestureText="Ctrl+Z" Command="{Binding undoCommand}"/>
-                    <MenuItem Header="Redo" InputGestureText="Ctrl+Y" Command="{Binding redoCommand}"/>
-                    <MenuItem Header="Cut" InputGestureText="Ctrl+X" Command="{Binding cutCommand}"/>
-                    <MenuItem Header="Copy" InputGestureText="Ctrl+C" Command="{Binding copyCommand}"/>
-                    <MenuItem Header="Paste" InputGestureText="Ctrl+V" Command="{Binding pasteCommand}"/>
-                    <MenuItem Header="Find" InputGestureText="Ctrl+F" Command="{Binding findCommand}"/>
-                    <MenuItem Header="Find + Replace" InputGestureText="Ctrl+H" Command="{Binding findAndReplaceCommand}"/>
-                </MenuItem>
-            </Menu>
+        <StackPanel Orientation="Vertical" DockPanel.Dock="Top" Background="{DynamicResource menuColor}">
 
-            <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" HorizontalAlignment="Right">
-                <TextBlock Text="{Binding file.Name, FallbackValue='Not Saved'}" ToolTip="{Binding file.FullName}" Foreground="#ccc"/>
-            </StackPanel>
-        </DockPanel>
+            <DockPanel Background="{DynamicResource menuColor}">
+                
+                <Menu DockPanel.Dock="Left" Name="menu" Height="{StaticResource buttonHeight}" Margin="0">
+                    <MenuItem Height="{Binding Height, ElementName=menu}" Template="{DynamicResource MenuItemTemplate}">
+                        <MenuItem.Header>
+                            <TextBlock Text="File" VerticalAlignment="Center"/>
+                        </MenuItem.Header>
+                        <MenuItem Header="New" InputGestureText="Ctrl+N" Command="{Binding newCommand}"/>
+                        <MenuItem Header="New Window" Command="{Binding newWindowCommand}"/>
+                        <MenuItem Header="Open" InputGestureText="Ctrl+O" Command="{Binding openCommand}"/>
+                        <MenuItem Header="Open in Explorer" Command="{Binding openInExplorerCommand}"/>
+                        <MenuItem Header="Save" InputGestureText="Ctrl+S" Command="{Binding saveCommand}"/>
+                        <MenuItem Header="Save As" Command="{Binding saveAsCommand}"/>
+                        <MenuItem Header="Exit" Command="{Binding exitCommand}"/>
+                    </MenuItem>
+                    <MenuItem Height="{Binding Height, ElementName=menu}" Template="{DynamicResource MenuItemTemplate}">
+                        <MenuItem.Header>
+                            <TextBlock Text="Edit" VerticalAlignment="Center"/>
+                        </MenuItem.Header>
+                        <MenuItem Header="Undo" InputGestureText="Ctrl+Z" Command="{Binding undoCommand}"/>
+                        <MenuItem Header="Redo" InputGestureText="Ctrl+Y" Command="{Binding redoCommand}"/>
+                        <MenuItem Header="Cut" InputGestureText="Ctrl+X" Command="{Binding cutCommand}"/>
+                        <MenuItem Header="Copy" InputGestureText="Ctrl+C" Command="{Binding copyCommand}"/>
+                        <MenuItem Header="Paste" InputGestureText="Ctrl+V" Command="{Binding pasteCommand}"/>
+                        <MenuItem Header="Find" InputGestureText="Ctrl+F" Command="{Binding findCommand}"/>
+                        <MenuItem Header="Find + Replace" InputGestureText="Ctrl+H" Command="{Binding findAndReplaceCommand}"/>
+                    </MenuItem>
+                </Menu>
+                
+                <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" HorizontalAlignment="Right">
+                    <TextBlock Text="{Binding file.Name, FallbackValue='Not Saved'}" 
+                               ToolTip="{Binding file.FullName}" Foreground="#ccc"/>
+                </StackPanel>
+            </DockPanel>
+            
+            <WrapPanel Orientation="Horizontal" HorizontalAlignment="Right" Visibility="Collapsed">
+                <TextBlock>Find</TextBlock>
+                <Border BorderBrush="{DynamicResource editorColor}" 
+                        BorderThickness="1" CornerRadius="2" Margin="0,5,5,5">
+                    <TextBox FontSize="10" Width="180" TextAlignment="Right"
+                         Background="{DynamicResource editorColor}"
+                         Foreground="{DynamicResource editorFontColor}"/>
+                </Border>
+                <Button Content="Next" Margin="0,5,5,5" Padding="5" FontSize="10"/>
+                <Button Content="All" Margin="0,5,5,5" Padding="5" FontSize="10"/>
+                <Button Content="✖" Margin="0,5,5,5" Padding="5" FontSize="10"/>
+            </WrapPanel>
+
+            <WrapPanel Orientation="Horizontal" HorizontalAlignment="Right" Visibility="Collapsed">
+                <TextBlock>Replace</TextBlock>
+                <Border BorderBrush="{DynamicResource editorColor}"
+                        BorderThickness="1" CornerRadius="2" Margin="0,5,5,5">
+                    <TextBox FontSize="10" Width="180" TextAlignment="Right"
+                         Background="{DynamicResource editorColor}"
+                         Foreground="{DynamicResource editorFontColor}"/>
+                </Border>
+                <Button Content="Next" Margin="0,5,5,5" Padding="5" FontSize="10"/>
+                <Button Content="All" Margin="0,5,5,5" Padding="5" FontSize="10"/>
+            </WrapPanel>
+        </StackPanel>
 
         <TextBox Name="textbox" AcceptsReturn="True" TextWrapping="Wrap"
                  FontSize="16"
