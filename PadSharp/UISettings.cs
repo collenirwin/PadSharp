@@ -3,15 +3,10 @@ using System;
 using System.IO;
 using System.Windows;
 using System.Windows.Media;
+using BoinWPF.Themes;
 
 namespace PadSharp
 {
-    public enum Theme
-    {
-        dark,
-        light
-    }
-
     public class UISettings
     {
         public const string FILE_PATH = "settings.json";
@@ -20,13 +15,12 @@ namespace PadSharp
         public Theme theme = Theme.light;
         public FontFamily fontFamily = new FontFamily("Segoe UI");
         public double fontSize = 16;
-        public Color editorFontColor = Colors.Black;
 
         // window positioning
-        public int top = 300;
-        public int left = 300;
-        public int height = 350;
-        public int width = 525;
+        public double top = 300;
+        public double left = 300;
+        public double height = 350;
+        public double width = 525;
         public WindowState windowState = WindowState.Normal;
 
         /// <summary>
@@ -72,6 +66,12 @@ namespace PadSharp
         /// <returns>false if an exception was thrown</returns>
         public bool save()
         {
+            // don't save in the minimized state
+            if (windowState == WindowState.Minimized)
+            {
+                windowState = WindowState.Normal;
+            }
+
             try
             {
                 // serialize to JSON, write to FILE_PATH

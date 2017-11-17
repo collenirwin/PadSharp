@@ -1,15 +1,13 @@
 ﻿using BoinWPF;
+using BoinWPF.Themes;
+using ICSharpCode.AvalonEdit.Search;
 using Microsoft.Win32;
 using System;
 using System.ComponentModel;
-using System.IO;
-using System.Windows;
 using System.Diagnostics;
-using System.Text;
-using ICSharpCode.AvalonEdit.Search;
-using ICSharpCode.AvalonEdit;
-using ICSharpCode.AvalonEdit.Highlighting;
+using System.IO;
 using System.Text.RegularExpressions;
+using System.Windows;
 
 namespace PadSharp
 {
@@ -53,6 +51,7 @@ namespace PadSharp
         #endregion
 
         readonly UISettings settings;
+        Theme theme;
         string savedText = "";
 
         FileInfo _file;
@@ -145,6 +144,7 @@ namespace PadSharp
             textbox.TextArea.Caret.PositionChanged += textbox_PositionChanged;
 
             settings = UISettings.load();
+            applySettings(settings);
 
             // if settings couldn't load
             if (settings == null)
@@ -154,8 +154,46 @@ namespace PadSharp
                     Global.APP_NAME + "'s root directory. A potential fix may be to run " + 
                     Global.APP_NAME + " as an administrator.");
             }
+        }
 
-            
+        /// <summary>
+        /// Set all window properties to match settings fields
+        /// </summary>
+        private void applySettings(UISettings settings)
+        {
+            // set theme
+            this.theme = settings.theme;
+            Application.Current.Resources.
+                MergedDictionaries[0].Source = ThemeManager.themeUri(this.theme);
+
+            textbox.FontFamily = settings.fontFamily;
+            textbox.FontSize = settings.fontSize;
+
+            this.WindowState = settings.windowState;
+
+            // only apply size/location settings if not maximized
+            if (this.WindowState == WindowState.Normal)
+            {
+                this.Top = settings.top;
+                this.Left = settings.left;
+                this.Height = settings.height;
+                this.Width = settings.width;
+            }
+        }
+
+        /// <summary>
+        /// Set all fields in settings object to match window properties
+        /// </summary>
+        private void setSettings(UISettings settings)
+        {
+            settings.theme = this.theme;
+            settings.fontFamily = textbox.FontFamily;
+            settings.fontSize = textbox.FontSize;
+            settings.windowState = this.WindowState;
+            settings.top = this.Top;
+            settings.left = this.Left;
+            settings.height = this.Height;
+            settings.width = this.Width;
         }
 
         #region Menu Actions
@@ -306,6 +344,9 @@ namespace PadSharp
             }
             else
             {
+                // set all user settings
+                setSettings(settings);
+
                 // save user settings, show a message if saving fails
                 if (settings != null && !settings.save())
                 {
