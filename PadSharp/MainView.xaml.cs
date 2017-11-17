@@ -6,6 +6,10 @@ using System.IO;
 using System.Windows;
 using System.Diagnostics;
 using System.Text;
+using ICSharpCode.AvalonEdit.Search;
+using ICSharpCode.AvalonEdit;
+using ICSharpCode.AvalonEdit.Highlighting;
+using System.Text.RegularExpressions;
 
 namespace PadSharp
 {
@@ -50,8 +54,8 @@ namespace PadSharp
 
         readonly UISettings settings;
         string savedText = "";
-        FileInfo _file;
 
+        FileInfo _file;
         public FileInfo file
         {
             get { return _file; }
@@ -61,6 +65,48 @@ namespace PadSharp
                 {
                     _file = value;
                     PropertyChanged(this, new PropertyChangedEventArgs("file"));
+                }
+            }
+        }
+
+        int _lineNumber = 1;
+        public int lineNumber
+        {
+            get { return _lineNumber; }
+            private set
+            {
+                if (_lineNumber != value)
+                {
+                    _lineNumber = value;
+                    PropertyChanged(this, new PropertyChangedEventArgs("lineNumber"));
+                }
+            }
+        }
+
+        int _columnNumber = 1;
+        public int columnNumber
+        {
+            get { return _columnNumber; }
+            private set
+            {
+                if (_columnNumber != value)
+                {
+                    _columnNumber = value;
+                    PropertyChanged(this, new PropertyChangedEventArgs("columnNumber"));
+                }
+            }
+        }
+
+        int _wordCount = 0;
+        public int wordCount
+        {
+            get { return _wordCount; }
+            private set
+            {
+                if (_wordCount != value)
+                {
+                    _wordCount = value;
+                    PropertyChanged(this, new PropertyChangedEventArgs("wordCount"));
                 }
             }
         }
@@ -94,6 +140,9 @@ namespace PadSharp
             #endregion
 
             InitializeComponent();
+
+            SearchPanel.Install(textbox);
+            textbox.TextArea.Caret.PositionChanged += textbox_PositionChanged;
 
             settings = UISettings.load();
 
@@ -266,6 +315,17 @@ namespace PadSharp
                         Global.APP_NAME + " as an administrator.");
                 }
             }
+        }
+
+        private void textbox_PositionChanged(object sender, EventArgs e)
+        {
+            lineNumber = textbox.TextArea.Caret.Line;
+            columnNumber = textbox.TextArea.Caret.Column;
+        }
+
+        private void textbox_TextChanged(object sender, EventArgs e)
+        {
+            wordCount = Regex.Matches(textbox.Text, @"\b\S+\b").Count;
         }
 
         private void open(string path)

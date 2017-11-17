@@ -2,6 +2,7 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:ae="http://icsharpcode.net/sharpdevelop/avalonedit"
         Name="window" Title="{StaticResource appName}"
         Height="350" Width="525"
         MinHeight="200" MinWidth="350"
@@ -109,12 +110,24 @@
             </WrapPanel>
         </StackPanel>
 
-        <TextBox Name="textbox" AcceptsReturn="True" TextWrapping="Wrap"
-                 FontSize="16"
-                 Background="{DynamicResource editorColor}"
-                 Foreground="{DynamicResource editorFontColor}"
-                 ScrollViewer.CanContentScroll="True"
-                 ScrollViewer.HorizontalScrollBarVisibility="Auto"
-                 ScrollViewer.VerticalScrollBarVisibility="Auto"/>
+        <DockPanel DockPanel.Dock="Bottom" Background="{DynamicResource menuColor}">
+            <StackPanel DockPanel.Dock="Left" Orientation="Horizontal">
+                <TextBlock Text="Line" Foreground="{DynamicResource editorFontColor}"/>
+                <TextBlock Text="{Binding lineNumber}" Foreground="{DynamicResource fontColor}"/>
+                <TextBlock Text="Column" Foreground="{DynamicResource editorFontColor}"/>
+                <TextBlock Text="{Binding columnNumber}" Foreground="{DynamicResource fontColor}"/>
+            </StackPanel>
+            <StackPanel DockPanel.Dock="right" Orientation="Horizontal">
+                <TextBlock Text="{Binding wordCount}" Foreground="{DynamicResource fontColor}"/>
+                <TextBlock Text="Words" Foreground="{DynamicResource editorFontColor}"/>
+            </StackPanel>
+        </DockPanel>
+
+        <ae:TextEditor Name="textbox" WordWrap="True"
+                       FontSize="16"
+                       ShowLineNumbers="True"
+                       Background="{DynamicResource editorColor}"
+                       Foreground="{DynamicResource editorFontColor}"
+                       TextChanged="textbox_TextChanged"/>
     </DockPanel>
 </Window>

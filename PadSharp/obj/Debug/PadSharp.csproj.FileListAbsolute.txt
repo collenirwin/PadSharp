@@ -52,3 +52,5 @@ E:\git\PadSharp\PadSharp\obj\Debug\PadSharp_MarkupCompile.cache
 E:\git\PadSharp\PadSharp\obj\Debug\PadSharp.g.resources
 E:\git\PadSharp\PadSharp\obj\Debug\PadSharp.Properties.Resources.resources
 E:\git\PadSharp\PadSharp\obj\Debug\PadSharp.csproj.GenerateResource.Cache
+E:\git\PadSharp\PadSharp\bin\Debug\ICSharpCode.AvalonEdit.dll
+E:\git\PadSharp\PadSharp\bin\Debug\ICSharpCode.AvalonEdit.xml
