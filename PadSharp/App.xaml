@@ -13,7 +13,7 @@
             <sys:String x:Key="appName">Pad#</sys:String>
             <sys:Double x:Key="buttonHeight">40</sys:Double>
 
-            <ItemsPanelTemplate x:Key="MenuItemPanelTemplate">
+            <ItemsPanelTemplate x:Key="hideCheck">
             	<StackPanel Margin="-20,0,-2,0" Background="transparent"/>
             </ItemsPanelTemplate>
 

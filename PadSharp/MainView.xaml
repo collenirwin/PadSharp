@@ -21,16 +21,20 @@
             <Setter Property="Height" Value="auto"/>
             <Setter Property="Foreground" Value="{DynamicResource foreColorLight}"/>
         </Style>
-        <Style x:Key="noCheck" TargetType="MenuItem">
-			<Setter Property="ItemsPanel" Value="{StaticResource MenuItemPanelTemplate}"/>
+        <Style x:Key="checkMenu" TargetType="MenuItem">
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="BorderBrush" Value="White"/>
+            <Setter Property="Foreground" Value="#23272d"/>
         </Style>
     </Window.Resources>
     
     <Window.InputBindings>
+        <!-- File -->
         <KeyBinding Modifiers="Ctrl" Key="N" Command="{Binding newCommand}"/>
         <KeyBinding Modifiers="Ctrl" Key="O" Command="{Binding openCommand}"/>
         <KeyBinding Modifiers="Ctrl" Key="S" Command="{Binding saveCommand}"/>
 
+        <!-- Edit -->
         <KeyBinding Modifiers="Ctrl" Key="Z" Command="{Binding undoCommand}"/>
         <KeyBinding Modifiers="Ctrl" Key="Y" Command="{Binding redoCommand}"/>
         <KeyBinding Modifiers="Ctrl" Key="C" Command="{Binding copyCommand}"/>
@@ -38,6 +42,10 @@
         <KeyBinding Modifiers="Ctrl" Key="V" Command="{Binding pasteCommand}"/>
         <KeyBinding Modifiers="Ctrl" Key="F" Command="{Binding findCommand}"/>
         <KeyBinding Modifiers="Ctrl" Key="H" Command="{Binding findAndReplaceCommand}"/>
+
+        <!-- Insert -->
+        <KeyBinding Modifiers="Ctrl" Key="M" Command="{Binding todaysDateCommand}"/>
+        <KeyBinding Modifiers="Ctrl" Key="T" Command="{Binding currentTimeCommand}"/>
     </Window.InputBindings>
     
     <DockPanel FocusManager.FocusedElement="{Binding ElementName=textbox}">
@@ -46,7 +54,8 @@
             <DockPanel Background="{DynamicResource backColorLight}">
                 
                 <Menu DockPanel.Dock="Left" Name="menu" Height="{StaticResource buttonHeight}" Margin="0">
-                    <MenuItem Height="{Binding Height, ElementName=menu}" Template="{DynamicResource MenuItemTemplate}">
+                    <MenuItem Height="{Binding Height, ElementName=menu}" 
+                              Template="{DynamicResource MenuItemTemplate}" ItemsPanel="{StaticResource hideCheck}">
                         <MenuItem.Header>
                             <TextBlock Text="File" VerticalAlignment="Center"/>
                         </MenuItem.Header>
@@ -58,7 +67,9 @@
                         <MenuItem Header="Save As" Command="{Binding saveAsCommand}"/>
                         <MenuItem Header="Exit" Command="{Binding exitCommand}"/>
                     </MenuItem>
-                    <MenuItem Height="{Binding Height, ElementName=menu}" Template="{DynamicResource MenuItemTemplate}">
+                    
+                    <MenuItem Height="{Binding Height, ElementName=menu}"
+                              Template="{DynamicResource MenuItemTemplate}" ItemsPanel="{StaticResource hideCheck}">
                         <MenuItem.Header>
                             <TextBlock Text="Edit" VerticalAlignment="Center"/>
                         </MenuItem.Header>
@@ -69,6 +80,71 @@
                         <MenuItem Header="Paste" InputGestureText="Ctrl+V" Command="{Binding pasteCommand}"/>
                         <MenuItem Header="Find" InputGestureText="Ctrl+F" Command="{Binding findCommand}"/>
                         <MenuItem Header="Find + Replace" InputGestureText="Ctrl+H" Command="{Binding findAndReplaceCommand}"/>
+                        <MenuItem Header="Goto" InputGestureText="Ctrl+G" Command="{Binding gotoCommand}"/>
+                        <MenuItem Header="Select All" InputGestureText="Ctrl+A" Command="{Binding selectAllCommand}"/>
+                    </MenuItem>
+
+                    <MenuItem Height="{Binding Height, ElementName=menu}"
+                              Template="{DynamicResource MenuItemTemplate}" ItemsPanel="{StaticResource hideCheck}">
+                        <MenuItem.Header>
+                            <TextBlock Text="Insert" VerticalAlignment="Center"/>
+                        </MenuItem.Header>
+                        <MenuItem Header="Today's Date" InputGestureText="Ctrl+D" Command="{Binding todaysDateCommand}"/>
+                        <MenuItem Header="Current Time" InputGestureText="Ctrl+T" Command="{Binding currentTimeCommand}"/>
+                        <MenuItem Header="Date and Time" Command="{Binding dateAndTimeCommand}"/>
+                    </MenuItem>
+                    
+                    <MenuItem Height="{Binding Height, ElementName=menu}"
+                              Template="{DynamicResource MenuItemTemplate}">
+                        <MenuItem.Header>
+                            <TextBlock Text="Settings" VerticalAlignment="Center"/>
+                        </MenuItem.Header>
+                        <MenuItem Header="Theme" Name="themeMenu">
+                            <MenuItem Header="Light" IsCheckable="True" Checked="theme_Checked" Style="{StaticResource checkMenu}"/>
+                            <MenuItem Header="Dark" IsCheckable="True" Checked="theme_Checked" Style="{StaticResource checkMenu}"/>
+                        </MenuItem>
+                        <MenuItem Header="Date Format" Name="dateFormatMenu">
+                            <MenuItem Header="dddd, MMMM dd, yyyy" IsCheckable="True" Checked="date_Checked" Style="{StaticResource checkMenu}"/>
+                            <MenuItem Header="dddd, MMMM d, yyyy" IsCheckable="True" Checked="date_Checked" Style="{StaticResource checkMenu}"/>
+                            <MenuItem Header="MMMM dd yyyy" IsCheckable="True" Checked="date_Checked" Style="{StaticResource checkMenu}"/>
+                            <MenuItem Header="MMMM d yyyy" IsCheckable="True" Checked="date_Checked" Style="{StaticResource checkMenu}"/>
+                            <MenuItem Header="MMM-dd-yyyy" IsCheckable="True" Checked="date_Checked" Style="{StaticResource checkMenu}"/>
+                            <MenuItem Header="MMM-dd-yy" IsCheckable="True" Checked="date_Checked" Style="{StaticResource checkMenu}"/>
+                            <MenuItem Header="MMM-d-yyyy" IsCheckable="True" Checked="date_Checked" Style="{StaticResource checkMenu}"/>
+                            <MenuItem Header="MMM-d-yy" IsCheckable="True" Checked="date_Checked" Style="{StaticResource checkMenu}"/>
+                            <MenuItem Header="MM/dd/yyyy" IsCheckable="True" Checked="date_Checked" Style="{StaticResource checkMenu}"/>
+                            <MenuItem Header="MM/dd/yy" IsCheckable="True" Checked="date_Checked" Style="{StaticResource checkMenu}"/>
+                            <MenuItem Header="M/d/yyyy" IsCheckable="True" Checked="date_Checked" Style="{StaticResource checkMenu}"/>
+                            <MenuItem Header="M/d/yy" IsCheckable="True" Checked="date_Checked" Style="{StaticResource checkMenu}"/>
+                        </MenuItem>
+                        <MenuItem Header="Time Format" Name="timeFormatMenu">
+                            <MenuItem Header="HH:mm:ss" IsCheckable="True" Checked="time_Checked" Style="{StaticResource checkMenu}"/>
+                            <MenuItem Header="hh:mm:ss tt" IsCheckable="True" Checked="time_Checked" Style="{StaticResource checkMenu}"/>
+                            <MenuItem Header="hh:mm:ss" IsCheckable="True" Checked="time_Checked" Style="{StaticResource checkMenu}"/>
+                            <MenuItem Header="H:mm:ss" IsCheckable="True" Checked="time_Checked" Style="{StaticResource checkMenu}"/>
+                            <MenuItem Header="h:mm:ss tt" IsCheckable="True" Checked="time_Checked" Style="{StaticResource checkMenu}"/>
+                            <MenuItem Header="h:mm:ss" IsCheckable="True" Checked="time_Checked" Style="{StaticResource checkMenu}"/>
+                            <MenuItem Header="H:mm" IsCheckable="True" Checked="time_Checked" Style="{StaticResource checkMenu}"/>
+                            <MenuItem Header="h:mm tt" IsCheckable="True" Checked="time_Checked" Style="{StaticResource checkMenu}"/>
+                            <MenuItem Header="h:mm" IsCheckable="True" Checked="time_Checked" Style="{StaticResource checkMenu}"/>
+                        </MenuItem>
+                        <MenuItem Header="Show Line Numbers" Name="showLineNumbersDropdown" 
+                                  IsCheckable="True" Checked="showLineNumbers_Checked" Unchecked="showLineNumbers_Checked"/>
+                        <MenuItem Header="Show Status Bar" Name="showStatusBarDropdown" 
+                                  IsCheckable="True" Checked="showStatusBar_Checked" Unchecked="showStatusBar_Checked"/>
+                        <MenuItem Header="Word Wrap" Name="wordWrapDropdown" 
+                                  IsCheckable="True" Checked="wordWrap_Checked" Unchecked="wordWrap_Checked"/>
+                    </MenuItem>
+
+                    <MenuItem Height="{Binding Height, ElementName=menu}"
+                              Template="{DynamicResource MenuItemTemplate}" ItemsPanel="{StaticResource hideCheck}">
+                        <MenuItem.Header>
+                            <TextBlock Text="Help" VerticalAlignment="Center"/>
+                        </MenuItem.Header>
+                        <MenuItem Header="Date/Time Format Guide" 
+                                  Tag="https://docs.microsoft.com/en-us/dotnet/standard/base-types/custom-date-and-time-format-strings"
+                                  Click="help_Click"/>
+                        <MenuItem Header="GitHub" Tag="https://github.com/collenirwin/PadSharp" Click="help_Click"/>
                     </MenuItem>
                 </Menu>
                 
@@ -104,7 +180,7 @@
             </WrapPanel>
         </StackPanel>
 
-        <DockPanel DockPanel.Dock="Bottom" Background="{DynamicResource backColorLight}">
+        <DockPanel Name="statusBar" DockPanel.Dock="Bottom" Background="{DynamicResource backColorLight}">
             <StackPanel DockPanel.Dock="Left" Orientation="Horizontal">
                 <TextBlock Text="Ln" Foreground="{DynamicResource foreColorDark}"/>
                 <TextBlock Text="{Binding lineNumber}" Foreground="{DynamicResource foreColorLight}"/>
@@ -114,7 +190,27 @@
                 <TextBlock Text="{Binding wordCount}" Foreground="{DynamicResource foreColorLight}"/>
             </StackPanel>
             <StackPanel DockPanel.Dock="right" Orientation="Horizontal" HorizontalAlignment="Right">
-                
+                <TextBlock Text="Font" Foreground="{DynamicResource foreColorDark}"/>
+                <ComboBox Name="fontDropdown" IsEditable="False" Margin="0,0,5,0"
+                          FlowDirection="RightToLeft" SelectionChanged="fontDropdown_SelectionChanged"/>
+                <ComboBox Name="fontSizeDropdown" IsEditable="True" FlowDirection="RightToLeft" Margin="0,0,5,0">
+                    <ComboBoxItem>8</ComboBoxItem>
+                    <ComboBoxItem>9</ComboBoxItem>
+                    <ComboBoxItem>10</ComboBoxItem>
+                    <ComboBoxItem>11</ComboBoxItem>
+                    <ComboBoxItem>12</ComboBoxItem>
+                    <ComboBoxItem>14</ComboBoxItem>
+                    <ComboBoxItem>16</ComboBoxItem>
+                    <ComboBoxItem>18</ComboBoxItem>
+                    <ComboBoxItem>20</ComboBoxItem>
+                    <ComboBoxItem>22</ComboBoxItem>
+                    <ComboBoxItem>24</ComboBoxItem>
+                    <ComboBoxItem>26</ComboBoxItem>
+                    <ComboBoxItem>28</ComboBoxItem>
+                    <ComboBoxItem>36</ComboBoxItem>
+                    <ComboBoxItem>48</ComboBoxItem>
+                    <ComboBoxItem>72</ComboBoxItem>
+                </ComboBox>
             </StackPanel>
         </DockPanel>
 

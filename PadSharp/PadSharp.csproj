@@ -73,6 +73,8 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="UICommandBase.cs" />
+    <Compile Include="UICommandWithParam.cs" />
     <Compile Include="Global.cs" />
     <Compile Include="UICommand.cs" />
     <Compile Include="UISettings.cs" />

@@ -5,15 +5,15 @@ namespace PadSharp
     /// <summary>
     /// Barebones implementation of ICommand
     /// </summary>
-    public class UICommand : UICommandBase
+    public class UICommandWithParam : UICommandBase
     {
-        public Action action { get; private set; }
+        public Action<object> action { get; private set; }
 
         /// <summary>
         /// Constructor for UICommand
         /// </summary>
         /// <param name="action">Action to call via Execute</param>
-        public UICommand(Action action)
+        public UICommandWithParam(Action<object> action)
         {
             this.action = action;
         }
@@ -24,7 +24,7 @@ namespace PadSharp
         /// <param name="parameter">Not used</param>
         public override void Execute(object parameter)
         {
-            action();
+            action(parameter);
         }
     }
 }

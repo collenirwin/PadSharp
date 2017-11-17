@@ -1,12 +1,15 @@
-﻿using Newtonsoft.Json;
+﻿using BoinWPF.Themes;
+using Newtonsoft.Json;
 using System;
 using System.IO;
 using System.Windows;
 using System.Windows.Media;
-using BoinWPF.Themes;
 
 namespace PadSharp
 {
+    /// <summary>
+    /// Contains fields for user settings and json serialization methods
+    /// </summary>
     public class UISettings
     {
         public const string FILE_PATH = "settings.json";
@@ -22,6 +25,15 @@ namespace PadSharp
         public double height = 350;
         public double width = 525;
         public WindowState windowState = WindowState.Normal;
+
+        // date and time format
+        public string dateFormat = "MMMM d yyyy";
+        public string timeFormat = "h:mm tt";
+
+        // toggles
+        public bool showLineNumbers = true;
+        public bool showStatusBar = true;
+        public bool wordWrap = true;
 
         /// <summary>
         /// Creates a UISettings object based on the JSON file at FILE_PATH

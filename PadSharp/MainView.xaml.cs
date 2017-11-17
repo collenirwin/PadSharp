@@ -6,13 +6,16 @@ using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Media;
 
 namespace PadSharp
 {
     /// <summary>
-    /// Interaction logic for View.xaml
+    /// Interaction logic for MainView.xaml
     /// </summary>
     public partial class MainView : Window, INotifyPropertyChanged
     {
@@ -21,6 +24,13 @@ namespace PadSharp
         public event PropertyChangedEventHandler PropertyChanged = (sender, e) => { };
 
         const int FILE_SIZE_LIMIT = 100000;
+        const double MAX_FONT_SIZE = 500;
+
+        readonly UISettings settings;
+        Theme theme;
+        string savedText = "";
+
+        #region Properties
 
         #region UICommands
 
@@ -48,11 +58,15 @@ namespace PadSharp
 
         #endregion
 
+        #region Insert
+
+        public UICommand todaysDateCommand { get; private set; }
+        public UICommand currentTimeCommand { get; private set; }
+        public UICommand dateAndTimeCommand { get; private set; }
+
         #endregion
 
-        readonly UISettings settings;
-        Theme theme;
-        string savedText = "";
+        #endregion
 
         FileInfo _file;
         public FileInfo file
@@ -110,6 +124,29 @@ namespace PadSharp
             }
         }
 
+        public double fontSize
+        {
+            get { return textbox.FontSize; }
+            set
+            {
+                // make sure fontSize is within acceptable range
+                if (value > MAX_FONT_SIZE)
+                {
+                    textbox.FontSize = MAX_FONT_SIZE;
+                }
+                else if (value < 1)
+                {
+                    textbox.FontSize = 1;
+                }
+                else
+                {
+                    textbox.FontSize = value;
+                }
+            }
+        }
+
+        #endregion
+
         #endregion
 
         #region Methods
@@ -136,6 +173,11 @@ namespace PadSharp
             findCommand = new UICommand(Find_Command);
             findAndReplaceCommand = new UICommand(FindReplace_Command);
 
+            // insert
+            todaysDateCommand = new UICommand(TodaysDate_Command);
+            currentTimeCommand = new UICommand(CurrentTime_Command);
+            dateAndTimeCommand = new UICommand(DateAndTime_Command);
+
             #endregion
 
             InitializeComponent();
@@ -144,17 +186,26 @@ namespace PadSharp
             textbox.TextArea.Caret.PositionChanged += textbox_PositionChanged;
 
             settings = UISettings.load();
-            applySettings(settings);
 
             // if settings couldn't load
             if (settings == null)
             {
-                Global.actionMessage("Failed to load settings.json", 
-                    "settings.json is contained within " + 
-                    Global.APP_NAME + "'s root directory. A potential fix may be to run " + 
+                Global.actionMessage("Failed to load settings.json",
+                    "settings.json is contained within " +
+                    Global.APP_NAME + "'s root directory. A potential fix may be to run " +
                     Global.APP_NAME + " as an administrator.");
+
+                // call constructor for default settings
+                settings = new UISettings();
             }
+
+            applySettings(settings);
+
+            populateFontDropdown(fontDropdown);
+            selectFont(fontDropdown, textbox.FontFamily);
         }
+
+        #region Settings
 
         /// <summary>
         /// Set all window properties to match settings fields
@@ -166,8 +217,10 @@ namespace PadSharp
             Application.Current.Resources.
                 MergedDictionaries[0].Source = ThemeManager.themeUri(this.theme);
 
+            checkIfSameValue(themeMenu, this.theme == Theme.light ? "Light" : "Dark");
+
             textbox.FontFamily = settings.fontFamily;
-            textbox.FontSize = settings.fontSize;
+            this.fontSize = settings.fontSize;
 
             this.WindowState = settings.windowState;
 
@@ -179,6 +232,20 @@ namespace PadSharp
                 this.Height = settings.height;
                 this.Width = settings.width;
             }
+
+            // check the selected date/time formats
+            checkIfSameValue(dateFormatMenu, settings.dateFormat);
+            checkIfSameValue(timeFormatMenu, settings.timeFormat);
+
+            // set toggles
+            showLineNumbersDropdown.IsChecked = settings.showLineNumbers;
+            showStatusBarDropdown.IsChecked = settings.showStatusBar;
+            wordWrapDropdown.IsChecked = settings.wordWrap;
+
+            // call toggle events? ...
+            showLineNumbers_Checked(null, null);
+            showStatusBar_Checked(null, null);
+            wordWrap_Checked(null, null);
         }
 
         /// <summary>
@@ -188,7 +255,7 @@ namespace PadSharp
         {
             settings.theme = this.theme;
             settings.fontFamily = textbox.FontFamily;
-            settings.fontSize = textbox.FontSize;
+            settings.fontSize = this.fontSize;
             settings.windowState = this.WindowState;
             settings.top = this.Top;
             settings.left = this.Left;
@@ -196,7 +263,55 @@ namespace PadSharp
             settings.width = this.Width;
         }
 
-        #region Menu Actions
+        #region Font
+
+        private void populateFontDropdown(ComboBox dropdown)
+        {
+            // sort system fonts
+            var fonts = Fonts.SystemFontFamilies.OrderBy(x => x.Source);
+
+            // add 'em all to the dropdown
+            foreach (var font in fonts)
+            {
+                var item = new ComboBoxItem();
+                item.FontFamily = font;
+                item.Content = font.Source;
+
+                dropdown.Items.Add(item);
+            }
+        }
+
+        private void selectFont(ComboBox dropdown, FontFamily font)
+        {
+            foreach (ComboBoxItem item in dropdown.Items)
+            {
+                if (item.Content.ToString() == font.Source)
+                {
+                    dropdown.SelectedItem = item;
+                    return;
+                }
+            }
+
+            // default to 0 if we can't find given font
+            if (dropdown.Items.Count != 0)
+            {
+                dropdown.SelectedIndex = 0;
+            }
+        }
+
+        private void fontDropdown_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            // set textbox and dropdown font to the new selected font
+            var font = new FontFamily((fontDropdown.SelectedItem as ComboBoxItem).Content.ToString());
+            textbox.FontFamily = font;
+            fontDropdown.FontFamily = font;
+        }
+
+        #endregion
+
+        #endregion
+
+        #region Menu
 
         #region File
 
@@ -331,6 +446,131 @@ namespace PadSharp
 
         #endregion
 
+        #region Insert
+
+        private void TodaysDate_Command()
+        {
+            insert(DateTime.Now.ToString(settings.dateFormat));
+        }
+
+        private void CurrentTime_Command()
+        {
+            insert(DateTime.Now.ToString(settings.timeFormat));
+        }
+
+        private void DateAndTime_Command()
+        {
+            insert(DateTime.Now.ToString(settings.dateFormat + " " + settings.timeFormat));
+        }
+
+        #endregion
+
+        #region Settings
+
+        private void theme_Checked(object sender, RoutedEventArgs e)
+        {
+            var item = sender as MenuItem;
+            uncheckSiblings(item);
+
+            // select theme
+            this.theme = item.Header.ToString() == "Light" ? Theme.light : Theme.dark;
+
+            // set theme for app
+            Application.Current.Resources.
+                    MergedDictionaries[0].Source = ThemeManager.themeUri(this.theme);
+        }
+
+        private void date_Checked(object sender, RoutedEventArgs e)
+        {
+            var item = sender as MenuItem;
+            uncheckSiblings(item);
+            settings.dateFormat = item.Header.ToString();
+        }
+
+        private void time_Checked(object sender, RoutedEventArgs e)
+        {
+            var item = sender as MenuItem;
+            uncheckSiblings(item);
+            settings.timeFormat = item.Header.ToString();
+        }
+
+        private void showLineNumbers_Checked(object sender, RoutedEventArgs e)
+        {
+            textbox.ShowLineNumbers = showLineNumbersDropdown.IsChecked;
+            settings.showLineNumbers = showLineNumbersDropdown.IsChecked;
+        }
+
+        private void showStatusBar_Checked(object sender, RoutedEventArgs e)
+        {
+            statusBar.Visibility = showStatusBarDropdown.IsChecked ? Visibility.Visible : Visibility.Collapsed;
+            settings.showStatusBar = showStatusBarDropdown.IsChecked;
+        }
+
+        private void wordWrap_Checked(object sender, RoutedEventArgs e)
+        {
+            textbox.WordWrap = wordWrapDropdown.IsChecked;
+            settings.wordWrap = wordWrapDropdown.IsChecked;
+        }
+
+        #endregion
+
+        #region Help
+
+        private void help_Click(object sender, RoutedEventArgs e)
+        {
+            var item = sender as MenuItem;
+
+            try
+            {
+                Process.Start(item.Tag.ToString());
+            }
+            catch (Exception ex)
+            {
+                Global.actionMessage("Failed to launch '" + item.Tag.ToString() + "'", ex.Message);
+            }
+        }
+
+        #endregion
+
+        private void insert(string text)
+        {
+            // grab position we're going to before we reset textbox.Text
+            int position = textbox.CaretOffset + text.Length;
+
+            // insert the text
+            textbox.Text = textbox.Text.Insert(textbox.CaretOffset, text);
+
+            // go to the previously calculated position
+            textbox.CaretOffset = position;
+        }
+
+        private void uncheckSiblings(MenuItem item)
+        {
+            // if the item is checked, loop through all its parent's children and uncheck them
+            if (item.IsChecked)
+            {
+                var parent = item.Parent as MenuItem;
+                foreach (MenuItem child in parent.Items)
+                {
+                    if (child != item && child != null && child.IsChecked)
+                    {
+                        child.IsChecked = false;
+                    }
+                }
+            }
+        }
+
+        private void checkIfSameValue(MenuItem parent, string value)
+        {
+            foreach (MenuItem child in parent.Items)
+            {
+                if (child != null && child.Header.ToString() == value)
+                {
+                    child.IsChecked = true;
+                }
+            }
+        }
+
         #endregion
 
         private void window_Closing(object sender, CancelEventArgs e)
@@ -360,12 +600,14 @@ namespace PadSharp
 
         private void textbox_PositionChanged(object sender, EventArgs e)
         {
+            // set ln and col on caret position change
             lineNumber = textbox.TextArea.Caret.Line;
             columnNumber = textbox.TextArea.Caret.Column;
         }
 
         private void textbox_TextChanged(object sender, EventArgs e)
         {
+            // count the words on textchanged
             wordCount = Regex.Matches(textbox.Text, @"\b\S+\b").Count;
         }
 
@@ -419,7 +661,7 @@ namespace PadSharp
         private void saveAs()
         {
             var saveDialog = new SaveFileDialog();
-            saveDialog.Title = "Save";
+            saveDialog.Title = "Save As";
             saveDialog.ShowDialog();
 
             string path = saveDialog.FileName;
