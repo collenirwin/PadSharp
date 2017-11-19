@@ -10,6 +10,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Media;
 
 namespace PadSharp
@@ -219,8 +220,10 @@ namespace PadSharp
 
             checkIfSameValue(themeMenu, this.theme == Theme.light ? "Light" : "Dark");
 
+            // font
             textbox.FontFamily = settings.fontFamily;
             this.fontSize = settings.fontSize;
+            fontSizeDropdown.Text = this.fontSize.ToString();
 
             this.WindowState = settings.windowState;
 
@@ -305,6 +308,19 @@ namespace PadSharp
             var font = new FontFamily((fontDropdown.SelectedItem as ComboBoxItem).Content.ToString());
             textbox.FontFamily = font;
             fontDropdown.FontFamily = font;
+        }
+
+        private void fontSizeDropdown_Changed(object sender, EventArgs e)
+        {
+            double size;
+            if (double.TryParse(fontSizeDropdown.Text, out size))
+            {
+                fontSize = size;
+            }
+            else
+            {
+                fontSizeDropdown.Text = fontSize.ToString();
+            }
         }
 
         #endregion
@@ -572,6 +588,21 @@ namespace PadSharp
         }
 
         #endregion
+
+        private void window_MouseWheel(object sender, MouseWheelEventArgs e)
+        {
+            if ((Keyboard.Modifiers & ModifierKeys.Control) != 0)
+            {
+                int delta = 1;
+                if (e.Delta < 0)
+                {
+                    delta = -1;
+                }
+
+                fontSize += delta;
+                fontSizeDropdown.Text = fontSize.ToString();
+            }
+        }
 
         private void window_Closing(object sender, CancelEventArgs e)
         {
