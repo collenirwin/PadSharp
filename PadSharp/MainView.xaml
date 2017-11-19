@@ -191,7 +191,7 @@
             </StackPanel>
             <StackPanel DockPanel.Dock="right" Orientation="Horizontal" HorizontalAlignment="Right">
                 <TextBlock Text="Font" Foreground="{DynamicResource foreColorDark}"/>
-                <ComboBox Name="fontDropdown" IsEditable="False" Margin="0,0,5,0"
+                <ComboBox Name="fontDropdown" IsEditable="True" Margin="0,0,5,0"
                           FlowDirection="RightToLeft" SelectionChanged="fontDropdown_SelectionChanged"/>
                 <ComboBox Name="fontSizeDropdown" IsEditable="True" FlowDirection="RightToLeft" Margin="0,0,5,0">
                     <ComboBoxItem>8</ComboBoxItem>

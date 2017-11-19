@@ -379,7 +379,7 @@ namespace PadSharp
             }
             else
             {
-                Alert.showDialog("", Global.APP_NAME);
+                Alert.showDialog("No file is open.", Global.APP_NAME);
             }
         }
 
