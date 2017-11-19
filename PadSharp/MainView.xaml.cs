@@ -56,6 +56,7 @@ namespace PadSharp
         public UICommand pasteCommand { get; private set; }
         public UICommand findCommand { get; private set; }
         public UICommand findAndReplaceCommand { get; private set; }
+        public UICommand selectAllCommand { get; private set; }
 
         #endregion
 
@@ -173,6 +174,7 @@ namespace PadSharp
             pasteCommand = new UICommand(Paste_Command);
             findCommand = new UICommand(Find_Command);
             findAndReplaceCommand = new UICommand(FindReplace_Command);
+            selectAllCommand = new UICommand(SelectAll_Command);
 
             // insert
             todaysDateCommand = new UICommand(TodaysDate_Command);
@@ -458,6 +460,11 @@ namespace PadSharp
         private void FindReplace_Command()
         {
 
+        }
+
+        private void SelectAll_Command()
+        {
+            textbox.SelectAll();
         }
 
         #endregion

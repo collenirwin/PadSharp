@@ -43,6 +43,7 @@
         <KeyBinding Modifiers="Ctrl" Key="V" Command="{Binding pasteCommand}"/>
         <KeyBinding Modifiers="Ctrl" Key="F" Command="{Binding findCommand}"/>
         <KeyBinding Modifiers="Ctrl" Key="H" Command="{Binding findAndReplaceCommand}"/>
+        <KeyBinding Modifiers="Ctrl" Key="A" Command="{Binding selectAllCommand}"/>
 
         <!-- Insert -->
         <KeyBinding Modifiers="Ctrl" Key="M" Command="{Binding todaysDateCommand}"/>
