@@ -9,7 +9,7 @@
         WindowStartupLocation="Manual"
         Icon="./Resources/favicon.ico"
         Closing="window_Closing"
-        DataContext="{Binding RelativeSource={RelativeSource Self}}">
+        DataContext="{Binding RelativeSource={RelativeSource Self}}" BorderBrush="Transparent">
     
     <Window.Resources>
         <Style TargetType="TextBox">
@@ -193,7 +193,7 @@
                 <TextBlock Text="Font" Foreground="{DynamicResource foreColorDark}"/>
                 <ComboBox Name="fontDropdown" IsEditable="True" Margin="0,0,5,0"
                           FlowDirection="RightToLeft" SelectionChanged="fontDropdown_SelectionChanged"/>
-                <ComboBox Name="fontSizeDropdown" IsEditable="True" FlowDirection="RightToLeft" Margin="0,0,5,0">
+                <ComboBox Name="fontSizeDropdown" IsEditable="True" FlowDirection="RightToLeft" Margin="0,0,17,0">
                     <ComboBoxItem>8</ComboBoxItem>
                     <ComboBoxItem>9</ComboBoxItem>
                     <ComboBoxItem>10</ComboBoxItem>

@@ -97,8 +97,8 @@
                                         <Condition Binding="{Binding IsPressed, RelativeSource={RelativeSource Self}}" Value="false"/>
                                         <Condition Binding="{Binding IsEnabled, RelativeSource={RelativeSource Self}}" Value="true"/>
                                     </MultiDataTrigger.Conditions>
-                                    <Setter Property="Background" TargetName="templateRoot" Value="{DynamicResource foreColorDark}"/>
-                                    <Setter Property="BorderBrush" TargetName="templateRoot" Value="{DynamicResource foreColorDark}"/>
+                                    <Setter Property="Background" TargetName="templateRoot" Value="Transparent"/>
+                                    <Setter Property="BorderBrush" TargetName="templateRoot" Value="Transparent"/>
                                     <Setter Property="Background" TargetName="splitBorder" Value="{DynamicResource backColorLight}"/>
                                     <Setter Property="BorderBrush" TargetName="splitBorder" Value="{DynamicResource backColorLight}"/>
                                 </MultiDataTrigger>
@@ -222,7 +222,7 @@
         	</ControlTemplate>
             <Style TargetType="{x:Type ComboBox}">
                 <Setter Property="Background" Value="{DynamicResource backColorDark}"/>
-                <Setter Property="BorderBrush" Value="{DynamicResource foreColorDark}"/>
+                <Setter Property="BorderBrush" Value="Transparent"/>
                 <Setter Property="Foreground" Value="{DynamicResource foreColorDark}"/>
                 <Setter Property="BorderThickness" Value="1"/>
                 <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Auto"/>
