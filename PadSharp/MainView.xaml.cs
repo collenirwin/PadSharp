@@ -185,7 +185,15 @@ namespace PadSharp
 
             InitializeComponent();
 
-            SearchPanel.Install(textbox);
+            var args = Environment.GetCommandLineArgs();
+
+            // if we have a command line argument
+            if (args.Length > 1 && args[1].Length > 0)
+            {
+                // assume it is a path to a file, try to open the file
+                open(args[1]);
+            }
+
             textbox.TextArea.Caret.PositionChanged += textbox_PositionChanged;
 
             settings = UISettings.load();
@@ -596,6 +604,8 @@ namespace PadSharp
 
         #endregion
 
+        #region Window Events
+
         private void window_MouseWheel(object sender, MouseWheelEventArgs e)
         {
             if ((Keyboard.Modifiers & ModifierKeys.Control) != 0)
@@ -636,6 +646,10 @@ namespace PadSharp
             }
         }
 
+        #endregion
+
+        #region Textbox Events
+
         private void textbox_PositionChanged(object sender, EventArgs e)
         {
             // set ln and col on caret position change
@@ -648,6 +662,10 @@ namespace PadSharp
             // count the words on textchanged
             wordCount = Regex.Matches(textbox.Text, @"\b\S+\b").Count;
         }
+
+        #endregion
+
+        #region IO helpers
 
         private void open(string path)
         {
@@ -710,6 +728,8 @@ namespace PadSharp
                 save(path);
             }
         }
+
+        #endregion
 
         #endregion
     }

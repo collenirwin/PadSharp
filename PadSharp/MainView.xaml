@@ -7,7 +7,7 @@
         Height="350" Width="525"
         MinHeight="200" MinWidth="350"
         WindowStartupLocation="Manual"
-        Icon="./Resources/favicon.ico"
+        Icon="./favicon.ico"
         Closing="window_Closing"
         PreviewMouseWheel="window_MouseWheel"
         DataContext="{Binding RelativeSource={RelativeSource Self}}">
