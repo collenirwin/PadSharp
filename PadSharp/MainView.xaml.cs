@@ -56,6 +56,8 @@ namespace PadSharp
         public UICommand pasteCommand { get; private set; }
         public UICommand findCommand { get; private set; }
         public UICommand findAndReplaceCommand { get; private set; }
+        public UICommand gotoCommand { get; private set; }
+        public UICommand gotoGoCommand { get; private set; }
         public UICommand selectAllCommand { get; private set; }
 
         #endregion
@@ -174,6 +176,8 @@ namespace PadSharp
             pasteCommand = new UICommand(Paste_Command);
             findCommand = new UICommand(Find_Command);
             findAndReplaceCommand = new UICommand(FindReplace_Command);
+            gotoCommand = new UICommand(Goto_Command);
+            gotoGoCommand = new UICommand(GotoGo_Command);
             selectAllCommand = new UICommand(SelectAll_Command);
 
             // insert
@@ -462,12 +466,35 @@ namespace PadSharp
 
         private void Find_Command()
         {
-            
+            // close goto
+            gotoPanel.Visibility = Visibility.Collapsed;
+
+            // find open, replace closed
+            findPanelParent.Visibility = Visibility.Visible;
+            replacePanelParent.Visibility = Visibility.Collapsed;
+            txtFind.Focus();
         }
 
         private void FindReplace_Command()
         {
+            // close goto
+            gotoPanel.Visibility = Visibility.Collapsed;
 
+            // both find and replace open
+            findPanelParent.Visibility = Visibility.Visible;
+            replacePanelParent.Visibility = Visibility.Visible;
+            txtFind.Focus();
+        }
+
+        private void Goto_Command()
+        {
+            // close find and replace
+            findPanelParent.Visibility = Visibility.Collapsed;
+            replacePanelParent.Visibility = Visibility.Collapsed;
+
+            // open goto
+            gotoPanel.Visibility = Visibility.Visible;
+            txtGoto.Focus();
         }
 
         private void SelectAll_Command()
@@ -563,6 +590,8 @@ namespace PadSharp
 
         #endregion
 
+        #region Helpers
+
         private void insert(string text)
         {
             // grab position we're going to before we reset textbox.Text
@@ -601,6 +630,123 @@ namespace PadSharp
                 }
             }
         }
+
+        #endregion
+
+        #endregion
+
+        #region Find + Replace + Goto
+
+        #region Find
+
+        private bool findNext(string text, int start)
+        {
+            try
+            {
+                var regex = new Regex(text, matchCase.IsChecked == true
+                ? RegexOptions.None
+                : RegexOptions.IgnoreCase);
+
+                var match = regex.Match(textbox.Text, start);
+
+                if (!match.Success)
+                {
+                    // loop around and start from 0
+                    match = regex.Match(textbox.Text, 0);
+                }
+
+                if (match.Success)
+                {
+                    // select the matched text
+                    textbox.Select(match.Index, match.Length);
+
+                    // scroll to the matched text
+                    var location = textbox.Document.GetLocation(match.Index);
+                    textbox.ScrollTo(location.Line, location.Column);
+                }
+
+                return match.Success;
+            }
+            catch
+            {
+                // invalid regular expression
+                return false;
+            }
+        }
+
+        private void txtFind_TextChanged(object sender, RoutedEventArgs e)
+        {
+            // find first instance of text entered
+            if (findNext(txtFind.Text, 0)) // found
+            {
+                txtFind.Foreground = (Brush)FindResource("foreColorDark");
+            }
+            else // not found
+            {
+                txtFind.Foreground = Brushes.LightSalmon;
+            }
+        }
+
+        private void findUp_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void findDown_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void closeFindReplace_Click(object sender, RoutedEventArgs e)
+        {
+            findPanelParent.Visibility = Visibility.Collapsed;
+            replacePanelParent.Visibility = Visibility.Collapsed;
+        }
+
+        #endregion
+
+        #region Replace
+
+        private void replaceNext_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void replaceAll_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        #endregion
+
+        #region Goto
+
+        private void GotoGo_Command()
+        {
+            int line;
+            if (int.TryParse(txtGoto.Text, out line))
+            {
+                textbox.ScrollTo(line, 0);
+            }
+            else
+            {
+                Alert.showDialog("Line number must be an integer.", "Pad#");
+                txtGoto.Focus();
+                txtGoto.SelectAll();
+            }
+        }
+
+        private void goto_Click(object sender, RoutedEventArgs e)
+        {
+            GotoGo_Command();
+        }
+
+        private void closeGoto_Click(object sender, RoutedEventArgs e)
+        {
+            gotoPanel.Visibility = Visibility.Collapsed;
+        }
+
+        #endregion
 
         #endregion
 
@@ -648,7 +794,7 @@ namespace PadSharp
 
         #endregion
 
-        #region Textbox Events
+        #region Main Textbox Events
 
         private void textbox_PositionChanged(object sender, EventArgs e)
         {

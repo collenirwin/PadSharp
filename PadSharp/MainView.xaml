@@ -43,18 +43,19 @@
         <KeyBinding Modifiers="Ctrl" Key="V" Command="{Binding pasteCommand}"/>
         <KeyBinding Modifiers="Ctrl" Key="F" Command="{Binding findCommand}"/>
         <KeyBinding Modifiers="Ctrl" Key="H" Command="{Binding findAndReplaceCommand}"/>
+        <KeyBinding Modifiers="Ctrl" Key="G" Command="{Binding gotoCommand}"/>
         <KeyBinding Modifiers="Ctrl" Key="A" Command="{Binding selectAllCommand}"/>
 
         <!-- Insert -->
         <KeyBinding Modifiers="Ctrl" Key="M" Command="{Binding todaysDateCommand}"/>
         <KeyBinding Modifiers="Ctrl" Key="T" Command="{Binding currentTimeCommand}"/>
     </Window.InputBindings>
-    
-    <DockPanel FocusManager.FocusedElement="{Binding ElementName=textbox}">
-        <StackPanel Orientation="Vertical" DockPanel.Dock="Top" Background="{DynamicResource backColorLight}">
+
+    <DockPanel FocusManager.FocusedElement="{Binding ElementName=textbox}" Background="{DynamicResource backColorDark}">
+        <StackPanel Orientation="Vertical" DockPanel.Dock="Top" Background="{DynamicResource backColorDark}" Margin="0">
 
             <DockPanel Background="{DynamicResource backColorLight}">
-                
+
                 <Menu DockPanel.Dock="Left" Name="menu" Height="{StaticResource buttonHeight}" Margin="0">
                     <MenuItem Height="{Binding Height, ElementName=menu}" 
                               Template="{DynamicResource MenuItemTemplate}" ItemsPanel="{StaticResource hideCheck}">
@@ -69,7 +70,7 @@
                         <MenuItem Header="Save As" Command="{Binding saveAsCommand}"/>
                         <MenuItem Header="Exit" Command="{Binding exitCommand}"/>
                     </MenuItem>
-                    
+
                     <MenuItem Height="{Binding Height, ElementName=menu}"
                               Template="{DynamicResource MenuItemTemplate}" ItemsPanel="{StaticResource hideCheck}">
                         <MenuItem.Header>
@@ -95,7 +96,7 @@
                         <MenuItem Header="Current Time" InputGestureText="Ctrl+T" Command="{Binding currentTimeCommand}"/>
                         <MenuItem Header="Date and Time" Command="{Binding dateAndTimeCommand}"/>
                     </MenuItem>
-                    
+
                     <MenuItem Height="{Binding Height, ElementName=menu}"
                               Template="{DynamicResource MenuItemTemplate}">
                         <MenuItem.Header>
@@ -149,37 +150,81 @@
                         <MenuItem Header="GitHub" Tag="https://github.com/collenirwin/PadSharp" Click="help_Click"/>
                     </MenuItem>
                 </Menu>
-                
+
                 <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" HorizontalAlignment="Right">
                     <TextBlock Text="{Binding file.Name, FallbackValue='Not Saved'}" FontStyle="Italic"
                                ToolTip="{Binding file.FullName}" Foreground="{DynamicResource foreColorDark}"/>
                 </StackPanel>
             </DockPanel>
             
-            <WrapPanel Orientation="Horizontal" HorizontalAlignment="Right" Visibility="Collapsed">
-                <TextBlock>Find</TextBlock>
-                <Border BorderBrush="{DynamicResource backColorDark}" 
-                        BorderThickness="1" CornerRadius="2" Margin="0,5,5,5">
-                    <TextBox FontSize="10" Width="180" TextAlignment="Right"
-                         Background="{DynamicResource backColorDark}"
-                         Foreground="{DynamicResource foreColorDark}"/>
-                </Border>
-                <Button Content="Next" Margin="0,5,5,5" Padding="5" FontSize="10"/>
-                <Button Content="All" Margin="0,5,5,5" Padding="5" FontSize="10"/>
-                <Button Content="✖" Margin="0,5,5,5" Padding="5" FontSize="10"/>
-            </WrapPanel>
+            <StackPanel Name="findPanelParent" Orientation="Horizontal" HorizontalAlignment="Right" Visibility="Collapsed">
 
-            <WrapPanel Orientation="Horizontal" HorizontalAlignment="Right" Visibility="Collapsed">
-                <TextBlock>Replace</TextBlock>
-                <Border BorderBrush="{DynamicResource backColorDark}"
-                        BorderThickness="1" CornerRadius="2" Margin="0,5,5,5">
-                    <TextBox FontSize="10" Width="180" TextAlignment="Right"
-                         Background="{DynamicResource backColorDark}"
-                         Foreground="{DynamicResource foreColorDark}"/>
+                <CheckBox Name="matchCase" Foreground="{DynamicResource foreColorDark}" FlowDirection="RightToLeft" Margin="9">
+                    Match Case
+                </CheckBox>
+
+                <TextBlock Foreground="{DynamicResource foreColorDark}">Find</TextBlock>
+                
+                <StackPanel Name="findPanel" Orientation="Horizontal" HorizontalAlignment="Right"
+                            Margin="0" Width="260" 
+                            Background="{DynamicResource backColorDark}">
+                    <Border BorderBrush="{DynamicResource backColorLight}" 
+                            BorderThickness="1" CornerRadius="2" Margin="0,5,5,5">
+                        <TextBox Name="txtFind" FontSize="14" Width="180" TextAlignment="Right"
+                                 Background="{DynamicResource backColorLight}"
+                                 Foreground="{DynamicResource foreColorDark}"
+                                 TextChanged="txtFind_TextChanged"/>
+                    </Border>
+                    <Button Content="˄" FontFamily="Consolas" FontWeight="Bold" Click="findUp_Click"
+                            Margin="0,5,5,5" Padding="6,8,6,4" FontSize="10" Style="{DynamicResource ButtonStyle}"/>
+                    <Button Content="˅" FontFamily="Consolas" FontWeight="Bold" Click="findDown_Click"
+                            Margin="0,5,5,5" Padding="6,8,6,4" FontSize="10" Style="{DynamicResource ButtonStyle}"/>
+                    <Button Content="✖" FontFamily="Consolas" Click="closeFindReplace_Click"
+                            Margin="0,5,5,5" Padding="5" FontSize="10" Style="{DynamicResource ButtonStyle}"/>
+                </StackPanel>
+            </StackPanel>
+
+            <StackPanel Name="replacePanelParent" Orientation="Horizontal" HorizontalAlignment="Right" Visibility="Collapsed">
+                
+                <TextBlock Foreground="{DynamicResource foreColorDark}">Replace</TextBlock>
+                
+                <StackPanel Name="replacePanel" Orientation="Horizontal" HorizontalAlignment="Right"
+                            Margin="0" Width="{Binding Width, ElementName=findPanel}"
+                            Background="{DynamicResource backColorDark}">
+                    <Border BorderBrush="{DynamicResource backColorLight}"
+                            BorderThickness="1" CornerRadius="2" Margin="0,5,5,5">
+                        <TextBox Name="txtReplace" FontSize="14" Width="180" TextAlignment="Right"
+                                 Background="{DynamicResource backColorLight}"
+                                 Foreground="{DynamicResource foreColorDark}"/>
+                    </Border>
+                    <Button Content="Next" Margin="0,5,5,5" Padding="5" FontSize="10"
+                            Click="replaceNext_Click"
+                            Style="{DynamicResource ButtonStyle}"/>
+                    <Button Content="All" Margin="0,5,5,5" Padding="5" FontSize="10"
+                            Click="replaceAll_Click"
+                            Style="{DynamicResource ButtonStyle}"/>
+                </StackPanel>
+            </StackPanel>
+            
+            <StackPanel Name="gotoPanel" Orientation="Horizontal" HorizontalAlignment="Right" Visibility="Collapsed">
+                <TextBlock Foreground="{DynamicResource foreColorDark}">Go to line</TextBlock>
+                <Border BorderBrush="{DynamicResource backColorLight}"
+                            BorderThickness="1" CornerRadius="2" Margin="0,5,5,5">
+                    <TextBox Name="txtGoto" FontSize="14" Width="180" TextAlignment="Right"
+                                 Background="{DynamicResource backColorLight}"
+                                 Foreground="{DynamicResource foreColorDark}">
+                        <TextBox.InputBindings>
+                            <KeyBinding Key="Enter" Command="{Binding gotoGoCommand}"/>
+                            <KeyBinding Key="Return" Command="{Binding gotoGoCommand}"/>
+                        </TextBox.InputBindings>
+                    </TextBox>
                 </Border>
-                <Button Content="Next" Margin="0,5,5,5" Padding="5" FontSize="10"/>
-                <Button Content="All" Margin="0,5,5,5" Padding="5" FontSize="10"/>
-            </WrapPanel>
+                <Button Content="Go" Margin="0,5,5,5" Padding="5" FontSize="10"
+                        Click="goto_Click"
+                        Style="{DynamicResource ButtonStyle}"/>
+                <Button Content="✖" FontFamily="Consolas" Click="closeGoto_Click"
+                            Margin="0,5,5,5" Padding="5" FontSize="10" Style="{DynamicResource ButtonStyle}"/>
+            </StackPanel>
         </StackPanel>
 
         <DockPanel Name="statusBar" DockPanel.Dock="Bottom" Background="{DynamicResource backColorLight}">
@@ -224,6 +269,8 @@
                        Background="{DynamicResource backColorDark}"
                        Foreground="{DynamicResource foreColorDark}"
 					   BorderBrush="{DynamicResource backColorLight}"
+                       BorderThickness="0,1,0,0"
+                       Margin="0"
                        TextChanged="textbox_TextChanged" 
                        Style="{DynamicResource TextEditorStyle}"/>
     </DockPanel>
