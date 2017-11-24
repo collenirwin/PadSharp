@@ -473,6 +473,7 @@ namespace PadSharp
             findPanelParent.Visibility = Visibility.Visible;
             replacePanelParent.Visibility = Visibility.Collapsed;
             txtFind.Focus();
+            txtFind.SelectAll();
         }
 
         private void FindReplace_Command()
@@ -484,6 +485,7 @@ namespace PadSharp
             findPanelParent.Visibility = Visibility.Visible;
             replacePanelParent.Visibility = Visibility.Visible;
             txtFind.Focus();
+            txtFind.SelectAll();
         }
 
         private void Goto_Command()
@@ -639,20 +641,28 @@ namespace PadSharp
 
         #region Find
 
-        private bool findNext(string text, int start)
+        private bool findNext(string text, int start, bool lookback = false)
         {
             try
             {
-                var regex = new Regex(text, matchCase.IsChecked == true
-                ? RegexOptions.None
-                : RegexOptions.IgnoreCase);
+                var options = matchCase.IsChecked == true
+                    ? RegexOptions.None
+                    : RegexOptions.IgnoreCase;
 
-                var match = regex.Match(textbox.Text, start);
+                string allText = textbox.Text;
+
+                if (lookback)
+                {
+                    options |= RegexOptions.RightToLeft;
+                }
+
+                var regex = new Regex(text, options);
+                var match = regex.Match(allText, start);
 
                 if (!match.Success)
                 {
-                    // loop around and start from 0
-                    match = regex.Match(textbox.Text, 0);
+                    // loop around and start from the opposite end
+                    match = regex.Match(textbox.Text, lookback ? textbox.Text.Length : 0);
                 }
 
                 if (match.Success)
@@ -674,31 +684,45 @@ namespace PadSharp
             }
         }
 
-        private void txtFind_TextChanged(object sender, RoutedEventArgs e)
+        private bool findHelper(int start, bool lookback = false)
         {
-            // find first instance of text entered
-            if (findNext(txtFind.Text, 0)) // found
+            bool found = findNext(txtFind.Text, start, lookback);
+
+            if (found) // found
             {
+                // normal text color
                 txtFind.Foreground = (Brush)FindResource("foreColorDark");
             }
             else // not found
             {
+                // red text color
                 txtFind.Foreground = Brushes.LightSalmon;
             }
+
+            return found;
+        }
+
+        private void txtFind_TextChanged(object sender, RoutedEventArgs e)
+        {
+            // find first instance of text entered
+            findHelper(0);
         }
 
         private void findUp_Click(object sender, RoutedEventArgs e)
         {
-
+            // look back from selection
+            findHelper(textbox.SelectionStart, true);
         }
 
         private void findDown_Click(object sender, RoutedEventArgs e)
         {
-
+            // look forward from selection
+            findHelper(textbox.SelectionStart + textbox.SelectionLength);
         }
 
         private void closeFindReplace_Click(object sender, RoutedEventArgs e)
         {
+            // close find and replace
             findPanelParent.Visibility = Visibility.Collapsed;
             replacePanelParent.Visibility = Visibility.Collapsed;
         }

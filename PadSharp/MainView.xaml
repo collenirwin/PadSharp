@@ -166,7 +166,7 @@
                 <TextBlock Foreground="{DynamicResource foreColorDark}">Find</TextBlock>
                 
                 <StackPanel Name="findPanel" Orientation="Horizontal" HorizontalAlignment="Right"
-                            Margin="0" Width="260" 
+                            Margin="0" Width="262" 
                             Background="{DynamicResource backColorDark}">
                     <Border BorderBrush="{DynamicResource backColorLight}" 
                             BorderThickness="1" CornerRadius="2" Margin="0,5,5,5">
@@ -176,11 +176,11 @@
                                  TextChanged="txtFind_TextChanged"/>
                     </Border>
                     <Button Content="˄" FontFamily="Consolas" FontWeight="Bold" Click="findUp_Click"
-                            Margin="0,5,5,5" Padding="6,8,6,4" FontSize="10" Style="{DynamicResource ButtonStyle}"/>
+                            Margin="0,5,5,5" Padding="4,6,4,0" Width="20" FontSize="14" Style="{DynamicResource ButtonStyle}"/>
                     <Button Content="˅" FontFamily="Consolas" FontWeight="Bold" Click="findDown_Click"
-                            Margin="0,5,5,5" Padding="6,8,6,4" FontSize="10" Style="{DynamicResource ButtonStyle}"/>
+                            Margin="0,5,5,5" Padding="4,6,4,0" Width="20" FontSize="14" Style="{DynamicResource ButtonStyle}"/>
                     <Button Content="✖" FontFamily="Consolas" Click="closeFindReplace_Click"
-                            Margin="0,5,5,5" Padding="5" FontSize="10" Style="{DynamicResource ButtonStyle}"/>
+                            Margin="0,5,5,5" Padding="0,0,0,0" Width="20" FontSize="10" Style="{DynamicResource ButtonStyle}"/>
                 </StackPanel>
             </StackPanel>
 
