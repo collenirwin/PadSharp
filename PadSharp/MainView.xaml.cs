@@ -773,15 +773,6 @@ namespace PadSharp
 
         private void replaceAll_Click(object sender, RoutedEventArgs e)
         {
-            // if the replace is the same as the find
-            if (txtFind.Text == txtReplace.Text || 
-                (matchCase.IsChecked == false && txtFind.Text.ToLower() == txtReplace.Text.ToLower()))
-            {
-                // no can do
-                Alert.showDialog("Your replace text can't be the same as your find text.", Global.APP_NAME);
-                return;
-            }
-
             // count up all the matches of the pattern in txtFind
             int count = Regex.Matches(textbox.Text, txtFind.Text,
                 matchCase.IsChecked == true
@@ -795,7 +786,10 @@ namespace PadSharp
                 Global.APP_NAME, "OK", "Cancel") == AlertResult.button1Clicked)
             {
                 // replace it ALL
-                while (replaceHelper());
+                for (int x = 0; x < count; x++)
+                {
+                    replaceHelper();
+                }
             }
         }
 
