@@ -92,7 +92,7 @@
                         <MenuItem.Header>
                             <TextBlock Text="Insert" VerticalAlignment="Center"/>
                         </MenuItem.Header>
-                        <MenuItem Header="Today's Date" InputGestureText="Ctrl+D" Command="{Binding todaysDateCommand}"/>
+                        <MenuItem Header="Today's Date" InputGestureText="Ctrl+M" Command="{Binding todaysDateCommand}"/>
                         <MenuItem Header="Current Time" InputGestureText="Ctrl+T" Command="{Binding currentTimeCommand}"/>
                         <MenuItem Header="Date and Time" Command="{Binding dateAndTimeCommand}"/>
                     </MenuItem>
@@ -274,6 +274,19 @@
                        BorderThickness="0,1,0,0"
                        Margin="0"
                        TextChanged="textbox_TextChanged" 
-                       Style="{DynamicResource TextEditorStyle}"/>
+                       Style="{DynamicResource TextEditorStyle}">
+            <ae:TextEditor.ContextMenu>
+                <ContextMenu Background="{DynamicResource backColorLight}" Margin="-34,0,-25,0">
+                    <MenuItem Header="Cut" InputGestureText="Ctrl+X" Command="{Binding cutCommand}"/>
+                    <MenuItem Header="Copy" InputGestureText="Ctrl+C" Command="{Binding copyCommand}"/>
+                    <MenuItem Header="Paste" InputGestureText="Ctrl+V" Command="{Binding pasteCommand}"/>
+                    <Separator/>
+                    <MenuItem Header="Insert Date" InputGestureText="Ctrl+M" Command="{Binding todaysDateCommand}"/>
+                    <MenuItem Header="Insert Time" InputGestureText="Ctrl+T" Command="{Binding currentTimeCommand}"/>
+                    <Separator/>
+                    <MenuItem Header="Select All" InputGestureText="Ctrl+A" Command="{Binding selectAllCommand}"/>
+                </ContextMenu>
+            </ae:TextEditor.ContextMenu>
+        </ae:TextEditor>
     </DockPanel>
 </Window>
