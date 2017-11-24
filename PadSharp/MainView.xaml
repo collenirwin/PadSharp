@@ -159,7 +159,7 @@
             
             <StackPanel Name="findPanelParent" Orientation="Horizontal" HorizontalAlignment="Right" Visibility="Collapsed">
 
-                <CheckBox Name="matchCase" Foreground="{DynamicResource foreColorDark}" FlowDirection="RightToLeft" Margin="9">
+                <CheckBox Name="matchCase" Foreground="{DynamicResource foreColorDark}" FlowDirection="RightToLeft" IsTabStop="False" Margin="9">
                     Match Case
                 </CheckBox>
 
@@ -175,11 +175,11 @@
                                  Foreground="{DynamicResource foreColorDark}"
                                  TextChanged="txtFind_TextChanged"/>
                     </Border>
-                    <Button Content="˄" FontFamily="Consolas" FontWeight="Bold" Click="findUp_Click"
+                    <Button Content="˄" FontFamily="Consolas" FontWeight="Bold" Click="findUp_Click" IsTabStop="False"
                             Margin="0,5,5,5" Padding="4,6,4,0" Width="20" FontSize="14" Style="{DynamicResource ButtonStyle}"/>
-                    <Button Content="˅" FontFamily="Consolas" FontWeight="Bold" Click="findDown_Click"
+                    <Button Content="˅" FontFamily="Consolas" FontWeight="Bold" Click="findDown_Click" IsTabStop="False"
                             Margin="0,5,5,5" Padding="4,6,4,0" Width="20" FontSize="14" Style="{DynamicResource ButtonStyle}"/>
-                    <Button Content="✖" FontFamily="Consolas" Click="closeFindReplace_Click"
+                    <Button Content="✖" FontFamily="Consolas" Click="closeFindReplace_Click" IsTabStop="False"
                             Margin="0,5,5,5" Padding="0,0,0,0" Width="20" FontSize="10" Style="{DynamicResource ButtonStyle}"/>
                 </StackPanel>
             </StackPanel>
@@ -199,9 +199,11 @@
                     </Border>
                     <Button Content="Next" Margin="0,5,5,5" Padding="5" FontSize="10"
                             Click="replaceNext_Click"
+                            IsTabStop="False"
                             Style="{DynamicResource ButtonStyle}"/>
                     <Button Content="All" Margin="0,5,5,5" Padding="5" FontSize="10"
                             Click="replaceAll_Click"
+                            IsTabStop="False"
                             Style="{DynamicResource ButtonStyle}"/>
                 </StackPanel>
             </StackPanel>

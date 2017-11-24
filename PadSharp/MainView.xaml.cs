@@ -731,14 +731,59 @@ namespace PadSharp
 
         #region Replace
 
+        private bool replaceHelper()
+        {
+            // select the text to replace
+            if (findHelper(textbox.SelectionStart + textbox.SelectionLength))
+            {
+                // get starting point
+                int start = textbox.SelectionStart;
+
+                // replace the selection
+                textbox.Text = textbox.Text
+                    .Remove(start, textbox.SelectionLength)
+                    .Insert(start, txtReplace.Text);
+
+                // place our caret after the inserted replacement
+                textbox.SelectionStart = start + txtReplace.Text.Length;
+                return true;
+            }
+
+            // nothing to replace
+            return false;
+        }
+
         private void replaceNext_Click(object sender, RoutedEventArgs e)
         {
-
+            replaceHelper();
         }
 
         private void replaceAll_Click(object sender, RoutedEventArgs e)
         {
+            // if the replace is the same as the find
+            if (txtFind.Text == txtReplace.Text || 
+                (matchCase.IsChecked == false && txtFind.Text.ToLower() == txtReplace.Text.ToLower()))
+            {
+                // no can do
+                Alert.showDialog("Your replace text can't be the same as your find text.", Global.APP_NAME);
+                return;
+            }
 
+            // count up all the matches of the pattern in txtFind
+            int count = Regex.Matches(textbox.Text, txtFind.Text,
+                matchCase.IsChecked == true
+                    ? RegexOptions.None
+                    : RegexOptions.IgnoreCase).Count;
+
+            // if there's something to replace, ask: are you sure???
+            if (count > 0 && 
+                Alert.showDialog(
+                string.Format("Replace {0} instances of {1} with {2}?", count, txtFind.Text, txtReplace.Text), 
+                Global.APP_NAME, "OK", "Cancel") == AlertResult.button1Clicked)
+            {
+                // replace it ALL
+                while (replaceHelper());
+            }
         }
 
         #endregion
@@ -754,7 +799,7 @@ namespace PadSharp
             }
             else
             {
-                Alert.showDialog("Line number must be an integer.", "Pad#");
+                Alert.showDialog("Line number must be an integer.", Global.APP_NAME);
                 txtGoto.Focus();
                 txtGoto.SelectAll();
             }
