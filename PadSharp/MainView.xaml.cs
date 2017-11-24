@@ -472,8 +472,7 @@ namespace PadSharp
             // find open, replace closed
             findPanelParent.Visibility = Visibility.Visible;
             replacePanelParent.Visibility = Visibility.Collapsed;
-            txtFind.Focus();
-            txtFind.SelectAll();
+            openFindHelper();
         }
 
         private void FindReplace_Command()
@@ -484,8 +483,7 @@ namespace PadSharp
             // both find and replace open
             findPanelParent.Visibility = Visibility.Visible;
             replacePanelParent.Visibility = Visibility.Visible;
-            txtFind.Focus();
-            txtFind.SelectAll();
+            openFindHelper();
         }
 
         private void Goto_Command()
@@ -631,6 +629,21 @@ namespace PadSharp
                     child.IsChecked = true;
                 }
             }
+        }
+
+        /// <summary>
+        /// put selected text into find box, select it
+        /// </summary>
+        private void openFindHelper()
+        {
+            // put selected text into find box
+            if (textbox.SelectionLength > 0)
+            {
+                txtFind.Text = textbox.SelectedText;
+            }
+
+            txtFind.Focus();
+            txtFind.SelectAll();
         }
 
         #endregion

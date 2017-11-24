@@ -281,6 +281,9 @@
                     <MenuItem Header="Copy" InputGestureText="Ctrl+C" Command="{Binding copyCommand}"/>
                     <MenuItem Header="Paste" InputGestureText="Ctrl+V" Command="{Binding pasteCommand}"/>
                     <Separator/>
+                    <MenuItem Header="Find" InputGestureText="Ctrl+F" Command="{Binding findCommand}"/>
+                    <MenuItem Header="Find + Replace" InputGestureText="Ctrl+H" Command="{Binding findAndReplaceCommand}"/>
+                    <Separator/>
                     <MenuItem Header="Insert Date" InputGestureText="Ctrl+M" Command="{Binding todaysDateCommand}"/>
                     <MenuItem Header="Insert Time" InputGestureText="Ctrl+T" Command="{Binding currentTimeCommand}"/>
                     <Separator/>
