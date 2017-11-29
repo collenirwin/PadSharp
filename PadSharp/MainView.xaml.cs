@@ -495,6 +495,7 @@ namespace PadSharp
             // open goto
             gotoPanel.Visibility = Visibility.Visible;
             txtGoto.Focus();
+            txtGoto.SelectAll();
         }
 
         private void SelectAll_Command()
