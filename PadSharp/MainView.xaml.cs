@@ -379,6 +379,8 @@ namespace PadSharp
         {
             var openDialog = new OpenFileDialog();
             openDialog.Title = "Open";
+            openDialog.DefaultExt = ".txt";
+            openDialog.Filter = "Text Files|*.txt|All Files|*.*";
             openDialog.Multiselect = false;
             openDialog.ShowDialog();
 
@@ -891,6 +893,9 @@ namespace PadSharp
         {
             var saveDialog = new SaveFileDialog();
             saveDialog.Title = "Save As";
+            saveDialog.DefaultExt = ".txt";
+            saveDialog.Filter = "Text Files|*.txt|All Files|*.*";
+            saveDialog.AddExtension = true;
             saveDialog.ShowDialog();
 
             string path = saveDialog.FileName;

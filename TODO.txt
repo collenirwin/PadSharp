@@ -2,4 +2,3 @@ change setup file description
 add topmost toggle
 add version checking
 add dictionary lookup
-add file extensions to ofd and sfd
