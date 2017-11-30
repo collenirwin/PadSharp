@@ -1,5 +1,3 @@
-change settings file dir
-finish migration of find, replace, goto to other file
 change setup file description
 add topmost toggle
 add version checking

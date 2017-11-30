@@ -1,17 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using ICSharpCode.AvalonEdit;
+﻿using ICSharpCode.AvalonEdit;
 using System.Text.RegularExpressions;
-using System.Windows.Controls;
 
 namespace PadSharp
 {
     public static class TextEditorUtils
     {
-        public static bool findNext(TextEditor textbox, string text, 
+        /// <summary>
+        /// Attempts to find the next match of the specified Regular Expression
+        /// within textbox.Text and highlight it.
+        /// </summary>
+        /// <param name="textbox">TextEditor to search in</param>
+        /// <param name="regex">Regular Expression to apply to textbox.Text</param>
+        /// <param name="start">Starting point in textbox.Text</param>
+        /// <param name="matchCase">use IgnoreCase flag?</param>
+        /// <param name="lookback">search back from this point?</param>
+        /// <returns>true if found, false if regex is incorrect or if not found</returns>
+        public static bool findNext(TextEditor textbox, string regex, 
             int start, bool matchCase, bool lookback = false)
         {
             try
@@ -27,13 +31,13 @@ namespace PadSharp
                     options |= RegexOptions.RightToLeft;
                 }
 
-                var regex = new Regex(text, options);
-                var match = regex.Match(allText, start);
+                var _regex = new Regex(regex, options);
+                var match = _regex.Match(allText, start);
 
                 if (!match.Success)
                 {
                     // loop around and start from the opposite end
-                    match = regex.Match(textbox.Text, lookback ? textbox.Text.Length : 0);
+                    match = _regex.Match(textbox.Text, lookback ? textbox.Text.Length : 0);
                 }
 
                 if (match.Success)
@@ -55,10 +59,35 @@ namespace PadSharp
             }
         }
 
-        //public static bool replaceNext(TextEditor textbox, string text, 
-        //    int start, bool matchCase, bool lookback = false)
-        //{
+        /// <summary>
+        /// Attempts to find the next match of the specified Regular Expression
+        /// within textbox.Text and replace it with replacement.
+        /// </summary>
+        /// <param name="textbox">TextEditor to search in</param>
+        /// <param name="regex">Regular Expression to apply to textbox.Text</param>
+        /// <param name="start">Starting point in textbox.Text</param>
+        /// <param name="matchCase">use IgnoreCase flag?</param>
+        /// <param name="lookback">search back from this point?</param>
+        /// <returns>true if found, false if regex is incorrect or if not found</returns>
+        public static bool replaceNext(TextEditor textbox, string regex, string replacement,
+            int start, bool matchCase, bool lookback = false)
+        {
+            if (findNext(textbox, regex, start, matchCase, lookback))
+            {
+                int oldStart = textbox.SelectionStart;
 
-        //}
+                // replace the selection
+                textbox.Text = textbox.Text
+                    .Remove(oldStart, textbox.SelectionLength)
+                    .Insert(oldStart, replacement);
+
+                // place our caret after the inserted replacement
+                textbox.SelectionStart = oldStart + replacement.Length;
+                return true;
+            }
+
+            // nothing to replace
+            return false;
+        }
     }
 }

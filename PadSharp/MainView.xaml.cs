@@ -1,6 +1,5 @@
 ﻿using BoinWPF;
 using BoinWPF.Themes;
-using ICSharpCode.AvalonEdit.Search;
 using Microsoft.Win32;
 using System;
 using System.ComponentModel;
@@ -655,12 +654,9 @@ namespace PadSharp
 
         #region Find
 
-        private bool findHelper(int start, bool lookback = false)
+        private void setFoundForeground(bool wasFound)
         {
-            bool found = TextEditorUtils.findNext(textbox, txtFind.Text, 
-                start, matchCase.IsChecked == true, lookback);
-
-            if (found) // found
+            if (wasFound) // found
             {
                 // normal text color
                 txtFind.Foreground = (Brush)FindResource("foreColorDark");
@@ -670,6 +666,14 @@ namespace PadSharp
                 // red text color
                 txtFind.Foreground = Brushes.LightSalmon;
             }
+        }
+
+        private bool findHelper(int start, bool lookback = false)
+        {
+            bool found = TextEditorUtils.findNext(textbox, txtFind.Text, 
+                start, matchCase.IsChecked == true, lookback);
+
+            setFoundForeground(found);
 
             return found;
         }
@@ -705,24 +709,12 @@ namespace PadSharp
 
         private bool replaceHelper()
         {
-            // select the text to replace
-            if (findHelper(textbox.SelectionStart + textbox.SelectionLength))
-            {
-                // get starting point
-                int start = textbox.SelectionStart;
+            bool replaced = TextEditorUtils.replaceNext(textbox, txtFind.Text, txtReplace.Text, 
+                textbox.SelectionStart + textbox.SelectionLength, matchCase.IsChecked == true);
 
-                // replace the selection
-                textbox.Text = textbox.Text
-                    .Remove(start, textbox.SelectionLength)
-                    .Insert(start, txtReplace.Text);
+            setFoundForeground(replaced);
 
-                // place our caret after the inserted replacement
-                textbox.SelectionStart = start + txtReplace.Text.Length;
-                return true;
-            }
-
-            // nothing to replace
-            return false;
+            return replaced;
         }
 
         private void replaceNext_Click(object sender, RoutedEventArgs e)
