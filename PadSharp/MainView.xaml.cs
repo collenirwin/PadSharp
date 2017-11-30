@@ -655,52 +655,10 @@ namespace PadSharp
 
         #region Find
 
-        private bool findNext(string text, int start, bool lookback = false)
-        {
-            try
-            {
-                var options = matchCase.IsChecked == true
-                    ? RegexOptions.None
-                    : RegexOptions.IgnoreCase;
-
-                string allText = textbox.Text;
-
-                if (lookback)
-                {
-                    options |= RegexOptions.RightToLeft;
-                }
-
-                var regex = new Regex(text, options);
-                var match = regex.Match(allText, start);
-
-                if (!match.Success)
-                {
-                    // loop around and start from the opposite end
-                    match = regex.Match(textbox.Text, lookback ? textbox.Text.Length : 0);
-                }
-
-                if (match.Success)
-                {
-                    // select the matched text
-                    textbox.Select(match.Index, match.Length);
-
-                    // scroll to the matched text
-                    var location = textbox.Document.GetLocation(match.Index);
-                    textbox.ScrollTo(location.Line, location.Column);
-                }
-
-                return match.Success;
-            }
-            catch
-            {
-                // invalid regular expression
-                return false;
-            }
-        }
-
         private bool findHelper(int start, bool lookback = false)
         {
-            bool found = findNext(txtFind.Text, start, lookback);
+            bool found = TextEditorUtils.findNext(textbox, txtFind.Text, 
+                start, matchCase.IsChecked == true, lookback);
 
             if (found) // found
             {
