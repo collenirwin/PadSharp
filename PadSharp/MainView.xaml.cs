@@ -257,6 +257,7 @@ namespace PadSharp
             showLineNumbersDropdown.IsChecked = settings.showLineNumbers;
             showStatusBarDropdown.IsChecked = settings.showStatusBar;
             wordWrapDropdown.IsChecked = settings.wordWrap;
+            topmostDrownDown.IsChecked = settings.topmost;
 
             // call toggle events? ...
             showLineNumbers_Checked(null, null);
@@ -570,6 +571,12 @@ namespace PadSharp
         {
             textbox.WordWrap = wordWrapDropdown.IsChecked;
             settings.wordWrap = wordWrapDropdown.IsChecked;
+        }
+
+        private void topmost_Checked(object sender, RoutedEventArgs e)
+        {
+            settings.topmost = topmostDrownDown.IsChecked;
+            this.Topmost = topmostDrownDown.IsChecked;
         }
 
         #endregion

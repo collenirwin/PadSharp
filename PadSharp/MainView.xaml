@@ -138,6 +138,8 @@
                                   IsCheckable="True" Checked="showStatusBar_Checked" Unchecked="showStatusBar_Checked"/>
                         <MenuItem Header="Word Wrap" Name="wordWrapDropdown" 
                                   IsCheckable="True" Checked="wordWrap_Checked" Unchecked="wordWrap_Checked"/>
+                        <MenuItem Header="Topmost" Name="topmostDrownDown" 
+                                  IsCheckable="True" Checked="topmost_Checked" Unchecked="topmost_Checked"/>
                     </MenuItem>
 
                     <MenuItem Height="{Binding Height, ElementName=menu}"

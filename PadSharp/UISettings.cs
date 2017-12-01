@@ -43,6 +43,7 @@ namespace PadSharp
         public bool showLineNumbers = true;
         public bool showStatusBar = true;
         public bool wordWrap = true;
+        public bool topmost = false;
 
         /// <summary>
         /// Creates the file's parent directory if it hasn't been created,
