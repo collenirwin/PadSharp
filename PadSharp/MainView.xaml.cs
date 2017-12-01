@@ -204,9 +204,8 @@ namespace PadSharp
             // if settings couldn't load
             if (settings == null)
             {
-                Global.actionMessage("Failed to load settings.json",
-                    "settings.json is contained within " +
-                    Global.APP_NAME + "'s root directory. A potential fix may be to run " +
+                Global.actionMessage("Failed to load settings.json.", 
+                    "A potential fix may be to run " +
                     Global.APP_NAME + " as an administrator.");
 
                 // call constructor for default settings
@@ -821,8 +820,7 @@ namespace PadSharp
                 if (settings != null && !settings.save())
                 {
                     Global.actionMessage("Failed to save settings.json",
-                        "settings.json saves to " +
-                        Global.APP_NAME + "'s root directory. A potential fix may be to run " +
+                        "A potential fix may be to run " +
                         Global.APP_NAME + " as an administrator.");
                 }
             }

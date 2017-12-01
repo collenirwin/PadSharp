@@ -5,7 +5,7 @@ namespace PadSharp
     public static class Global
     {
         public const string APP_NAME = "Pad#";
-        public const string VERSION = "1.0.4";
+        public const string VERSION = "1.0.5";
 
         public static void actionMessage(string action, string details)
         {
