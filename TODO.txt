@@ -1,3 +1,1 @@
-change setup file description
-add version checking
-add dictionary lookup
+add version checking?

@@ -7,7 +7,7 @@
 ; (To generate a new GUID, click Tools | Generate GUID inside the IDE.)
 AppId={{D0D04B0B-3C2F-47BD-A850-566DE9C4C648}
 AppName=Pad#
-AppVersion=1.0.1
+AppVersion=1.1.1
 ;AppVerName=Pad# 1.0.1
 AppPublisher=Collen Irwin
 AppPublisherURL=https://github.com/collenirwin
@@ -35,13 +35,14 @@ Source: "G:\git\PadSharp\PadSharp\bin\Debug\BoinWPF.dll"; DestDir: "{app}"; Flag
 Source: "G:\git\PadSharp\PadSharp\bin\Debug\ICSharpCode.AvalonEdit.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "G:\git\PadSharp\PadSharp\bin\Debug\ICSharpCode.AvalonEdit.xml"; DestDir: "{app}"; Flags: ignoreversion
 Source: "G:\git\PadSharp\PadSharp\bin\Debug\inno_license.txt"; DestDir: "{app}"; Flags: ignoreversion
+Source: "G:\git\PadSharp\PadSharp\bin\Debug\dictionary_license.txt"; DestDir: "{app}"; Flags: ignoreversion
 Source: "G:\git\PadSharp\PadSharp\bin\Debug\Newtonsoft.Json.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "G:\git\PadSharp\PadSharp\bin\Debug\Newtonsoft.Json.xml"; DestDir: "{app}"; Flags: ignoreversion
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Registry]
 Root: HKCR; Subkey: ".txt";                             ValueData: "Pad#";          Flags: uninsdeletevalue; ValueType: string;  ValueName: ""
-Root: HKCR; Subkey: "Pad#";                     ValueData: "Program Pad#";  Flags: uninsdeletekey;   ValueType: string;  ValueName: ""
+Root: HKCR; Subkey: "Pad#";                     ValueData: "Text File (.txt)";  Flags: uninsdeletekey;   ValueType: string;  ValueName: ""
 Root: HKCR; Subkey: "Pad#\DefaultIcon";         ValueData: "{app}\PadSharp.exe,0";               ValueType: string;  ValueName: ""
 Root: HKCR; Subkey: "Pad#\shell\open\command";  ValueData: """{app}\PadSharp.exe"" ""%1""";  ValueType: string;  ValueName: ""
 
