@@ -263,7 +263,7 @@ namespace PadSharp
             showLineNumbersDropdown.IsChecked = settings.showLineNumbers;
             showStatusBarDropdown.IsChecked = settings.showStatusBar;
             wordWrapDropdown.IsChecked = settings.wordWrap;
-            topmostDrownDown.IsChecked = settings.topmost;
+            topmostDrowndown.IsChecked = settings.topmost;
 
             // call toggle events? ...
             showLineNumbers_Checked(null, null);
@@ -324,10 +324,21 @@ namespace PadSharp
 
         private void fontDropdown_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            // set textbox and dropdown font to the new selected font
-            var font = new FontFamily((fontDropdown.SelectedItem as ComboBoxItem).Content.ToString());
-            textbox.FontFamily = font;
-            fontDropdown.FontFamily = font;
+            try
+            {
+                // set textbox and dropdown font to the new selected font
+                var font = new FontFamily((fontDropdown.SelectedItem as ComboBoxItem).Content.ToString());
+                textbox.FontFamily = font;
+                fontDropdown.FontFamily = font;
+            }
+            catch
+            {
+                // default to 0
+                if (fontDropdown.Items.Count != 0)
+                {
+                    fontDropdown.SelectedIndex = 0;
+                }
+            }
         }
 
         private void fontSizeDropdown_Changed(object sender, EventArgs e)
@@ -336,6 +347,7 @@ namespace PadSharp
             if (double.TryParse(fontSizeDropdown.Text, out size))
             {
                 fontSize = size;
+                fontSizeDropdown.Text = fontSize.ToString();
             }
             else
             {
@@ -594,15 +606,37 @@ namespace PadSharp
         private void date_Checked(object sender, RoutedEventArgs e)
         {
             var item = sender as MenuItem;
-            uncheckSiblings(item);
             settings.dateFormat = item.Header.ToString();
+            uncheckSiblings(item);
+        }
+
+        private void date_Unchecked(object sender, RoutedEventArgs e)
+        {
+            var item = sender as MenuItem;
+            if (settings.dateFormat == item.Header.ToString())
+            {
+                item.Checked -= date_Checked;
+                item.IsChecked = true;
+                item.Checked += date_Checked;
+            }
         }
 
         private void time_Checked(object sender, RoutedEventArgs e)
         {
             var item = sender as MenuItem;
-            uncheckSiblings(item);
             settings.timeFormat = item.Header.ToString();
+            uncheckSiblings(item);
+        }
+
+        private void time_Unchecked(object sender, RoutedEventArgs e)
+        {
+            var item = sender as MenuItem;
+            if (settings.timeFormat == item.Header.ToString())
+            {
+                item.Checked -= time_Checked;
+                item.IsChecked = true;
+                item.Checked += time_Checked;
+            }
         }
 
         private void showLineNumbers_Checked(object sender, RoutedEventArgs e)
@@ -625,8 +659,8 @@ namespace PadSharp
 
         private void topmost_Checked(object sender, RoutedEventArgs e)
         {
-            settings.topmost = topmostDrownDown.IsChecked;
-            this.Topmost = topmostDrownDown.IsChecked;
+            settings.topmost = topmostDrowndown.IsChecked;
+            this.Topmost = topmostDrowndown.IsChecked;
         }
 
         #endregion

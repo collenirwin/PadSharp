@@ -110,29 +110,29 @@
                             <MenuItem Header="Dark" IsCheckable="True" Checked="theme_Checked" Style="{StaticResource checkMenu}"/>
                         </MenuItem>
                         <MenuItem Header="Date Format" Name="dateFormatMenu">
-                            <MenuItem Header="dddd, MMMM dd, yyyy" IsCheckable="True" Checked="date_Checked" Style="{StaticResource checkMenu}"/>
-                            <MenuItem Header="dddd, MMMM d, yyyy" IsCheckable="True" Checked="date_Checked" Style="{StaticResource checkMenu}"/>
-                            <MenuItem Header="MMMM dd yyyy" IsCheckable="True" Checked="date_Checked" Style="{StaticResource checkMenu}"/>
-                            <MenuItem Header="MMMM d yyyy" IsCheckable="True" Checked="date_Checked" Style="{StaticResource checkMenu}"/>
-                            <MenuItem Header="MMM-dd-yyyy" IsCheckable="True" Checked="date_Checked" Style="{StaticResource checkMenu}"/>
-                            <MenuItem Header="MMM-dd-yy" IsCheckable="True" Checked="date_Checked" Style="{StaticResource checkMenu}"/>
-                            <MenuItem Header="MMM-d-yyyy" IsCheckable="True" Checked="date_Checked" Style="{StaticResource checkMenu}"/>
-                            <MenuItem Header="MMM-d-yy" IsCheckable="True" Checked="date_Checked" Style="{StaticResource checkMenu}"/>
-                            <MenuItem Header="MM/dd/yyyy" IsCheckable="True" Checked="date_Checked" Style="{StaticResource checkMenu}"/>
-                            <MenuItem Header="MM/dd/yy" IsCheckable="True" Checked="date_Checked" Style="{StaticResource checkMenu}"/>
-                            <MenuItem Header="M/d/yyyy" IsCheckable="True" Checked="date_Checked" Style="{StaticResource checkMenu}"/>
-                            <MenuItem Header="M/d/yy" IsCheckable="True" Checked="date_Checked" Style="{StaticResource checkMenu}"/>
+                            <MenuItem Header="dddd, MMMM dd, yyyy" IsCheckable="True" Checked="date_Checked" Unchecked="date_Unchecked" Style="{StaticResource checkMenu}"/>
+                            <MenuItem Header="dddd, MMMM d, yyyy" IsCheckable="True" Checked="date_Checked" Unchecked="date_Unchecked" Style="{StaticResource checkMenu}"/>
+                            <MenuItem Header="MMMM dd yyyy" IsCheckable="True" Checked="date_Checked" Unchecked="date_Unchecked" Style="{StaticResource checkMenu}"/>
+                            <MenuItem Header="MMMM d yyyy" IsCheckable="True" Checked="date_Checked" Unchecked="date_Unchecked" Style="{StaticResource checkMenu}"/>
+                            <MenuItem Header="MMM-dd-yyyy" IsCheckable="True" Checked="date_Checked" Unchecked="date_Unchecked" Style="{StaticResource checkMenu}"/>
+                            <MenuItem Header="MMM-dd-yy" IsCheckable="True" Checked="date_Checked" Unchecked="date_Unchecked" Style="{StaticResource checkMenu}"/>
+                            <MenuItem Header="MMM-d-yyyy" IsCheckable="True" Checked="date_Checked" Unchecked="date_Unchecked" Style="{StaticResource checkMenu}"/>
+                            <MenuItem Header="MMM-d-yy" IsCheckable="True" Checked="date_Checked" Unchecked="date_Unchecked" Style="{StaticResource checkMenu}"/>
+                            <MenuItem Header="MM/dd/yyyy" IsCheckable="True" Checked="date_Checked" Unchecked="date_Unchecked" Style="{StaticResource checkMenu}"/>
+                            <MenuItem Header="MM/dd/yy" IsCheckable="True" Checked="date_Checked" Unchecked="date_Unchecked" Style="{StaticResource checkMenu}"/>
+                            <MenuItem Header="M/d/yyyy" IsCheckable="True" Checked="date_Checked" Unchecked="date_Unchecked" Style="{StaticResource checkMenu}"/>
+                            <MenuItem Header="M/d/yy" IsCheckable="True" Checked="date_Checked" Unchecked="date_Unchecked" Style="{StaticResource checkMenu}"/>
                         </MenuItem>
                         <MenuItem Header="Time Format" Name="timeFormatMenu">
-                            <MenuItem Header="HH:mm:ss" IsCheckable="True" Checked="time_Checked" Style="{StaticResource checkMenu}"/>
-                            <MenuItem Header="hh:mm:ss tt" IsCheckable="True" Checked="time_Checked" Style="{StaticResource checkMenu}"/>
-                            <MenuItem Header="hh:mm:ss" IsCheckable="True" Checked="time_Checked" Style="{StaticResource checkMenu}"/>
-                            <MenuItem Header="H:mm:ss" IsCheckable="True" Checked="time_Checked" Style="{StaticResource checkMenu}"/>
-                            <MenuItem Header="h:mm:ss tt" IsCheckable="True" Checked="time_Checked" Style="{StaticResource checkMenu}"/>
-                            <MenuItem Header="h:mm:ss" IsCheckable="True" Checked="time_Checked" Style="{StaticResource checkMenu}"/>
-                            <MenuItem Header="H:mm" IsCheckable="True" Checked="time_Checked" Style="{StaticResource checkMenu}"/>
-                            <MenuItem Header="h:mm tt" IsCheckable="True" Checked="time_Checked" Style="{StaticResource checkMenu}"/>
-                            <MenuItem Header="h:mm" IsCheckable="True" Checked="time_Checked" Style="{StaticResource checkMenu}"/>
+                            <MenuItem Header="HH:mm:ss" IsCheckable="True" Checked="time_Checked" Unchecked="time_Unchecked" Style="{StaticResource checkMenu}"/>
+                            <MenuItem Header="hh:mm:ss tt" IsCheckable="True" Checked="time_Checked" Unchecked="time_Unchecked" Style="{StaticResource checkMenu}"/>
+                            <MenuItem Header="hh:mm:ss" IsCheckable="True" Checked="time_Checked" Unchecked="time_Unchecked" Style="{StaticResource checkMenu}"/>
+                            <MenuItem Header="H:mm:ss" IsCheckable="True" Checked="time_Checked" Unchecked="time_Unchecked" Style="{StaticResource checkMenu}"/>
+                            <MenuItem Header="h:mm:ss tt" IsCheckable="True" Checked="time_Checked" Unchecked="time_Unchecked" Style="{StaticResource checkMenu}"/>
+                            <MenuItem Header="h:mm:ss" IsCheckable="True" Checked="time_Checked" Unchecked="time_Unchecked" Style="{StaticResource checkMenu}"/>
+                            <MenuItem Header="H:mm" IsCheckable="True" Checked="time_Checked" Unchecked="time_Unchecked" Style="{StaticResource checkMenu}"/>
+                            <MenuItem Header="h:mm tt" IsCheckable="True" Checked="time_Checked" Unchecked="time_Unchecked" Style="{StaticResource checkMenu}"/>
+                            <MenuItem Header="h:mm" IsCheckable="True" Checked="time_Checked" Unchecked="time_Unchecked" Style="{StaticResource checkMenu}"/>
                         </MenuItem>
                         <MenuItem Header="Show Line Numbers" Name="showLineNumbersDropdown" 
                                   IsCheckable="True" Checked="showLineNumbers_Checked" Unchecked="showLineNumbers_Checked"/>
@@ -140,7 +140,7 @@
                                   IsCheckable="True" Checked="showStatusBar_Checked" Unchecked="showStatusBar_Checked"/>
                         <MenuItem Header="Word Wrap" Name="wordWrapDropdown" 
                                   IsCheckable="True" Checked="wordWrap_Checked" Unchecked="wordWrap_Checked"/>
-                        <MenuItem Header="Topmost" Name="topmostDrownDown" 
+                        <MenuItem Header="Topmost" Name="topmostDrowndown" 
                                   IsCheckable="True" Checked="topmost_Checked" Unchecked="topmost_Checked"/>
                     </MenuItem>
 

@@ -82,7 +82,7 @@ namespace PadSharp
                     .Insert(oldStart, replacement);
 
                 // place our caret after the inserted replacement
-                textbox.SelectionStart = oldStart + replacement.Length;
+                textbox.CaretOffset = oldStart + replacement.Length;
                 return true;
             }
 
