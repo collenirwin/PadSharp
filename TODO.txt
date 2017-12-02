@@ -1,4 +1,3 @@
 change setup file description
-add topmost toggle
 add version checking
 add dictionary lookup

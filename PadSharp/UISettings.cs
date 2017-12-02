@@ -13,15 +13,9 @@ namespace PadSharp
     public class UISettings
     {
         public const string FILE_NAME = "settings.json";
-        public const string DIRECTORY_NAME = Global.APP_NAME;
-
-        // pad#/settings.json
-        public static readonly string COMBINED_DIR = Path.Combine(DIRECTORY_NAME, FILE_NAME);
 
         // c:/users/<user>/appdata/roaming/pad#/settings.json
-        public static readonly string FULL_PATH = Path.Combine(
-            Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), 
-            COMBINED_DIR);
+        public static readonly string FULL_PATH = Path.Combine(Global.DATA_PATH, FILE_NAME);
 
         // colors and fonts
         public Theme theme = Theme.light;
@@ -46,25 +40,6 @@ namespace PadSharp
         public bool topmost = false;
 
         /// <summary>
-        /// Creates the file's parent directory if it hasn't been created,
-        /// then creates the specified (empty) file within it
-        /// </summary>
-        /// <param name="path">Full path to file</param>
-        static void createDirectoryAndFile(string path)
-        {
-            string dirPath = Path.Combine(path, "../");
-            if (!Directory.Exists(dirPath))
-            {
-                Directory.CreateDirectory(dirPath);
-            }
-
-            using (var writer = File.CreateText(path))
-            {
-                writer.Write("");
-            }
-        }
-
-        /// <summary>
         /// Creates a UISettings object based on the JSON file at FILE_PATH
         /// </summary>
         /// <returns>null if an exception was thrown</returns>
@@ -75,7 +50,7 @@ namespace PadSharp
                 // if our file isn't there, make it
                 if (!File.Exists(FULL_PATH))
                 {
-                    createDirectoryAndFile(FULL_PATH);
+                    Global.createDirectoryAndFile(FULL_PATH);
                 }
 
                 // load json object in from FILE_PATH
@@ -115,7 +90,7 @@ namespace PadSharp
                 // if our file isn't there, make it
                 if (!File.Exists(FULL_PATH))
                 {
-                    createDirectoryAndFile(FULL_PATH);
+                    Global.createDirectoryAndFile(FULL_PATH);
                 }
 
                 // serialize to JSON, write to FULL_PATH

@@ -57,6 +57,7 @@ namespace PadSharp
         public UICommand findAndReplaceCommand { get; private set; }
         public UICommand gotoCommand { get; private set; }
         public UICommand gotoGoCommand { get; private set; }
+        public UICommand defineCommand { get; private set; }
         public UICommand selectAllCommand { get; private set; }
 
         #endregion
@@ -177,6 +178,7 @@ namespace PadSharp
             findAndReplaceCommand = new UICommand(FindReplace_Command);
             gotoCommand = new UICommand(Goto_Command);
             gotoGoCommand = new UICommand(GotoGo_Command);
+            defineCommand = new UICommand(Define_Command);
             selectAllCommand = new UICommand(SelectAll_Command);
 
             // insert
@@ -187,6 +189,9 @@ namespace PadSharp
             #endregion
 
             InitializeComponent();
+
+            // titlebar: Pad# <version #>
+            this.Title = Global.APP_NAME + " " + Global.VERSION;
 
             var args = Environment.GetCommandLineArgs();
 
@@ -212,8 +217,10 @@ namespace PadSharp
                 settings = new UISettings();
             }
 
+            // apply settings to UI
             applySettings(settings);
 
+            // set font, size
             populateFontDropdown(fontDropdown);
             selectFont(fontDropdown, textbox.FontFamily);
         }
@@ -499,6 +506,11 @@ namespace PadSharp
             txtGoto.SelectAll();
         }
 
+        private void Define_Command()
+        {
+
+        }
+
         private void SelectAll_Command()
         {
             textbox.SelectAll();
@@ -600,6 +612,11 @@ namespace PadSharp
 
         #region Helpers
 
+        /// <summary>
+        /// Insert the specified text into <see cref="textbox"/>,
+        /// then move the caret to the end of the inserted text
+        /// </summary>
+        /// <param name="text">Text to insert</param>
         private void insert(string text)
         {
             // grab position we're going to before we reset textbox.Text
@@ -612,6 +629,9 @@ namespace PadSharp
             textbox.CaretOffset = position;
         }
 
+        /// <summary>
+        /// Unchecks all of the sibling MenuItems of provided <see cref="item"/>
+        /// </summary>
         private void uncheckSiblings(MenuItem item)
         {
             // if the item is checked, loop through all its parent's children and uncheck them
@@ -628,6 +648,11 @@ namespace PadSharp
             }
         }
 
+        /// <summary>
+        /// Check all child MenuItems whose header == provided <see cref="value"/>
+        /// </summary>
+        /// <param name="parent">Parent MenuItem</param>
+        /// <param name="value">Header value</param>
         private void checkIfSameValue(MenuItem parent, string value)
         {
             foreach (MenuItem child in parent.Items)
@@ -662,6 +687,11 @@ namespace PadSharp
 
         #region Find
 
+        /// <summary>
+        /// Sets the Foreground of <see cref="txtFind"/>
+        /// to its normal color or red based on <see cref="wasFound"/>
+        /// </summary>
+        /// <param name="wasFound">Was the text found within the textbox?</param>
         private void setFoundForeground(bool wasFound)
         {
             if (wasFound) // found
@@ -789,6 +819,7 @@ namespace PadSharp
 
         private void window_MouseWheel(object sender, MouseWheelEventArgs e)
         {
+            // Ctrl+Scroll
             if ((Keyboard.Modifiers & ModifierKeys.Control) != 0)
             {
                 int delta = 1;
@@ -796,7 +827,8 @@ namespace PadSharp
                 {
                     delta = -1;
                 }
-
+                
+                // increase/decrease the font size based on whether we're scrolling up or down
                 fontSize += delta;
                 fontSizeDropdown.Text = fontSize.ToString();
             }

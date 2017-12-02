@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:ae="http://icsharpcode.net/sharpdevelop/avalonedit"
-        Name="window" Title="{StaticResource appName}"
+        Name="window"
         Height="350" Width="525"
         MinHeight="200" MinWidth="350"
         WindowStartupLocation="Manual"
@@ -45,6 +45,7 @@
         <KeyBinding Modifiers="Ctrl" Key="F" Command="{Binding findCommand}"/>
         <KeyBinding Modifiers="Ctrl" Key="H" Command="{Binding findAndReplaceCommand}"/>
         <KeyBinding Modifiers="Ctrl" Key="G" Command="{Binding gotoCommand}"/>
+        <KeyBinding Modifiers="Alt" Key="D" Command="{Binding defineCommand}"/>
         <KeyBinding Modifiers="Ctrl" Key="A" Command="{Binding selectAllCommand}"/>
 
         <!-- Insert -->
@@ -85,6 +86,7 @@
                         <MenuItem Header="Find" InputGestureText="Ctrl+F" Command="{Binding findCommand}"/>
                         <MenuItem Header="Find + Replace" InputGestureText="Ctrl+H" Command="{Binding findAndReplaceCommand}"/>
                         <MenuItem Header="Goto" InputGestureText="Ctrl+G" Command="{Binding gotoCommand}"/>
+                        <MenuItem Header="Define Selection" InputGestureText="Alt+D" Command="{Binding defineCommand}"/>
                         <MenuItem Header="Select All" InputGestureText="Ctrl+A" Command="{Binding selectAllCommand}"/>
                     </MenuItem>
 
@@ -286,6 +288,7 @@
                     <Separator/>
                     <MenuItem Header="Find" InputGestureText="Ctrl+F" Command="{Binding findCommand}"/>
                     <MenuItem Header="Find + Replace" InputGestureText="Ctrl+H" Command="{Binding findAndReplaceCommand}"/>
+                    <MenuItem Header="Define Selection" InputGestureText="Alt+D" Command="{Binding defineCommand}"/>
                     <Separator/>
                     <MenuItem Header="Insert Date" InputGestureText="Ctrl+M" Command="{Binding todaysDateCommand}"/>
                     <MenuItem Header="Insert Time" InputGestureText="Ctrl+T" Command="{Binding currentTimeCommand}"/>
