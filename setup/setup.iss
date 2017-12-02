@@ -7,7 +7,7 @@
 ; (To generate a new GUID, click Tools | Generate GUID inside the IDE.)
 AppId={{D0D04B0B-3C2F-47BD-A850-566DE9C4C648}
 AppName=Pad#
-AppVersion=1.1.1
+AppVersion=1.1.2
 ;AppVerName=Pad# 1.0.1
 AppPublisher=Collen Irwin
 AppPublisherURL=https://github.com/collenirwin
