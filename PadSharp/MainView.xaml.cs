@@ -666,7 +666,7 @@ namespace PadSharp
             }
             else
             {
-                Alert.showDialog("Couldn't find a definition for " + word, Global.APP_NAME);
+                Alert.showDialog("Couldn't find a definition for '" + word + "'", Global.APP_NAME);
             }
         }
 

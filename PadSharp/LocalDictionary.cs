@@ -81,6 +81,8 @@ namespace PadSharp
             }
             catch (Exception ex)
             {
+                loading = false;
+
                 // failed - run error callback
                 if (error != null)
                 {
@@ -106,6 +108,12 @@ namespace PadSharp
 
                 downloading = true;
 
+                // make sure we have a folder to write to
+                if (!Directory.Exists(Global.DATA_PATH))
+                {
+                    Directory.CreateDirectory(Global.DATA_PATH);
+                }
+
                 // fetch file from url
                 await Task.Run(() => new WebClient().DownloadFile(new Uri(FILE_URL), FULL_PATH));
 
@@ -119,6 +127,8 @@ namespace PadSharp
             }
             catch (Exception ex)
             {
+                downloading = false;
+
                 // failed - run error callback
                 if (error != null)
                 {
