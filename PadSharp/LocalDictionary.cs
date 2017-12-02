@@ -32,6 +32,8 @@ namespace PadSharp
             get { return dictionary != null; }
         }
 
+        public static bool loading { get; private set; }
+
         /// <summary>
         /// Is there a file at <see cref="FULL_PATH"/>?
         /// </summary>
@@ -39,6 +41,11 @@ namespace PadSharp
         {
             get { return File.Exists(FULL_PATH); }
         }
+
+        /// <summary>
+        /// Are we in the middle of downloading the file?
+        /// </summary>
+        public static bool downloading { get; private set; }
 
         /// <summary>
         /// Attempts to load <see cref="FULL_PATH"/> into <see cref="dictionary"/>
@@ -49,12 +56,22 @@ namespace PadSharp
         {
             try
             {
+                // avoid collisions
+                if (loading)
+                {
+                    return;
+                }
+
+                loading = true;
+
                 // read from FULL_PATH
                 string json = File.ReadAllText(FULL_PATH);
 
                 // deserialize json into dictionary
                 dictionary = await Task<Dictionary<string, string>>.Run(() => 
                     JsonConvert.DeserializeObject<Dictionary<string, string>>(json));
+
+                loading = false;
 
                 // run success callback
                 if (success != null)
@@ -81,8 +98,18 @@ namespace PadSharp
         {
             try
             {
+                // avoid collisions
+                if (downloading)
+                {
+                    return;
+                }
+
+                downloading = true;
+
                 // fetch file from url
                 await Task.Run(() => new WebClient().DownloadFile(new Uri(FILE_URL), FULL_PATH));
+
+                downloading = false;
 
                 // run success callback
                 if (success != null)
@@ -109,6 +136,8 @@ namespace PadSharp
         /// </returns>
         public static string define(string word)
         {
+            word = word.ToUpper();
+
             if (loaded && dictionary.ContainsKey(word))
             {
                 return dictionary[word];

@@ -508,7 +508,46 @@ namespace PadSharp
 
         private void Define_Command()
         {
+            string text = textbox.SelectedText.Trim();
 
+            if (text != "")
+            {
+                // we have a file
+                if (LocalDictionary.downloaded)
+                {
+                    // it's in memory
+                    if (LocalDictionary.loaded)
+                    {
+                        showDefinition(text);
+                    }
+                    else // load file, showDefinition
+                    {
+                        loadDictionary(() => showDefinition(text));
+                    }
+                }
+                else // no file
+                {
+                    // donwload, load, showDefinition
+                    LocalDictionary.download(() =>
+                    {
+                        loadDictionary(() =>
+                        {
+                            showDefinition(text);
+                        });
+                    }, (ex) => // failed
+                    {
+                        Global.actionMessage("Failed to download the dictionary", ex.Message);
+                    });
+
+                    Alert.showDialog(
+                        "The dictionary is now downloading for the first time. This may take a moment.",
+                        Global.APP_NAME);
+                }
+            }
+            else
+            {
+                Alert.showDialog("Please select a word to define.", Global.APP_NAME);
+            }
         }
 
         private void SelectAll_Command()
@@ -611,6 +650,37 @@ namespace PadSharp
         #endregion
 
         #region Helpers
+
+        /// <summary>
+        /// Call LocalDictionary.define with <see cref="word"/>,
+        /// show an Alert dialog with the definition (or couldn't find ...)
+        /// </summary>
+        /// <param name="word">Word to define</param>
+        private void showDefinition(string word)
+        {
+            string definition = LocalDictionary.define(word);
+
+            if (definition != null)
+            {
+                Alert.showDialog(word + ": " + definition, Global.APP_NAME);
+            }
+            else
+            {
+                Alert.showDialog("Couldn't find a definition for " + word, Global.APP_NAME);
+            }
+        }
+
+        /// <summary>
+        /// Calls LocalDictionary.Load with a default error callback
+        /// </summary>
+        /// <param name="callback">Success callback</param>
+        private void loadDictionary(Action callback)
+        {
+            LocalDictionary.load(callback, (ex) =>
+            {
+                Global.actionMessage("Failed to read from the dictionary", ex.Message);
+            });
+        }
 
         /// <summary>
         /// Insert the specified text into <see cref="textbox"/>,

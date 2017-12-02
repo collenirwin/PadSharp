@@ -14,7 +14,7 @@ namespace PadSharp
         /// <summary>
         /// Current version
         /// </summary>
-        public const string VERSION = "1.1.0b";
+        public const string VERSION = "1.1.0";
 
         /// <summary>
         /// c:/users/[user]/appdata/roaming/<see cref="APP_NAME"/>
