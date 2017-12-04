@@ -149,6 +149,14 @@
                         <MenuItem.Header>
                             <TextBlock Text="Help" VerticalAlignment="Center"/>
                         </MenuItem.Header>
+                        <MenuItem Header="Licenses">
+                            <MenuItem Header="Pad# License" Click="help_Click" Tag="https://github.com/collenirwin/PadSharp/blob/master/LICENSE"
+                                      Style="{StaticResource checkMenu}"/>
+                            <MenuItem Header="Inno Setup License" Click="help_Click" Tag="https://github.com/collenirwin/PadSharp/blob/master/PadSharp/bin/Release/inno_license.txt"
+                                      Style="{StaticResource checkMenu}"/>
+                            <MenuItem Header="Dictionary License" Click="help_Click" Tag="https://github.com/collenirwin/PadSharp/blob/master/PadSharp/bin/Release/dictionary_license.txt"
+                                      Style="{StaticResource checkMenu}"/>
+                        </MenuItem>
                         <MenuItem Header="Date/Time Format Guide" 
                                   Tag="https://docs.microsoft.com/en-us/dotnet/standard/base-types/custom-date-and-time-format-strings"
                                   Click="help_Click"/>

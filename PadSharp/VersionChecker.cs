@@ -6,8 +6,8 @@ namespace PadSharp
 {
     public static class VersionChecker
     {
-        public const string VERSION = "1.2.0";
-        public const string VERSION_URL = "https://github.com/collenirwin/PadSharp/blob/master/setup/version.txt";
+        public const string VERSION = "1.2.1";
+        public const string VERSION_URL = "https://raw.githubusercontent.com/collenirwin/PadSharp/master/setup/version.txt";
 
         /// <summary>
         /// Fetches a version number from a file at <see cref="VERSION_URL"/>
