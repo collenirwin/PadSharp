@@ -9,6 +9,8 @@ namespace PadSharp
         public const string VERSION = "1.2.1";
         public const string VERSION_URL = "https://raw.githubusercontent.com/collenirwin/PadSharp/master/setup/version.txt";
 
+        static Random ran = new Random();
+
         /// <summary>
         /// Fetches a version number from a file at <see cref="VERSION_URL"/>
         /// and compares it with <see cref="VERSION"/>.
@@ -24,7 +26,8 @@ namespace PadSharp
                 using (var client = new WebClient())
                 {
                     // fetch version from repo
-                    version = await Task.Run(() => client.DownloadString(VERSION_URL));
+                    version = await Task.Run(() => client.DownloadString(VERSION_URL + 
+                        "?r=" + ran.Next(100000).ToString())); // add a random number to the end to avoid caching
                 }
 
                 // if we have a new version and a callback
