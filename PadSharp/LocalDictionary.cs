@@ -114,8 +114,11 @@ namespace PadSharp
                     Directory.CreateDirectory(Global.DATA_PATH);
                 }
 
-                // fetch file from url
-                await Task.Run(() => new WebClient().DownloadFile(new Uri(FILE_URL), FULL_PATH));
+                using (var client = new WebClient())
+                {
+                    // fetch file from url
+                    await Task.Run(() => client.DownloadFile(new Uri(FILE_URL), FULL_PATH));
+                }
 
                 downloading = false;
 

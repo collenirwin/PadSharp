@@ -2,12 +2,18 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 [Setup]
+; Read from version.txt
+#define VerFile FileOpen("version.txt")
+#define AppVer FileRead(VerFile)
+#expr FileClose(VerFile)
+#undef VerFile
+
 ; NOTE: The value of AppId uniquely identifies this application.
 ; Do not use the same AppId value in installers for other applications.
 ; (To generate a new GUID, click Tools | Generate GUID inside the IDE.)
 AppId={{D0D04B0B-3C2F-47BD-A850-566DE9C4C648}
 AppName=Pad#
-AppVersion=1.1.2
+AppVersion={#AppVer}
 ;AppVerName=Pad# 1.0.1
 AppPublisher=Collen Irwin
 AppPublisherURL=https://github.com/collenirwin

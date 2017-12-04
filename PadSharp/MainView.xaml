@@ -278,6 +278,7 @@
 					   BorderBrush="{DynamicResource backColorLight}"
                        BorderThickness="0,1,0,0"
                        Margin="0"
+                       GotFocus="textbox_GotFocus"
                        TextChanged="textbox_TextChanged" 
                        Style="{DynamicResource TextEditorStyle}">
             <ae:TextEditor.ContextMenu>

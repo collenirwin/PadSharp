@@ -155,6 +155,8 @@ namespace PadSharp
 
         #region Methods
 
+        #region Constructor
+
         public MainView()
         {
             #region Assigning Commands
@@ -202,6 +204,10 @@ namespace PadSharp
                 open(args[1]);
             }
 
+            // set hyperlink color
+            textbox.TextArea.TextView.LinkTextForegroundBrush = SystemColors.HighlightBrush;
+
+            // register PositionChanged event
             textbox.TextArea.Caret.PositionChanged += textbox_PositionChanged;
 
             settings = UISettings.load();
@@ -225,6 +231,8 @@ namespace PadSharp
             selectFont(fontDropdown, textbox.FontFamily);
         }
 
+        #endregion
+
         #region Settings
 
         /// <summary>
@@ -246,14 +254,23 @@ namespace PadSharp
 
             this.WindowState = settings.windowState;
 
-            // only apply size/location settings if not maximized
+            // only apply size settings if not maximized
             if (this.WindowState == WindowState.Normal)
             {
-                this.Top = settings.top;
-                this.Left = settings.left;
                 this.Height = settings.height;
                 this.Width = settings.width;
             }
+
+            // only set our location if it's within the bounds of the user's screen(s)
+            if (settings.top >= SystemParameters.VirtualScreenTop && 
+                settings.left >= SystemParameters.VirtualScreenLeft &&
+                settings.top <= (SystemParameters.VirtualScreenHeight - Math.Abs(SystemParameters.VirtualScreenTop) - this.Height) &&
+                settings.left <= (SystemParameters.VirtualScreenWidth - Math.Abs(SystemParameters.VirtualScreenLeft) - this.Width))
+            {
+                this.Top = settings.top;
+                this.Left = settings.left;
+            }
+            
 
             // check the selected date/time formats
             checkIfSameValue(dateFormatMenu, settings.dateFormat);
@@ -285,6 +302,8 @@ namespace PadSharp
             settings.height = this.Height;
             settings.width = this.Width;
         }
+
+        #endregion
 
         #region Font
 
@@ -331,14 +350,7 @@ namespace PadSharp
                 textbox.FontFamily = font;
                 fontDropdown.FontFamily = font;
             }
-            catch
-            {
-                // default to 0
-                if (fontDropdown.Items.Count != 0)
-                {
-                    fontDropdown.SelectedIndex = 0;
-                }
-            }
+            catch { /* go with the last best matched font */ }
         }
 
         private void fontSizeDropdown_Changed(object sender, EventArgs e)
@@ -354,8 +366,6 @@ namespace PadSharp
                 fontSizeDropdown.Text = fontSize.ToString();
             }
         }
-
-        #endregion
 
         #endregion
 
@@ -669,16 +679,7 @@ namespace PadSharp
 
         private void help_Click(object sender, RoutedEventArgs e)
         {
-            var item = sender as MenuItem;
-
-            try
-            {
-                Process.Start(item.Tag.ToString());
-            }
-            catch (Exception ex)
-            {
-                Global.actionMessage("Failed to launch '" + item.Tag.ToString() + "'", ex.Message);
-            }
+            Global.launch((sender as MenuItem).Tag.ToString());
         }
 
         #endregion
@@ -965,6 +966,12 @@ namespace PadSharp
         #endregion
 
         #region Main Textbox Events
+
+        private void textbox_GotFocus(object sender, EventArgs e)
+        {
+            // make sure the font dropdown always displays the correct font
+            fontDropdown.Text = textbox.FontFamily.Source;
+        }
 
         private void textbox_PositionChanged(object sender, EventArgs e)
         {

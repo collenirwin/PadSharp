@@ -1,9 +1,14 @@
 ﻿using BoinWPF;
 using System;
+using System.Diagnostics;
 using System.IO;
+using System.Reflection;
 
 namespace PadSharp
 {
+    /// <summary>
+    /// Container for common constants and methods
+    /// </summary>
     public static class Global
     {
         /// <summary>
@@ -14,7 +19,7 @@ namespace PadSharp
         /// <summary>
         /// Current version
         /// </summary>
-        public const string VERSION = "1.1.2";
+        public const string VERSION = VersionChecker.VERSION;
 
         /// <summary>
         /// c:/users/[user]/appdata/roaming/<see cref="APP_NAME"/>
@@ -32,6 +37,22 @@ namespace PadSharp
         public static void actionMessage(string action, string details)
         {
             Alert.showDialog(action + ". Here are some additional details: " + details, APP_NAME);
+        }
+
+        /// <summary>
+        /// Attempts to run the specified path/url
+        /// </summary>
+        /// <param name="path">Path to file to run</param>
+        public static void launch(string path)
+        {
+            try
+            {
+                Process.Start(path);
+            }
+            catch (Exception ex)
+            {
+                Global.actionMessage("Failed to launch '" + path + "'", ex.Message);
+            }
         }
 
         /// <summary>

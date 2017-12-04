@@ -69,8 +69,11 @@ G:\git\PadSharp\PadSharp\obj\Debug\MainView.baml
 G:\git\PadSharp\PadSharp\obj\Debug\App.baml
 G:\git\PadSharp\PadSharp\obj\Debug\MainView.g.cs
 G:\git\PadSharp\PadSharp\obj\Debug\App.g.cs
-G:\git\PadSharp\PadSharp\obj\Debug\PadSharp_Content.g.cs
 G:\git\PadSharp\PadSharp\obj\Debug\PadSharp_MarkupCompile.cache
 G:\git\PadSharp\PadSharp\obj\Debug\PadSharp.g.resources
 G:\git\PadSharp\PadSharp\obj\Debug\PadSharp.Properties.Resources.resources
 G:\git\PadSharp\PadSharp\obj\Debug\PadSharp.csproj.GenerateResource.Cache
+G:\git\PadSharp\PadSharp\bin\Debug\PadSharp.exe.manifest
+G:\git\PadSharp\PadSharp\bin\Debug\PadSharp.application
+G:\git\PadSharp\PadSharp\obj\Debug\PadSharp.exe.manifest
+G:\git\PadSharp\PadSharp\obj\Debug\PadSharp.application
