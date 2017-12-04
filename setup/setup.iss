@@ -36,14 +36,14 @@ Name: "english"; MessagesFile: "compiler:Default.isl"
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
 
 [Files]
-Source: "G:\git\PadSharp\PadSharp\bin\Debug\PadSharp.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: "G:\git\PadSharp\PadSharp\bin\Debug\BoinWPF.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "G:\git\PadSharp\PadSharp\bin\Debug\ICSharpCode.AvalonEdit.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "G:\git\PadSharp\PadSharp\bin\Debug\ICSharpCode.AvalonEdit.xml"; DestDir: "{app}"; Flags: ignoreversion
-Source: "G:\git\PadSharp\PadSharp\bin\Debug\inno_license.txt"; DestDir: "{app}"; Flags: ignoreversion
-Source: "G:\git\PadSharp\PadSharp\bin\Debug\dictionary_license.txt"; DestDir: "{app}"; Flags: ignoreversion
-Source: "G:\git\PadSharp\PadSharp\bin\Debug\Newtonsoft.Json.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "G:\git\PadSharp\PadSharp\bin\Debug\Newtonsoft.Json.xml"; DestDir: "{app}"; Flags: ignoreversion
+Source: "G:\git\PadSharp\PadSharp\bin\Release\PadSharp.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "G:\git\PadSharp\PadSharp\bin\Release\BoinWPF.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "G:\git\PadSharp\PadSharp\bin\Release\ICSharpCode.AvalonEdit.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "G:\git\PadSharp\PadSharp\bin\Release\ICSharpCode.AvalonEdit.xml"; DestDir: "{app}"; Flags: ignoreversion
+Source: "G:\git\PadSharp\PadSharp\bin\Release\inno_license.txt"; DestDir: "{app}"; Flags: ignoreversion
+Source: "G:\git\PadSharp\PadSharp\bin\Release\dictionary_license.txt"; DestDir: "{app}"; Flags: ignoreversion
+Source: "G:\git\PadSharp\PadSharp\bin\Release\Newtonsoft.Json.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "G:\git\PadSharp\PadSharp\bin\Release\Newtonsoft.Json.xml"; DestDir: "{app}"; Flags: ignoreversion
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Registry]
