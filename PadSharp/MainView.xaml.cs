@@ -1,5 +1,6 @@
 ﻿using BoinWPF;
 using BoinWPF.Themes;
+using ICSharpCode.AvalonEdit.Utils;
 using Microsoft.Win32;
 using System;
 using System.ComponentModel;
@@ -9,6 +10,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 
@@ -42,6 +44,7 @@ namespace PadSharp
         public UICommand openInExplorerCommand { get; private set; }
         public UICommand saveCommand { get; private set; }
         public UICommand saveAsCommand { get; private set; }
+        public UICommand printCommand { get; private set; }
         public UICommand exitCommand { get; private set; }
 
         #endregion
@@ -82,7 +85,21 @@ namespace PadSharp
                 {
                     _file = value;
                     PropertyChanged(this, new PropertyChangedEventArgs("file"));
+                    fileSaved = true;
                 }
+            }
+        }
+
+        public bool fileSaved
+        {
+            get
+            {
+                return file != null && textbox.Text == savedText;
+            }
+            set
+            {
+                // hack? update the UI while keeping this essentially readonly
+                PropertyChanged(this, new PropertyChangedEventArgs("fileSaved"));
             }
         }
 
@@ -168,6 +185,7 @@ namespace PadSharp
             openInExplorerCommand = new UICommand(OpenInExplorer_Command);
             saveCommand = new UICommand(Save_Command);
             saveAsCommand = new UICommand(SaveAs_Command);
+            printCommand = new UICommand(Print_Command);
             exitCommand = new UICommand(Exit_Command);
 
             // edit
@@ -458,6 +476,24 @@ namespace PadSharp
         private void SaveAs_Command()
         {
             saveAs();
+        }
+
+        private void Print_Command()
+        {
+            var printDialog = new PrintDialog();
+
+            if (printDialog.ShowDialog() == true)
+            {
+                // get a FlowDocument from our editor
+                var flowDoc = DocumentPrinter.CreateFlowDocumentForEditor(textbox);
+
+                printDialog.PrintDocument(
+                    // get document paginator from flowdoc
+                    ((IDocumentPaginatorSource)flowDoc).DocumentPaginator,
+
+                    // description
+                    "Pad#: " + lblFileName.Text);
+            }
         }
 
         private void Exit_Command()
@@ -984,6 +1020,9 @@ namespace PadSharp
         {
             // count the words on textchanged
             wordCount = Regex.Matches(textbox.Text, @"\b\S+\b").Count;
+
+            // force UI to acknowledge fileSaved
+            fileSaved = false;
         }
 
         #endregion

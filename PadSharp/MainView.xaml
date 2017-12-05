@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:ae="http://icsharpcode.net/sharpdevelop/avalonedit"
+        xmlns:ps="clr-namespace:PadSharp"
         Name="window"
         Height="350" Width="525"
         MinHeight="200" MinWidth="350"
@@ -35,6 +36,7 @@
         <KeyBinding Modifiers="Ctrl" Key="N" Command="{Binding newCommand}"/>
         <KeyBinding Modifiers="Ctrl" Key="O" Command="{Binding openCommand}"/>
         <KeyBinding Modifiers="Ctrl" Key="S" Command="{Binding saveCommand}"/>
+        <KeyBinding Modifiers="Ctrl" Key="P" Command="{Binding printCommand}"/>
 
         <!-- Edit -->
         <KeyBinding Modifiers="Ctrl" Key="Z" Command="{Binding undoCommand}"/>
@@ -70,6 +72,7 @@
                         <MenuItem Header="Open in Explorer" Command="{Binding openInExplorerCommand}"/>
                         <MenuItem Header="Save" InputGestureText="Ctrl+S" Command="{Binding saveCommand}"/>
                         <MenuItem Header="Save As" Command="{Binding saveAsCommand}"/>
+                        <MenuItem Header="Print" InputGestureText="Ctrl+P" Command="{Binding printCommand}"/>
                         <MenuItem Header="Exit" Command="{Binding exitCommand}"/>
                     </MenuItem>
 
@@ -165,8 +168,24 @@
                 </Menu>
 
                 <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" HorizontalAlignment="Right">
-                    <TextBlock Text="{Binding file.Name, FallbackValue='Not Saved'}" FontStyle="Italic"
-                               ToolTip="{Binding file.FullName}" Foreground="{DynamicResource foreColorDark}"/>
+                    <TextBlock Name="lblFileName" ToolTip="{Binding file.FullName}" Foreground="{DynamicResource foreColorDark}">
+                        <TextBlock.Style>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="VerticalAlignment" Value="Center"/>
+                                <Setter Property="Padding" Value="5,0,5,0"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding fileSaved}" Value="True">
+                                        <Setter Property="FontStyle" Value="Normal"/>
+                                        <Setter Property="Text" Value="{Binding file.Name, StringFormat={}{0}, FallbackValue='Not Saved'}"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding fileSaved}" Value="False">
+                                        <Setter Property="FontStyle" Value="Italic"/>
+                                        <Setter Property="Text" Value="{Binding file.Name, StringFormat={}*{0}, FallbackValue='Not Saved'}"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBlock.Style>
+                    </TextBlock>
                 </StackPanel>
             </DockPanel>
             
