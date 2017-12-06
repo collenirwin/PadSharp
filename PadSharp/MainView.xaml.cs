@@ -61,6 +61,7 @@ namespace PadSharp
         public UICommand gotoCommand { get; private set; }
         public UICommand gotoGoCommand { get; private set; }
         public UICommand defineCommand { get; private set; }
+        public UICommand sortCommand { get; private set; }
         public UICommand selectAllCommand { get; private set; }
 
         #endregion
@@ -199,6 +200,7 @@ namespace PadSharp
             gotoCommand = new UICommand(Goto_Command);
             gotoGoCommand = new UICommand(GotoGo_Command);
             defineCommand = new UICommand(Define_Command);
+            sortCommand = new UICommand(Sort_Command);
             selectAllCommand = new UICommand(SelectAll_Command);
 
             // insert
@@ -604,6 +606,11 @@ namespace PadSharp
             {
                 Alert.showDialog("Please select a word to define.", Global.APP_NAME);
             }
+        }
+
+        private void Sort_Command()
+        {
+            TextEditorUtils.sortLines(textbox, textbox.SelectedText);
         }
 
         private void SelectAll_Command()

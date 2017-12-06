@@ -48,6 +48,7 @@
         <KeyBinding Modifiers="Ctrl" Key="H" Command="{Binding findAndReplaceCommand}"/>
         <KeyBinding Modifiers="Ctrl" Key="G" Command="{Binding gotoCommand}"/>
         <KeyBinding Modifiers="Alt" Key="D" Command="{Binding defineCommand}"/>
+        <KeyBinding Modifiers="Alt" Key="S" Command="{Binding sortCommand}"/>
         <KeyBinding Modifiers="Ctrl" Key="A" Command="{Binding selectAllCommand}"/>
 
         <!-- Insert -->
@@ -90,6 +91,7 @@
                         <MenuItem Header="Find + Replace" InputGestureText="Ctrl+H" Command="{Binding findAndReplaceCommand}"/>
                         <MenuItem Header="Goto" InputGestureText="Ctrl+G" Command="{Binding gotoCommand}"/>
                         <MenuItem Header="Define Selection" InputGestureText="Alt+D" Command="{Binding defineCommand}"/>
+                        <MenuItem Header="Sort Selected Lines" InputGestureText="Alt+S" Command="{Binding sortCommand}"/>
                         <MenuItem Header="Select All" InputGestureText="Ctrl+A" Command="{Binding selectAllCommand}"/>
                     </MenuItem>
 
@@ -309,7 +311,7 @@
                        TextChanged="textbox_TextChanged" 
                        Style="{DynamicResource TextEditorStyle}">
             <ae:TextEditor.ContextMenu>
-                <ContextMenu Background="{DynamicResource backColorLight}" Margin="-34,0,-25,0">
+                <ContextMenu Background="{DynamicResource backColorLight}" Margin="-30,0,-25,0">
                     <MenuItem Header="Cut" InputGestureText="Ctrl+X" Command="{Binding cutCommand}"/>
                     <MenuItem Header="Copy" InputGestureText="Ctrl+C" Command="{Binding copyCommand}"/>
                     <MenuItem Header="Paste" InputGestureText="Ctrl+V" Command="{Binding pasteCommand}"/>
@@ -317,6 +319,7 @@
                     <MenuItem Header="Find" InputGestureText="Ctrl+F" Command="{Binding findCommand}"/>
                     <MenuItem Header="Find + Replace" InputGestureText="Ctrl+H" Command="{Binding findAndReplaceCommand}"/>
                     <MenuItem Header="Define Selection" InputGestureText="Alt+D" Command="{Binding defineCommand}"/>
+                    <MenuItem Header="Sort Selected Lines" InputGestureText="Alt+S" Command="{Binding sortCommand}"/>
                     <Separator/>
                     <MenuItem Header="Insert Date" InputGestureText="Ctrl+M" Command="{Binding todaysDateCommand}"/>
                     <MenuItem Header="Insert Time" InputGestureText="Ctrl+T" Command="{Binding currentTimeCommand}"/>

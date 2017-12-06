@@ -1,4 +1,5 @@
 ﻿using ICSharpCode.AvalonEdit;
+using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace PadSharp
@@ -88,6 +89,25 @@ namespace PadSharp
 
             // nothing to replace
             return false;
+        }
+
+        /// <summary>
+        /// Sorts the specified lines in the <see cref="TextEditor"/> provided.
+        /// Does nothing if textbox does not conain linesToSort.
+        /// </summary>
+        /// <param name="textbox"><see cref="TextEditor"/> to sort lines in</param>
+        /// <param name="linesToSort">Lines to sort</param>
+        public static void sortLines(TextEditor textbox, string linesToSort)
+        {
+            int index = textbox.Text.IndexOf(linesToSort);
+
+            if (index != -1)
+            {
+                textbox.Text = textbox.Text
+                    .Remove(index, linesToSort.Length)
+                    .Insert(index, string.Join("\r\n", 
+                        linesToSort.Replace("\r", "").Split('\n').OrderBy(x => x)));
+            }
         }
     }
 }
