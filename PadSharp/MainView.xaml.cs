@@ -393,20 +393,18 @@ namespace PadSharp
 
         private void New_Command()
         {
-            // text not saved
-            if (textbox.Text != savedText)
+            // text not saved, promt them: are you sure?
+            if (textbox.Text != savedText && Alert.showDialog(
+                "Are you sure you want to make a new file? Your current changes will be lost.",
+                Global.APP_NAME, "Yes", "Cancel") != AlertResult.button1Clicked)
             {
-                // are you sure?
-                if (Alert.showDialog(
-                    "Are you sure you want to make a new file? Your current changes will be lost.",
-                    Global.APP_NAME, "Yes", "Cancel") == AlertResult.button1Clicked)
-                {
-                    // reset all values to null/""
-                    file = null;
-                    savedText = "";
-                    textbox.Text = "";
-                }
+                return;
             }
+
+            // reset all values to null/""
+            file = null;
+            savedText = "";
+            textbox.Text = "";
         }
 
         private void NewWindow_Command()

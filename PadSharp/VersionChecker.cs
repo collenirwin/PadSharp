@@ -6,7 +6,7 @@ namespace PadSharp
 {
     public static class VersionChecker
     {
-        public const string VERSION = "1.2.1";
+        public const string VERSION = "1.2.3";
         public const string VERSION_URL = "https://raw.githubusercontent.com/collenirwin/PadSharp/master/setup/version.txt";
 
         static Random ran = new Random();
