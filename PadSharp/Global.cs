@@ -30,13 +30,13 @@ namespace PadSharp
 
         /// <summary>
         /// Show an Alert dialog with the following format:
-        /// [action]. Here are some additional details: [details]
+        /// [action]. (hidden in toggleable textbox): [message]
         /// </summary>
         /// <param name="action">What happened?</param>
         /// <param name="details">What more is there to say about this?</param>
         public static void actionMessage(string action, string details)
         {
-            Alert.showDialog(action + ". Here are some additional details: " + details, APP_NAME);
+            Alert.showMoreInfoDialog(action, details, APP_NAME);
         }
 
         /// <summary>
