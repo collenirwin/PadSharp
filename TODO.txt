@@ -1,2 +1,8 @@
 Directory treeview?
-Add extra info panel to Alert
+Ask to save before opening
+Should save be an option instead of just cancelling the action?
+Maybe add another menu item (selection?)
+Convert cASE
+Option to sort descending
+Reverse word? Needed?
+Some sort of markdown-esque support? checkmarks?
