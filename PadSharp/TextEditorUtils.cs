@@ -109,5 +109,20 @@ namespace PadSharp
                         linesToSort.Replace("\r", "").Split('\n').OrderBy(x => x)));
             }
         }
+
+        /// <summary>
+        /// Set all line endings to \r\n (windows = true) or \n (windows = false)
+        /// </summary>
+        /// <param name="textbox"><see cref="TextEditor"/> we're working with</param>
+        /// <param name="windows">Use Windows line endings?</param>
+        public static void normalizeLineEndings(TextEditor textbox, bool windows)
+        {
+            textbox.Text = textbox.Text.Replace("\r", "");
+
+            if (windows)
+            {
+                textbox.Text = textbox.Text.Replace("\n", "\r\n");
+            }
+        }
     }
 }

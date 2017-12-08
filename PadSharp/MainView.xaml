@@ -90,8 +90,14 @@
                         <MenuItem Header="Find" InputGestureText="Ctrl+F" Command="{Binding findCommand}"/>
                         <MenuItem Header="Find + Replace" InputGestureText="Ctrl+H" Command="{Binding findAndReplaceCommand}"/>
                         <MenuItem Header="Goto" InputGestureText="Ctrl+G" Command="{Binding gotoCommand}"/>
-                        <MenuItem Header="Define Selection" InputGestureText="Alt+D" Command="{Binding defineCommand}"/>
-                        <MenuItem Header="Sort Selected Lines" InputGestureText="Alt+S" Command="{Binding sortCommand}"/>
+                        <MenuItem Header="Advanced">
+                            <MenuItem Header="Normalize Line Endings"
+                                      Command="{Binding normalizeLineEndingdCommand}" Style="{StaticResource checkMenu}"/>
+                            <MenuItem Header="Define Selection" InputGestureText="Alt+D"
+                                      Command="{Binding defineCommand}" Style="{StaticResource checkMenu}"/>
+                            <MenuItem Header="Sort Selected Lines" InputGestureText="Alt+S"
+                                      Command="{Binding sortCommand}" Style="{StaticResource checkMenu}"/>
+                        </MenuItem>
                         <MenuItem Header="Select All" InputGestureText="Ctrl+A" Command="{Binding selectAllCommand}"/>
                     </MenuItem>
 
@@ -111,8 +117,8 @@
                             <TextBlock Text="Settings" VerticalAlignment="Center"/>
                         </MenuItem.Header>
                         <MenuItem Header="Theme" Name="themeMenu">
-                            <MenuItem Header="Light" IsCheckable="True" Checked="theme_Checked" Style="{StaticResource checkMenu}"/>
-                            <MenuItem Header="Dark" IsCheckable="True" Checked="theme_Checked" Style="{StaticResource checkMenu}"/>
+                            <MenuItem Header="Light" IsCheckable="True" Checked="theme_Checked" Unchecked="theme_Unchecked" Style="{StaticResource checkMenu}"/>
+                            <MenuItem Header="Dark" IsCheckable="True" Checked="theme_Checked" Unchecked="theme_Unchecked" Style="{StaticResource checkMenu}"/>
                         </MenuItem>
                         <MenuItem Header="Date Format" Name="dateFormatMenu">
                             <MenuItem Header="dddd, MMMM dd, yyyy" IsCheckable="True" Checked="date_Checked" Unchecked="date_Unchecked" Style="{StaticResource checkMenu}"/>
@@ -308,7 +314,7 @@
                        BorderThickness="0,1,0,0"
                        Margin="0"
                        GotFocus="textbox_GotFocus"
-                       TextChanged="textbox_TextChanged" 
+                       TextChanged="textbox_TextChanged"
                        Style="{DynamicResource TextEditorStyle}">
             <ae:TextEditor.ContextMenu>
                 <ContextMenu Background="{DynamicResource backColorLight}" Margin="-30,0,-25,0">

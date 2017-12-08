@@ -23,13 +23,25 @@ namespace PadSharp
     {
         #region Vars
 
+        // required to implement (from INotifyPropertyChanged)
         public event PropertyChangedEventHandler PropertyChanged = (sender, e) => { };
 
+        // 100k file size max
         const int FILE_SIZE_LIMIT = 100000;
+
+        // 500px font size max
         const double MAX_FONT_SIZE = 500;
 
+        // margin to avoid clipping text under scrollbars
+        const double TEXTBOX_MARGIN = 18;
+
+        // settings object (contains all user settings)
         readonly UISettings settings;
+
+        // Theme we're using
         Theme theme;
+
+        // text from currently open file
         string savedText = "";
 
         #region Properties
@@ -60,6 +72,7 @@ namespace PadSharp
         public UICommand findAndReplaceCommand { get; private set; }
         public UICommand gotoCommand { get; private set; }
         public UICommand gotoGoCommand { get; private set; }
+        public UICommand normalizeLineEndingdCommand { get; private set; }
         public UICommand defineCommand { get; private set; }
         public UICommand sortCommand { get; private set; }
         public UICommand selectAllCommand { get; private set; }
@@ -77,6 +90,10 @@ namespace PadSharp
         #endregion
 
         FileInfo _file;
+
+        /// <summary>
+        /// Currently open file
+        /// </summary>
         public FileInfo file
         {
             get { return _file; }
@@ -91,6 +108,9 @@ namespace PadSharp
             }
         }
 
+        /// <summary>
+        /// Is the file saved?
+        /// </summary>
         public bool fileSaved
         {
             get
@@ -105,6 +125,10 @@ namespace PadSharp
         }
 
         int _lineNumber = 1;
+
+        /// <summary>
+        /// Line number the caret is on
+        /// </summary>
         public int lineNumber
         {
             get { return _lineNumber; }
@@ -119,6 +143,10 @@ namespace PadSharp
         }
 
         int _columnNumber = 1;
+
+        /// <summary>
+        /// Column number the caret is on
+        /// </summary>
         public int columnNumber
         {
             get { return _columnNumber; }
@@ -133,6 +161,10 @@ namespace PadSharp
         }
 
         int _wordCount = 0;
+
+        /// <summary>
+        /// Number of words in textbox (found using \b\S+\b)
+        /// </summary>
         public int wordCount
         {
             get { return _wordCount; }
@@ -146,6 +178,9 @@ namespace PadSharp
             }
         }
 
+        /// <summary>
+        /// Font size of the textbox
+        /// </summary>
         public double fontSize
         {
             get { return textbox.FontSize; }
@@ -199,6 +234,7 @@ namespace PadSharp
             findAndReplaceCommand = new UICommand(FindReplace_Command);
             gotoCommand = new UICommand(Goto_Command);
             gotoGoCommand = new UICommand(GotoGo_Command);
+            normalizeLineEndingdCommand = new UICommand(NormalizeLineEndings_Command);
             defineCommand = new UICommand(Define_Command);
             sortCommand = new UICommand(Sort_Command);
             selectAllCommand = new UICommand(SelectAll_Command);
@@ -229,6 +265,9 @@ namespace PadSharp
 
             // register PositionChanged event
             textbox.TextArea.Caret.PositionChanged += textbox_PositionChanged;
+
+            // make sure our text doesn't go under the scrollbars
+            textbox.TextArea.Margin = new Thickness(0, 0, TEXTBOX_MARGIN, TEXTBOX_MARGIN);
 
             settings = UISettings.load();
 
@@ -564,6 +603,15 @@ namespace PadSharp
             txtGoto.SelectAll();
         }
 
+        private void NormalizeLineEndings_Command()
+        {
+            // set all line endings to /r/n
+            TextEditorUtils.normalizeLineEndings(textbox, true);
+
+            // give the user some feedback - this change won't be obvious
+            Alert.showDialog(@"Done. All line endings are now \r\n.", Global.APP_NAME);
+        }
+
         private void Define_Command()
         {
             string text = textbox.SelectedText.Trim();
@@ -644,14 +692,27 @@ namespace PadSharp
         private void theme_Checked(object sender, RoutedEventArgs e)
         {
             var item = sender as MenuItem;
-            uncheckSiblings(item);
 
             // select theme
             this.theme = item.Header.ToString() == "Light" ? Theme.light : Theme.dark;
 
+            // uncheck other themes
+            uncheckSiblings(item);
+
             // set theme for app
             Application.Current.Resources.
                     MergedDictionaries[0].Source = ThemeManager.themeUri(this.theme);
+        }
+
+        private void theme_Unchecked(object sender, RoutedEventArgs e)
+        {
+            var item = sender as MenuItem;
+
+            // if this setting is selected
+            if (this.theme.ToString() == item.Header.ToString().ToLower())
+            {
+                keepMenuItemChecked(item, theme_Checked);
+            }
         }
 
         private void date_Checked(object sender, RoutedEventArgs e)
@@ -664,11 +725,11 @@ namespace PadSharp
         private void date_Unchecked(object sender, RoutedEventArgs e)
         {
             var item = sender as MenuItem;
+
+            // if this setting is selected
             if (settings.dateFormat == item.Header.ToString())
             {
-                item.Checked -= date_Checked;
-                item.IsChecked = true;
-                item.Checked += date_Checked;
+                keepMenuItemChecked(item, date_Checked);
             }
         }
 
@@ -682,11 +743,11 @@ namespace PadSharp
         private void time_Unchecked(object sender, RoutedEventArgs e)
         {
             var item = sender as MenuItem;
+
+            // if this setting is selected
             if (settings.timeFormat == item.Header.ToString())
             {
-                item.Checked -= time_Checked;
-                item.IsChecked = true;
-                item.Checked += time_Checked;
+                keepMenuItemChecked(item, time_Checked);
             }
         }
 
@@ -706,6 +767,11 @@ namespace PadSharp
         {
             textbox.WordWrap = wordWrapDropdown.IsChecked;
             settings.wordWrap = wordWrapDropdown.IsChecked;
+
+            // make sure our text doesn't go under the scrollbars
+            // and set bottom margin to 0 if wordwrap is enabled (no bottom scrollbar)
+            textbox.TextArea.Margin = new Thickness(0, 0, TEXTBOX_MARGIN, 
+                textbox.WordWrap ? 0 : TEXTBOX_MARGIN);
         }
 
         private void topmost_Checked(object sender, RoutedEventArgs e)
@@ -823,6 +889,18 @@ namespace PadSharp
 
             txtFind.Focus();
             txtFind.SelectAll();
+        }
+
+        /// <summary>
+        /// Keeps the passed <see cref="MenuItem"/> checked but doesn't trigger its Checked event
+        /// </summary>
+        /// <param name="item">MenuItem to keep checked</param>
+        /// <param name="handler">item's Checked event handler</param>
+        private void keepMenuItemChecked(MenuItem item, RoutedEventHandler handler)
+        {
+            item.Checked -= handler;
+            item.IsChecked = true;
+            item.Checked += handler;
         }
 
         #endregion
@@ -1019,6 +1097,10 @@ namespace PadSharp
             // set ln and col on caret position change
             lineNumber = textbox.TextArea.Caret.Line;
             columnNumber = textbox.TextArea.Caret.Column;
+
+            // scroll to the caret's position
+            textbox.ScrollTo(textbox.TextArea.Caret.Position.Line,
+                textbox.TextArea.Caret.Position.Column);
         }
 
         private void textbox_TextChanged(object sender, EventArgs e)

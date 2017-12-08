@@ -1,2 +1,2 @@
-Text sorting
 Directory treeview?
+Add extra info panel to Alert
