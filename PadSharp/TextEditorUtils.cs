@@ -1,9 +1,13 @@
 ﻿using ICSharpCode.AvalonEdit;
+using System;
 using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace PadSharp
 {
+    /// <summary>
+    /// Contains various utility functions for working with text within an AvalonEdit TextEditor
+    /// </summary>
     public static class TextEditorUtils
     {
         /// <summary>
@@ -62,7 +66,7 @@ namespace PadSharp
 
         /// <summary>
         /// Attempts to find the next match of the specified Regular Expression
-        /// within textbox.Text and replace it with replacement.
+        /// within textbox.Text and replace it with the replacement.
         /// </summary>
         /// <param name="textbox">TextEditor to search in</param>
         /// <param name="regex">Regular Expression to apply to textbox.Text</param>
@@ -73,6 +77,11 @@ namespace PadSharp
         public static bool replaceNext(TextEditor textbox, string regex, string replacement,
             int start, bool matchCase, bool lookback = false)
         {
+            if (regex == "")
+            {
+                return false;
+            }
+
             if (findNext(textbox, regex, start, matchCase, lookback))
             {
                 int oldStart = textbox.SelectionStart;
@@ -88,6 +97,47 @@ namespace PadSharp
             }
 
             // nothing to replace
+            return false;
+        }
+
+        /// <summary>
+        /// Attempts to find the matches of the specified Regular Expression
+        /// within textbox.Text and replace them with the replacement.
+        /// </summary>
+        /// <param name="textbox">TextEditor to search in</param>
+        /// <param name="regex">Regular Expression to apply to textbox.Text</param>
+        /// <param name="start">Starting point in textbox.Text</param>
+        /// <param name="matchCase">use IgnoreCase flag?</param>
+        /// <param name="predicate">
+        /// Number of replacements will be passed to this.
+        /// It will decide if the replacement will run.
+        /// </param>
+        /// <returns>
+        /// true if found, false if regex is incorrect or if not found or if predicate returns false
+        /// </returns>
+        public static bool replaceAll(TextEditor textbox, string regex, string replacement,
+            bool matchCase, Predicate<int> predicate = null)
+        {
+            if (regex == "")
+            {
+                return false;
+            }
+
+            var options = matchCase
+                ? RegexOptions.None
+                : RegexOptions.IgnoreCase;
+
+            options |= RegexOptions.Multiline;
+
+            var _regex = new Regex(regex, options);
+            var matches = _regex.Matches(textbox.Text);
+
+            if (predicate == null || predicate(matches.Count))
+            {
+                textbox.Text = _regex.Replace(textbox.Text, replacement);
+                return true;
+            }
+
             return false;
         }
 

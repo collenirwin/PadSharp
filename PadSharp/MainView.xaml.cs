@@ -986,24 +986,13 @@ namespace PadSharp
 
         private void replaceAll_Click(object sender, RoutedEventArgs e)
         {
-            // count up all the matches of the pattern in txtFind
-            int count = Regex.Matches(textbox.Text, txtFind.Text,
-                matchCase.IsChecked == true
-                    ? RegexOptions.None
-                    : RegexOptions.IgnoreCase).Count;
-
-            // if there's something to replace, ask: are you sure???
-            if (count > 0 && 
-                Alert.showDialog(
-                string.Format("Replace {0} instances of {1} with {2}?", count, txtFind.Text, txtReplace.Text), 
-                Global.APP_NAME, "OK", "Cancel") == AlertResult.button1Clicked)
+            TextEditorUtils.replaceAll(textbox, txtFind.Text, txtReplace.Text, 
+                matchCase.IsChecked == true, (count) =>
             {
-                // replace it ALL
-                for (int x = 0; x < count; x++)
-                {
-                    replaceHelper();
-                }
-            }
+                return count > 0 && Alert.showDialog(
+                    string.Format("Replace {0} instances of {1} with {2}?", count, txtFind.Text, txtReplace.Text), 
+                    Global.APP_NAME, "OK", "Cancel") == AlertResult.button1Clicked;
+            });
         }
 
         #endregion
