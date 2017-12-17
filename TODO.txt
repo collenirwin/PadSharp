@@ -1,9 +1,7 @@
 Directory treeview?
-Ask to save before opening
 Maybe add another menu item (selection?)
 Convert cASE
 Option to sort descending
 Reverse word? Needed?
 Some sort of markdown-esque support? checkmarks?
-if file is saved and save as is called, put the file's name in the dialog (maybe a default file name for unsaved)
 fix word-wrap lag

@@ -430,7 +430,7 @@ namespace PadSharp
         {
             // text not saved, promt them: are you sure?
             if (textbox.Text != savedText && Alert.showDialog(
-                "Are you sure you want to make a new file? Your current changes will be lost.",
+                "Are you sure you want to make a new file? Your unsaved changes to the current file will be lost.",
                 Global.APP_NAME, "Yes", "Cancel") != AlertResult.button1Clicked)
             {
                 return;
@@ -457,17 +457,25 @@ namespace PadSharp
 
         private void Open_Command()
         {
+            // text not saved, promt them: are you sure?
+            if (textbox.Text != savedText && Alert.showDialog(
+                "Are you sure you want to open a file? Your unsaved changes to the current file will be lost.",
+                Global.APP_NAME, "Yes", "Cancel") != AlertResult.button1Clicked)
+            {
+                return;
+            }
+
             var openDialog = new OpenFileDialog();
             openDialog.Title = "Open";
             openDialog.DefaultExt = ".txt";
             openDialog.Filter = "Text Files|*.txt|All Files|*.*";
             openDialog.Multiselect = false;
-            openDialog.ShowDialog();
+            var result = openDialog.ShowDialog();
 
             string path = openDialog.FileName;
 
             // if a file was selected, save it
-            if (path != null && path != "")
+            if (result == true && path != null && path != "")
             {
                 open(path);
             }
@@ -479,8 +487,8 @@ namespace PadSharp
             {
                 try
                 {
-                    // open the current file in Windows Explorer
-                    Process.Start("explorer.exe", file.FullName);
+                    // open the current file's directory in Windows Explorer
+                    Process.Start("explorer.exe", file.DirectoryName);
                 }
                 catch (Exception ex)
                 {
@@ -1140,16 +1148,17 @@ namespace PadSharp
         private void saveAs()
         {
             var saveDialog = new SaveFileDialog();
+            saveDialog.FileName = fileSaved ? file.Name : "document.txt";
             saveDialog.Title = "Save As";
             saveDialog.DefaultExt = ".txt";
             saveDialog.Filter = "Text Files|*.txt|All Files|*.*";
             saveDialog.AddExtension = true;
-            saveDialog.ShowDialog();
+            var result = saveDialog.ShowDialog();
 
             string path = saveDialog.FileName;
 
             // if a file was selected, save it
-            if (path != null && path != "")
+            if (result == true && path != null && path != "")
             {
                 save(path);
             }
