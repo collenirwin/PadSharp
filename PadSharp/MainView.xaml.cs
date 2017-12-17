@@ -32,9 +32,6 @@ namespace PadSharp
         // 500px font size max
         const double MAX_FONT_SIZE = 500;
 
-        // margin to avoid clipping text under scrollbars
-        const double TEXTBOX_MARGIN = 18;
-
         // settings object (contains all user settings)
         readonly UISettings settings;
 
@@ -265,9 +262,6 @@ namespace PadSharp
 
             // register PositionChanged event
             textbox.TextArea.Caret.PositionChanged += textbox_PositionChanged;
-
-            // make sure our text doesn't go under the scrollbars
-            textbox.TextArea.Margin = new Thickness(0, 0, TEXTBOX_MARGIN, TEXTBOX_MARGIN);
 
             settings = UISettings.load();
 
@@ -767,11 +761,6 @@ namespace PadSharp
         {
             textbox.WordWrap = wordWrapDropdown.IsChecked;
             settings.wordWrap = wordWrapDropdown.IsChecked;
-
-            // make sure our text doesn't go under the scrollbars
-            // and set bottom margin to 0 if wordwrap is enabled (no bottom scrollbar)
-            textbox.TextArea.Margin = new Thickness(0, 0, TEXTBOX_MARGIN, 
-                textbox.WordWrap ? 0 : TEXTBOX_MARGIN);
         }
 
         private void topmost_Checked(object sender, RoutedEventArgs e)
@@ -1086,10 +1075,6 @@ namespace PadSharp
             // set ln and col on caret position change
             lineNumber = textbox.TextArea.Caret.Line;
             columnNumber = textbox.TextArea.Caret.Column;
-
-            // scroll to the caret's position
-            textbox.ScrollTo(textbox.TextArea.Caret.Position.Line,
-                textbox.TextArea.Caret.Position.Column);
         }
 
         private void textbox_TextChanged(object sender, EventArgs e)

@@ -1,9 +1,11 @@
 ﻿<Application
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:sys="clr-namespace:System;assembly=mscorlib"
-             xmlns:avalonedit="http://icsharpcode.net/sharpdevelop/avalonedit" xmlns:Themes="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Aero" x:Class="PadSharp.App"
-             StartupUri="./MainView.xaml">
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:sys="clr-namespace:System;assembly=mscorlib"
+    xmlns:avalonedit="http://icsharpcode.net/sharpdevelop/avalonedit"
+    xmlns:Themes="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Aero"
+    x:Class="PadSharp.App"
+    StartupUri="./MainView.xaml">
     
     <Application.Resources>
         <ResourceDictionary>
@@ -18,73 +20,49 @@
             	<StackPanel Margin="-20,0,-2,0" Background="transparent"/>
             </ItemsPanelTemplate>
 
-        	<Style x:Key="TextEditorStyle" TargetType="{x:Type avalonedit:TextEditor}">
-        		<Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"/>
-        		<Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"/>
-        		<Setter Property="BorderThickness" Value="0"/>
-        		<Setter Property="FlowDirection" Value="LeftToRight"/>
-        		<Setter Property="Template">
-        			<Setter.Value>
-        				<ControlTemplate TargetType="{x:Type avalonedit:TextEditor}">
-        					<Border BorderBrush="{TemplateBinding BorderBrush}"
-                                    BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}">
-        						<ScrollViewer x:Name="PART_ScrollViewer" CanContentScroll="True"
+            <Style x:Key="TextEditorStyle" TargetType="{x:Type avalonedit:TextEditor}">
+                <Style.Resources>
+                    <Style TargetType="ScrollBar">
+                        <Setter Property="Background" Value="Transparent"/>
+                        <Setter Property="Foreground" Value="Transparent"/>
+                        <Setter Property="BorderBrush" Value="Transparent"/>
+                        <Setter Property="Opacity" Value="0.30"/>
+                    </Style>
+                </Style.Resources>
+                <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"/>
+                <Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"/>
+                <Setter Property="BorderThickness" Value="0"/>
+                <Setter Property="FlowDirection" Value="LeftToRight"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type avalonedit:TextEditor}">
+                            <Border BorderBrush="{TemplateBinding BorderBrush}"
+                                    BorderThickness="{TemplateBinding BorderThickness}"
+                                    Background="{TemplateBinding Background}">
+                                <ScrollViewer x:Name="PART_ScrollViewer"
+                                              CanContentScroll="True"
                                               Content="{Binding TextArea, RelativeSource={RelativeSource TemplatedParent}}"
-                                              Focusable="False" HorizontalContentAlignment="Left"
+                                              Focusable="False"
+                                              HorizontalContentAlignment="Left"
                                               HorizontalScrollBarVisibility="{TemplateBinding HorizontalScrollBarVisibility}"
                                               Padding="{TemplateBinding Padding}"
                                               VerticalScrollBarVisibility="{TemplateBinding VerticalScrollBarVisibility}"
                                               VerticalContentAlignment="Top"
                                               Background="{TemplateBinding Background}" 
-                                              BorderBrush="{TemplateBinding BorderBrush}" 
+                                              BorderBrush="{TemplateBinding BorderBrush}"
                                               Template="{DynamicResource ScrollViewerControlTemplate}"/>
-        					</Border>
-        					<ControlTemplate.Triggers>
-        						<Trigger Property="WordWrap" Value="True">
-        							<Setter Property="HorizontalScrollBarVisibility" TargetName="PART_ScrollViewer" Value="Disabled"/>
-        						</Trigger>
-        					</ControlTemplate.Triggers>
-        				</ControlTemplate>
-        			</Setter.Value>
-        		</Setter>
-        	</Style>
-
-            <ControlTemplate x:Key="ScrollViewerControlTemplate" TargetType="{x:Type ScrollViewer}">
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="Auto" />
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="Auto"/>
-                    </Grid.RowDefinitions>
-                    <ScrollContentPresenter Grid.ColumnSpan="2" Grid.RowSpan="2"/>
-                    <ScrollBar 
-        				x:Name="PART_VerticalScrollBar"
-        				Grid.Column="1"
-        				Opacity="0.25"
-        				Background="{TemplateBinding BorderBrush}"
-        				Foreground="{TemplateBinding BorderBrush}"
-        				BorderBrush="{TemplateBinding BorderBrush}"
-        				Value="{TemplateBinding VerticalOffset}"
-        				Maximum="{TemplateBinding ScrollableHeight}"
-        				ViewportSize="{TemplateBinding ViewportHeight}"
-        				Visibility="{TemplateBinding ComputedVerticalScrollBarVisibility}" />
-                    <ScrollBar 
-        				x:Name="PART_HorizontalScrollBar"
-        				Orientation="Horizontal"
-        				Grid.Row="1"
-        				Opacity="0.25"
-        				Background="{TemplateBinding BorderBrush}"
-        				Foreground="{TemplateBinding BorderBrush}"
-        				BorderBrush="{TemplateBinding BorderBrush}"
-        				Value="{TemplateBinding HorizontalOffset}"
-        				Maximum="{TemplateBinding ScrollableWidth}"
-        				ViewportSize="{TemplateBinding ViewportWidth}"
-        				Visibility="{TemplateBinding ComputedHorizontalScrollBarVisibility}" />
-                </Grid>
-            </ControlTemplate>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="WordWrap" Value="True">
+                                    <Setter Property="HorizontalScrollBarVisibility"
+                                            TargetName="PART_ScrollViewer"
+                                            Value="Disabled"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
             
         	<Style x:Key="ComboBoxToggleButton" TargetType="{x:Type ToggleButton}">
         		<Setter Property="OverridesDefaultStyle" Value="true"/>
