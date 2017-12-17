@@ -34,8 +34,11 @@
     <Window.InputBindings>
         <!-- File -->
         <KeyBinding Modifiers="Ctrl" Key="N" Command="{Binding newCommand}"/>
+        <KeyBinding Modifiers="Ctrl+Shift" Key="N" Command="{Binding newWindowCommand}"/>
         <KeyBinding Modifiers="Ctrl" Key="O" Command="{Binding openCommand}"/>
+        <KeyBinding Modifiers="Ctrl+Shift" Key="O" Command="{Binding openInExplorerCommand}"/>
         <KeyBinding Modifiers="Ctrl" Key="S" Command="{Binding saveCommand}"/>
+        <KeyBinding Modifiers="Ctrl+Shift" Key="S" Command="{Binding saveAsCommand}"/>
         <KeyBinding Modifiers="Ctrl" Key="P" Command="{Binding printCommand}"/>
 
         <!-- Edit -->
@@ -48,7 +51,9 @@
         <KeyBinding Modifiers="Ctrl" Key="H" Command="{Binding findAndReplaceCommand}"/>
         <KeyBinding Modifiers="Ctrl" Key="G" Command="{Binding gotoCommand}"/>
         <KeyBinding Modifiers="Alt" Key="D" Command="{Binding defineCommand}"/>
-        <KeyBinding Modifiers="Alt" Key="S" Command="{Binding sortCommand}"/>
+        <KeyBinding Modifiers="Alt" Key="R" Command="{Binding reverseCommand}"/>
+        <KeyBinding Modifiers="Alt" Key="S" Command="{Binding sortCommand}" CommandParameter="{StaticResource false}"/>
+        <KeyBinding Modifiers="Ctrl+Alt" Key="S" Command="{Binding sortCommand}" CommandParameter="{StaticResource true}"/>
         <KeyBinding Modifiers="Ctrl" Key="A" Command="{Binding selectAllCommand}"/>
 
         <!-- Insert -->
@@ -68,13 +73,13 @@
                             <TextBlock Text="File" VerticalAlignment="Center"/>
                         </MenuItem.Header>
                         <MenuItem Header="New" InputGestureText="Ctrl+N" Command="{Binding newCommand}"/>
-                        <MenuItem Header="New Window" Command="{Binding newWindowCommand}"/>
+                        <MenuItem Header="New Window" InputGestureText="Ctrl+Shift+N" Command="{Binding newWindowCommand}"/>
                         <MenuItem Header="Open" InputGestureText="Ctrl+O" Command="{Binding openCommand}"/>
-                        <MenuItem Header="Open in Explorer" Command="{Binding openInExplorerCommand}"/>
+                        <MenuItem Header="Open in Explorer" InputGestureText="Ctrl+Shift+O" Command="{Binding openInExplorerCommand}"/>
                         <MenuItem Header="Save" InputGestureText="Ctrl+S" Command="{Binding saveCommand}"/>
-                        <MenuItem Header="Save As" Command="{Binding saveAsCommand}"/>
+                        <MenuItem Header="Save As" InputGestureText="Ctrl+Shift+S" Command="{Binding saveAsCommand}"/>
                         <MenuItem Header="Print" InputGestureText="Ctrl+P" Command="{Binding printCommand}"/>
-                        <MenuItem Header="Exit" Command="{Binding exitCommand}"/>
+                        <MenuItem Header="Exit" InputGestureText="Alt+F4" Command="{Binding exitCommand}"/>
                     </MenuItem>
 
                     <MenuItem Height="{Binding Height, ElementName=menu}"
@@ -90,13 +95,24 @@
                         <MenuItem Header="Find" InputGestureText="Ctrl+F" Command="{Binding findCommand}"/>
                         <MenuItem Header="Find + Replace" InputGestureText="Ctrl+H" Command="{Binding findAndReplaceCommand}"/>
                         <MenuItem Header="Goto" InputGestureText="Ctrl+G" Command="{Binding gotoCommand}"/>
-                        <MenuItem Header="Advanced">
-                            <MenuItem Header="Normalize Line Endings"
-                                      Command="{Binding normalizeLineEndingdCommand}" Style="{StaticResource checkMenu}"/>
+                        <MenuItem Header="Normalize Line Endings" Command="{Binding normalizeLineEndingdCommand}"/>
+                        <MenuItem Header="Selection">
+                            <MenuItem Header="Convert Case" Style="{StaticResource checkMenu}">
+                                <MenuItem Header="lower case" Command="{Binding lowerCaseCommand}" Style="{StaticResource checkMenu}"/>
+                                <MenuItem Header="UPPER CASE" Command="{Binding upperCaseCommand}" Style="{StaticResource checkMenu}"/>
+                                <MenuItem Header="Title Case" Command="{Binding titleCaseCommand}" Style="{StaticResource checkMenu}"/>
+                                <MenuItem Header="tOGGLE cASE" Command="{Binding toggleCaseCommand}" Style="{StaticResource checkMenu}"/>
+                            </MenuItem>
                             <MenuItem Header="Define Selection" InputGestureText="Alt+D"
                                       Command="{Binding defineCommand}" Style="{StaticResource checkMenu}"/>
-                            <MenuItem Header="Sort Selected Lines" InputGestureText="Alt+S"
-                                      Command="{Binding sortCommand}" Style="{StaticResource checkMenu}"/>
+                            <MenuItem Header="Reverse Selected Lines" InputGestureText="Alt+R"
+                                      Command="{Binding reverseCommand}" Style="{StaticResource checkMenu}"/>
+                            <MenuItem Header="Sort Selected Lines" Style="{StaticResource checkMenu}">
+                                <MenuItem Header="Ascending" InputGestureText="Alt+S"
+                                          Command="{Binding sortCommand}" CommandParameter="{StaticResource false}" Style="{StaticResource checkMenu}"/>
+                                <MenuItem Header="Descending" InputGestureText="Ctrl+Alt+S"
+                                          Command="{Binding sortCommand}" CommandParameter="{StaticResource true}" Style="{StaticResource checkMenu}"/>
+                            </MenuItem>
                         </MenuItem>
                         <MenuItem Header="Select All" InputGestureText="Ctrl+A" Command="{Binding selectAllCommand}"/>
                     </MenuItem>

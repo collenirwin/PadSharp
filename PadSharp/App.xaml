@@ -15,6 +15,8 @@
 
             <sys:String x:Key="appName">Pad#</sys:String>
             <sys:Double x:Key="buttonHeight">40</sys:Double>
+            <sys:Boolean x:Key="true">True</sys:Boolean>
+            <sys:Boolean x:Key="false">False</sys:Boolean>
 
             <ItemsPanelTemplate x:Key="hideCheck">
             	<StackPanel Margin="-20,0,-2,0" Background="transparent"/>

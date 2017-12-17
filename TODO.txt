@@ -1,7 +1,2 @@
 Directory treeview?
-Maybe add another menu item (selection?)
-Convert cASE
-Option to sort descending
-Reverse word? Needed?
 Some sort of markdown-esque support? checkmarks?
-fix word-wrap lag

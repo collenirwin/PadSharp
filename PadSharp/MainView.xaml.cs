@@ -70,8 +70,13 @@ namespace PadSharp
         public UICommand gotoCommand { get; private set; }
         public UICommand gotoGoCommand { get; private set; }
         public UICommand normalizeLineEndingdCommand { get; private set; }
+        public UICommand lowerCaseCommand { get; private set; }
+        public UICommand upperCaseCommand { get; private set; }
+        public UICommand titleCaseCommand { get; private set; }
+        public UICommand toggleCaseCommand { get; private set; }
         public UICommand defineCommand { get; private set; }
-        public UICommand sortCommand { get; private set; }
+        public UICommand reverseCommand { get; private set; }
+        public UICommandWithParam sortCommand { get; private set; }
         public UICommand selectAllCommand { get; private set; }
 
         #endregion
@@ -232,8 +237,13 @@ namespace PadSharp
             gotoCommand = new UICommand(Goto_Command);
             gotoGoCommand = new UICommand(GotoGo_Command);
             normalizeLineEndingdCommand = new UICommand(NormalizeLineEndings_Command);
+            lowerCaseCommand = new UICommand(LowerCase_Command);
+            upperCaseCommand = new UICommand(UpperCase_Command);
+            titleCaseCommand = new UICommand(TitleCase_Command);
+            toggleCaseCommand = new UICommand(ToggleCase_Command);
             defineCommand = new UICommand(Define_Command);
-            sortCommand = new UICommand(Sort_Command);
+            reverseCommand = new UICommand(Reverse_Command);
+            sortCommand = new UICommandWithParam(Sort_Command);
             selectAllCommand = new UICommand(SelectAll_Command);
 
             // insert
@@ -613,6 +623,26 @@ namespace PadSharp
             // give the user some feedback - this change won't be obvious
             Alert.showDialog(@"Done. All line endings are now \r\n.", Global.APP_NAME);
         }
+        
+        private void LowerCase_Command()
+        {
+            TextEditorUtils.lowerCase(textbox, textbox.SelectedText);
+        }
+
+        private void UpperCase_Command()
+        {
+            TextEditorUtils.upperCase(textbox, textbox.SelectedText);
+        }
+
+        private void TitleCase_Command()
+        {
+            TextEditorUtils.titleCase(textbox, textbox.SelectedText);
+        }
+
+        private void ToggleCase_Command()
+        {
+            TextEditorUtils.toggleCase(textbox, textbox.SelectedText);
+        }
 
         private void Define_Command()
         {
@@ -658,9 +688,14 @@ namespace PadSharp
             }
         }
 
-        private void Sort_Command()
+        private void Reverse_Command()
         {
-            TextEditorUtils.sortLines(textbox, textbox.SelectedText);
+            TextEditorUtils.reverseLines(textbox, textbox.SelectedText);
+        }
+
+        private void Sort_Command(object descending)
+        {
+            TextEditorUtils.sortLines(textbox, textbox.SelectedText, (bool)descending);
         }
 
         private void SelectAll_Command()
