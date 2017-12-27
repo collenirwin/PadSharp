@@ -1,0 +1,6 @@
+﻿<SyntaxDefinition name="CheckMark" xmlns="http://icsharpcode.net/sharpdevelop/syntaxdefinition/2008">
+  <Color name="Check" foreground="Gray" />
+  <RuleSet>
+    <Span color="Check" begin="✔" />
+  </RuleSet>
+</SyntaxDefinition>

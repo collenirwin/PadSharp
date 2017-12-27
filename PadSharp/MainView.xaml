@@ -57,6 +57,8 @@
         <KeyBinding Modifiers="Ctrl" Key="A" Command="{Binding selectAllCommand}"/>
 
         <!-- Insert -->
+        <KeyBinding Modifiers="Alt" Key="C" Command="{Binding checkMarkCommand}" CommandParameter="{StaticResource true}"/>
+        <KeyBinding Modifiers="Ctrl+Alt" Key="C" Command="{Binding checkMarkCommand}" CommandParameter="{StaticResource false}"/>
         <KeyBinding Modifiers="Ctrl" Key="M" Command="{Binding todaysDateCommand}"/>
         <KeyBinding Modifiers="Ctrl" Key="T" Command="{Binding currentTimeCommand}"/>
     </Window.InputBindings>
@@ -122,6 +124,7 @@
                         <MenuItem.Header>
                             <TextBlock Text="Insert" VerticalAlignment="Center"/>
                         </MenuItem.Header>
+                        <MenuItem Header="Checkmark" InputGestureText="Alt+C" Command="{Binding checkMarkCommand}" CommandParameter="{StaticResource true}"/>
                         <MenuItem Header="Today's Date" InputGestureText="Ctrl+M" Command="{Binding todaysDateCommand}"/>
                         <MenuItem Header="Current Time" InputGestureText="Ctrl+T" Command="{Binding currentTimeCommand}"/>
                         <MenuItem Header="Date and Time" Command="{Binding dateAndTimeCommand}"/>
@@ -334,6 +337,9 @@
                        Style="{DynamicResource TextEditorStyle}">
             <ae:TextEditor.ContextMenu>
                 <ContextMenu Background="{DynamicResource backColorLight}" Margin="-30,0,-25,0">
+                    <MenuItem Header="Check" InputGestureText="Alt+C" Command="{Binding checkMarkCommand}" CommandParameter="{StaticResource true}"/>
+                    <MenuItem Header="Uncheck" InputGestureText="Alt+C" Command="{Binding checkMarkCommand}" CommandParameter="{StaticResource false}"/>
+                    <Separator/>
                     <MenuItem Header="Cut" InputGestureText="Ctrl+X" Command="{Binding cutCommand}"/>
                     <MenuItem Header="Copy" InputGestureText="Ctrl+C" Command="{Binding copyCommand}"/>
                     <MenuItem Header="Paste" InputGestureText="Ctrl+V" Command="{Binding pasteCommand}"/>

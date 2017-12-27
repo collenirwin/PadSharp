@@ -1,5 +1,7 @@
 ﻿using BoinWPF;
 using BoinWPF.Themes;
+using ICSharpCode.AvalonEdit.Highlighting;
+using ICSharpCode.AvalonEdit.Highlighting.Xshd;
 using ICSharpCode.AvalonEdit.Utils;
 using Microsoft.Win32;
 using System;
@@ -7,12 +9,14 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Xml;
 
 namespace PadSharp
 {
@@ -31,6 +35,9 @@ namespace PadSharp
 
         // 500px font size max
         const double MAX_FONT_SIZE = 500;
+
+        // our marker for highlighting a checked line
+        const string CHECK_MARK = "✔";
 
         // settings object (contains all user settings)
         readonly UISettings settings;
@@ -83,6 +90,7 @@ namespace PadSharp
 
         #region Insert
 
+        public UICommandWithParam checkMarkCommand { get; private set; }
         public UICommand todaysDateCommand { get; private set; }
         public UICommand currentTimeCommand { get; private set; }
         public UICommand dateAndTimeCommand { get; private set; }
@@ -247,6 +255,7 @@ namespace PadSharp
             selectAllCommand = new UICommand(SelectAll_Command);
 
             // insert
+            checkMarkCommand = new UICommandWithParam(CheckMark_Command);
             todaysDateCommand = new UICommand(TodaysDate_Command);
             currentTimeCommand = new UICommand(CurrentTime_Command);
             dateAndTimeCommand = new UICommand(DateAndTime_Command);
@@ -272,6 +281,13 @@ namespace PadSharp
 
             // register PositionChanged event
             textbox.TextArea.Caret.PositionChanged += textbox_PositionChanged;
+
+            // load the syntax highlighting xml from our resource file
+            using (var file = Assembly.GetExecutingAssembly().GetManifestResourceStream("PadSharp.CheckMark.xshd"))
+            using (var reader = new XmlTextReader(file))
+            {
+                textbox.SyntaxHighlighting = HighlightingLoader.Load(reader, HighlightingManager.Instance);
+            }
 
             settings = UISettings.load();
 
@@ -706,6 +722,29 @@ namespace PadSharp
         #endregion
 
         #region Insert
+
+        private void CheckMark_Command(object check)
+        {
+            // split the textbox text into lines
+            var lines = textbox.Text.Replace("\r", "").Split('\n');
+
+            // get the line we're currently on
+            int lineIndex = textbox.TextArea.Caret.Line - 1;
+
+            if ((bool)check)
+            {
+                // throw a CHECK_MARK at the beginning of the line we're on
+                lines[lineIndex] = CHECK_MARK + lines[lineIndex];
+            }
+            else
+            {
+                // remove all CHECK_MARKs from the line we're on
+                lines[lineIndex] = lines[lineIndex].Replace(CHECK_MARK, "");
+            }
+
+            // throw our edited lines back into the textbox
+            textbox.Text = string.Join("\r\n", lines);
+        }
 
         private void TodaysDate_Command()
         {

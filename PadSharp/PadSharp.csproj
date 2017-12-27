@@ -140,6 +140,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <EmbeddedResource Include="CheckMark.xshd" />
     <None Include="packages.config" />
     <None Include="PadSharp_TemporaryKey.pfx" />
     <None Include="Properties\Settings.settings">
