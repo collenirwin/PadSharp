@@ -338,7 +338,7 @@
             <ae:TextEditor.ContextMenu>
                 <ContextMenu Background="{DynamicResource backColorLight}" Margin="-30,0,-25,0">
                     <MenuItem Header="Check" InputGestureText="Alt+C" Command="{Binding checkMarkCommand}" CommandParameter="{StaticResource true}"/>
-                    <MenuItem Header="Uncheck" InputGestureText="Alt+C" Command="{Binding checkMarkCommand}" CommandParameter="{StaticResource false}"/>
+                    <MenuItem Header="Uncheck" InputGestureText="Ctrl+Alt+C" Command="{Binding checkMarkCommand}" CommandParameter="{StaticResource false}"/>
                     <Separator/>
                     <MenuItem Header="Cut" InputGestureText="Ctrl+X" Command="{Binding cutCommand}"/>
                     <MenuItem Header="Copy" InputGestureText="Ctrl+C" Command="{Binding copyCommand}"/>
