@@ -1,2 +1,2 @@
 Directory treeview?
-Some sort of markdown-esque support? checkmarks?
+✔Some sort of markdown-esque support? checkmarks?

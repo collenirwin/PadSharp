@@ -744,6 +744,8 @@ namespace PadSharp
 
             // throw our edited lines back into the textbox
             textbox.Text = string.Join("\r\n", lines);
+            textbox.TextArea.Caret.Line = lineIndex + 1;
+            textbox.TextArea.Caret.Column = 0;
         }
 
         private void TodaysDate_Command()
