@@ -101,6 +101,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="VersionChecker.cs" />
+    <Compile Include="WordList.cs" />
     <Page Include="MainView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -152,7 +153,9 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="words.txt" />
+  </ItemGroup>
   <ItemGroup>
     <None Include="BoinWPF.dll" />
     <Resource Include="favicon.ico" />

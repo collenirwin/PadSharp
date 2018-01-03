@@ -30,8 +30,8 @@ namespace PadSharp
         // required to implement (from INotifyPropertyChanged)
         public event PropertyChangedEventHandler PropertyChanged = (sender, e) => { };
 
-        // 100k file size max
-        const int FILE_SIZE_LIMIT = 100000;
+        // 5m file size max
+        const int FILE_SIZE_LIMIT = 5000000;
 
         // 500px font size max
         const double MAX_FONT_SIZE = 500;
@@ -76,6 +76,7 @@ namespace PadSharp
         public UICommand findAndReplaceCommand { get; private set; }
         public UICommand gotoCommand { get; private set; }
         public UICommand gotoGoCommand { get; private set; }
+        public UICommand checkSpellingCommand { get; private set; }
         public UICommand normalizeLineEndingdCommand { get; private set; }
         public UICommand lowerCaseCommand { get; private set; }
         public UICommand upperCaseCommand { get; private set; }
@@ -244,6 +245,7 @@ namespace PadSharp
             findAndReplaceCommand = new UICommand(FindReplace_Command);
             gotoCommand = new UICommand(Goto_Command);
             gotoGoCommand = new UICommand(GotoGo_Command);
+            checkSpellingCommand = new UICommand(CheckSpelling_Command);
             normalizeLineEndingdCommand = new UICommand(NormalizeLineEndings_Command);
             lowerCaseCommand = new UICommand(LowerCase_Command);
             upperCaseCommand = new UICommand(UpperCase_Command);
@@ -631,9 +633,52 @@ namespace PadSharp
             txtGoto.SelectAll();
         }
 
+        private void CheckSpelling_Command()
+        {
+            // words are 3 or more letters, no numbers/symbols other than '
+            var words = Regex.Matches(textbox.Text, @"\b([a-z]|'){3,}\b", RegexOptions.IgnoreCase);
+
+            bool mistakes = false;
+            foreach (Match word in words)
+            {
+                if (!WordList.containsWord(word.Value))
+                {
+                    mistakes = true; // spelling mistakes were made!
+
+                    // highlight undefined word
+                    textbox.SelectionLength = 0; // needed so we don't go out of range
+                    textbox.SelectionStart = word.Index;
+                    textbox.SelectionLength = word.Length;
+
+                    // scroll to the undefined word
+                    var location = textbox.Document.GetLocation(word.Index);
+                    textbox.ScrollTo(location.Line, location.Column);
+
+                    var result = Alert.showDialog(
+                        string.Format("'{0}' isn't in Pad#'s dictionary.", word.Value),
+                        Global.APP_NAME, "Skip", "Stop Spelling Check");
+
+                    if (result == AlertResult.button2Clicked)
+                    {
+                        // user clicked "Stop Spelling Check"
+                        return;
+                    }
+                }
+            }
+
+            // change our message depending on whether we found spelling mistakes
+            string message = mistakes
+                ? "No other spelling mistakes were found"
+                : "No spelling mistakes were found";
+
+            Global.actionMessage(message, "Note: some words may not be in Pad#'s dictionary. " +
+                "In order for a word to be checked it must be at least 3 letters long, " +
+                "and it must not contain any numbers or symbols (other than apostrophes (')).");
+        }
+
         private void NormalizeLineEndings_Command()
         {
-            // set all line endings to /r/n
+            // set all line endings to \r\n
             TextEditorUtils.normalizeLineEndings(textbox, true);
 
             // give the user some feedback - this change won't be obvious
@@ -681,21 +726,8 @@ namespace PadSharp
                 }
                 else // no file
                 {
-                    // donwload, load, showDefinition
-                    LocalDictionary.download(() =>
-                    {
-                        loadDictionary(() =>
-                        {
-                            showDefinition(text);
-                        });
-                    }, (ex) => // failed
-                    {
-                        Global.actionMessage("Failed to download the dictionary", ex.Message);
-                    });
-
-                    Alert.showDialog(
-                        "The dictionary is now downloading for the first time. This may take a moment.",
-                        Global.APP_NAME);
+                    // download, load, showDefinition
+                    downloadDictionary(() => showDefinition(text));
                 }
             }
             else
@@ -886,7 +918,7 @@ namespace PadSharp
         }
 
         /// <summary>
-        /// Calls LocalDictionary.Load with a default error callback
+        /// Calls LocalDictionary.load with a default error callback
         /// </summary>
         /// <param name="callback">Success callback</param>
         private void loadDictionary(Action callback)
@@ -895,6 +927,29 @@ namespace PadSharp
             {
                 Global.actionMessage("Failed to read from the dictionary", ex.Message);
             });
+        }
+
+        /// <summary>
+        /// Calls LocalDictionary.download, then loadDictionary with default error callbacks
+        /// </summary>
+        /// <param name="callback">Success callback</param>
+        private void downloadDictionary(Action callback)
+        {
+            // download, load, call callback
+            LocalDictionary.download(() =>
+            {
+                loadDictionary(() =>
+                {
+                    callback();
+                });
+            }, (ex) => // failed
+            {
+                Global.actionMessage("Failed to download the dictionary", ex.Message);
+            });
+
+            Alert.showDialog(
+                "The dictionary is now downloading for the first time. This may take a moment.",
+                Global.APP_NAME);
         }
 
         /// <summary>
@@ -1192,7 +1247,8 @@ namespace PadSharp
                     }
                     else
                     {
-                        Global.actionMessage("Failed to open '" + path + "'", "File is too large.");
+                        Global.actionMessage("Failed to open '" + path + "'", 
+                            string.Format("File is too large (must be under {0}k).", FILE_SIZE_LIMIT / 1000));
                     }
                 }
                 else

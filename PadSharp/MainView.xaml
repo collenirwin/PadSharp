@@ -50,6 +50,7 @@
         <KeyBinding Modifiers="Ctrl" Key="F" Command="{Binding findCommand}"/>
         <KeyBinding Modifiers="Ctrl" Key="H" Command="{Binding findAndReplaceCommand}"/>
         <KeyBinding Modifiers="Ctrl" Key="G" Command="{Binding gotoCommand}"/>
+        <KeyBinding Key="F7" Command="{Binding checkSpellingCommand}"/>
         <KeyBinding Modifiers="Alt" Key="D" Command="{Binding defineCommand}"/>
         <KeyBinding Modifiers="Alt" Key="R" Command="{Binding reverseCommand}"/>
         <KeyBinding Modifiers="Alt" Key="S" Command="{Binding sortCommand}" CommandParameter="{StaticResource false}"/>
@@ -97,6 +98,7 @@
                         <MenuItem Header="Find" InputGestureText="Ctrl+F" Command="{Binding findCommand}"/>
                         <MenuItem Header="Find + Replace" InputGestureText="Ctrl+H" Command="{Binding findAndReplaceCommand}"/>
                         <MenuItem Header="Goto" InputGestureText="Ctrl+G" Command="{Binding gotoCommand}"/>
+                        <MenuItem Header="Check Spelling" InputGestureText="F7" Command="{Binding checkSpellingCommand}"/>
                         <MenuItem Header="Normalize Line Endings" Command="{Binding normalizeLineEndingdCommand}"/>
                         <MenuItem Header="Selection">
                             <MenuItem Header="Convert Case" Style="{StaticResource checkMenu}">

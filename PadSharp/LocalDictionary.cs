@@ -149,13 +149,37 @@ namespace PadSharp
         /// </returns>
         public static string define(string word)
         {
-            word = word.ToUpper();
-
-            if (loaded && dictionary.ContainsKey(word))
+            // dictionary not in memory
+            if (!loaded)
             {
-                return dictionary[word];
+                return null;
             }
 
+            word = word.ToUpper();
+
+            // see if it's in there
+            if (dictionary.ContainsKey(word))
+            {
+                return dictionary[word]; // found!
+            }
+
+            var endings = new string[] { "S", "ED", "ES", "ING", "IES" };
+
+            // it wasn't. let's try taking off common word endings and looking for those variations
+            foreach (string ending in endings)
+            {
+                if (word.EndsWith(ending))
+                {
+                    // lop that ending off
+                    string endingless = word.Substring(0, word.Length - ending.Length);
+                    if (dictionary.ContainsKey(endingless))
+                    {
+                        return dictionary[endingless]; // aha!
+                    }
+                }
+            }
+
+            // no such luck!
             return null;
         }
 
