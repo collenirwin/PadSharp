@@ -762,16 +762,22 @@ namespace PadSharp
 
             // get the line we're currently on
             int lineIndex = textbox.TextArea.Caret.Line - 1;
+            string line = lines[lineIndex];
+
+            int checkPosition;
 
             if ((bool)check)
             {
-                // throw a CHECK_MARK at the beginning of the line we're on
-                lines[lineIndex] = CHECK_MARK + lines[lineIndex];
+                if (!line.StartsWith(CHECK_MARK))
+                {
+                    // throw a CHECK_MARK at the beginning of the line we're on (if it's not already there)
+                    lines[lineIndex] = CHECK_MARK + line;
+                }
             }
-            else
+            else if ((checkPosition = line.IndexOf(CHECK_MARK)) != -1)
             {
-                // remove all CHECK_MARKs from the line we're on
-                lines[lineIndex] = lines[lineIndex].Replace(CHECK_MARK, "");
+                // remove one CHECK_MARK from the line we're on (if one exists)
+                lines[lineIndex] = line.Remove(checkPosition, 1);
             }
 
             // throw our edited lines back into the textbox
