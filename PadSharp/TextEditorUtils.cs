@@ -154,7 +154,7 @@ namespace PadSharp
         /// <param name="textbox"><see cref="TextEditor"/> to replace text in</param>
         /// <param name="originalText">text to replace</param>
         /// <param name="newText">text to replace originalText with</param>
-        static void replaceIfExists(TextEditor textbox, string originalText, string newText)
+        private static void replaceIfExists(TextEditor textbox, string originalText, string newText)
         {
             int index = textbox.Text.IndexOf(originalText);
 
