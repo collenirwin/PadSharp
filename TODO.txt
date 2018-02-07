@@ -1,2 +1,3 @@
-Directory treeview?
+﻿Directory treeview?
 ✔Some sort of markdown-esque support? checkmarks?
+File encryption?

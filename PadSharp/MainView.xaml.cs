@@ -91,7 +91,8 @@ namespace PadSharp
 
         #region Insert
 
-        public UICommandWithParam checkMarkCommand { get; private set; }
+        public UICommand checkMarkCommand { get; private set; }
+        public UICommand addCheckMarkCommand { get; private set; }
         public UICommand todaysDateCommand { get; private set; }
         public UICommand currentTimeCommand { get; private set; }
         public UICommand dateAndTimeCommand { get; private set; }
@@ -257,7 +258,8 @@ namespace PadSharp
             selectAllCommand = new UICommand(SelectAll_Command);
 
             // insert
-            checkMarkCommand = new UICommandWithParam(CheckMark_Command);
+            checkMarkCommand = new UICommand(CheckMark_Command);
+            addCheckMarkCommand = new UICommand(AddCheckMark_Command);
             todaysDateCommand = new UICommand(TodaysDate_Command);
             currentTimeCommand = new UICommand(CurrentTime_Command);
             dateAndTimeCommand = new UICommand(DateAndTime_Command);
@@ -755,7 +757,7 @@ namespace PadSharp
 
         #region Insert
 
-        private void CheckMark_Command(object check)
+        private void CheckMark_Command()
         {
             // split the textbox text into lines
             var lines = textbox.Text.Replace("\r", "").Split('\n');
@@ -764,26 +766,28 @@ namespace PadSharp
             int lineIndex = textbox.TextArea.Caret.Line - 1;
             string line = lines[lineIndex];
 
-            int checkPosition;
+            bool hasCheck = line.Length > 0 && line.Substring(0, 1) == CHECK_MARK;
 
-            if ((bool)check)
+            if (!hasCheck)
             {
-                if (!line.StartsWith(CHECK_MARK))
-                {
-                    // throw a CHECK_MARK at the beginning of the line we're on (if it's not already there)
-                    lines[lineIndex] = CHECK_MARK + line;
-                }
+                // throw a CHECK_MARK at the beginning of the line we're on
+                lines[lineIndex] = CHECK_MARK + line;
             }
-            else if ((checkPosition = line.IndexOf(CHECK_MARK)) != -1)
+            else
             {
-                // remove one CHECK_MARK from the line we're on (if one exists)
-                lines[lineIndex] = line.Remove(checkPosition, 1);
+                // remove the CHECK_MARK from beginning of the line we're on
+                lines[lineIndex] = line.Remove(0, 1);
             }
 
             // throw our edited lines back into the textbox
             textbox.Document.Text = string.Join("\r\n", lines);
             textbox.TextArea.Caret.Line = lineIndex + 1;
             textbox.TextArea.Caret.Column = 0;
+        }
+
+        private void AddCheckMark_Command()
+        {
+            insert(CHECK_MARK);
         }
 
         private void TodaysDate_Command()
