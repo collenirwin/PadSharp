@@ -100,6 +100,8 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Crypto.cs" />
+    <Compile Include="StringUtils.cs" />
     <Compile Include="VersionChecker.cs" />
     <Compile Include="WordList.cs" />
     <Page Include="MainView.xaml">

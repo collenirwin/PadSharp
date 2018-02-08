@@ -8,7 +8,6 @@ namespace BoinVault
 {
     public static class Crypto
     {
-
         const int KEY_SIZE_BYTES = 32;
         const int PBKDF2_ITERATIONS = 4000;
 

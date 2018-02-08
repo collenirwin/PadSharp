@@ -25,7 +25,7 @@ namespace PadSharp
     /// </summary>
     public partial class MainView : Window, INotifyPropertyChanged
     {
-        #region Vars
+        #region Fields, Properties
 
         // required to implement (from INotifyPropertyChanged)
         public event PropertyChangedEventHandler PropertyChanged = (sender, e) => { };
@@ -214,6 +214,25 @@ namespace PadSharp
             }
         }
 
+        /// <summary>
+        /// Show the Selection Menu whenever text is selected
+        /// </summary>
+        public Visibility selectionMenuVisibility
+        {
+            get
+            {
+                return textbox != null && textbox.SelectionLength > 0
+                    ? Visibility.Visible
+                    : Visibility.Collapsed;
+            }
+            private set
+            {
+                // just force the UI to update
+                PropertyChanged(this,
+                    new PropertyChangedEventArgs("selectionMenuVisibility"));
+            }
+        }
+
         #endregion
 
         #endregion
@@ -285,6 +304,9 @@ namespace PadSharp
 
             // register PositionChanged event
             textbox.TextArea.Caret.PositionChanged += textbox_PositionChanged;
+
+            // register SelectionChanged event
+            textbox.TextArea.SelectionChanged += textArea_SelectionChanged;
 
             // load the syntax highlighting xml from our resource file
             using (var file = Assembly.GetExecutingAssembly().GetManifestResourceStream("PadSharp.CheckMark.xshd"))
@@ -689,22 +711,26 @@ namespace PadSharp
         
         private void LowerCase_Command()
         {
-            TextEditorUtils.lowerCase(textbox, textbox.SelectedText);
+            TextEditorUtils.replaceSelectedText(textbox,
+                textbox.SelectedText.ToLower());
         }
 
         private void UpperCase_Command()
         {
-            TextEditorUtils.upperCase(textbox, textbox.SelectedText);
+            TextEditorUtils.replaceSelectedText(textbox,
+                textbox.SelectedText.ToUpper());
         }
 
         private void TitleCase_Command()
         {
-            TextEditorUtils.titleCase(textbox, textbox.SelectedText);
+            TextEditorUtils.replaceSelectedText(textbox,
+                StringUtils.titleCase(textbox.SelectedText));
         }
 
         private void ToggleCase_Command()
         {
-            TextEditorUtils.toggleCase(textbox, textbox.SelectedText);
+            TextEditorUtils.replaceSelectedText(textbox,
+                StringUtils.toggleCase(textbox.SelectedText));
         }
 
         private void Define_Command()
@@ -740,12 +766,14 @@ namespace PadSharp
 
         private void Reverse_Command()
         {
-            TextEditorUtils.reverseLines(textbox, textbox.SelectedText);
+            TextEditorUtils.replaceSelectedText(textbox,
+                StringUtils.reverseLines(textbox.SelectedText));
         }
 
         private void Sort_Command(object descending)
         {
-            TextEditorUtils.sortLines(textbox, textbox.SelectedText, (bool)descending);
+            TextEditorUtils.replaceSelectedText(textbox,
+                StringUtils.sortLines(textbox.SelectedText, (bool)descending));
         }
 
         private void SelectAll_Command()
@@ -1233,6 +1261,12 @@ namespace PadSharp
 
             // force UI to acknowledge fileSaved
             fileSaved = false;
+        }
+
+        private void textArea_SelectionChanged(object sender, EventArgs e)
+        {
+            // force UI to acknowledge selectionMenuVisibility (we're not actually affecting it)
+            selectionMenuVisibility = Visibility.Visible;
         }
 
         #endregion

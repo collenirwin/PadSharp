@@ -1,6 +1,5 @@
 ﻿using ICSharpCode.AvalonEdit;
 using System;
-using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace PadSharp
@@ -19,8 +18,8 @@ namespace PadSharp
         /// <param name="textbox">TextEditor to search in</param>
         /// <param name="regex">Regular Expression to apply to textbox.Text</param>
         /// <param name="start">Starting point in textbox.Text</param>
-        /// <param name="matchCase">use IgnoreCase flag?</param>
-        /// <param name="lookback">search back from this point?</param>
+        /// <param name="matchCase">Use IgnoreCase flag?</param>
+        /// <param name="lookback">Search back from this point?</param>
         /// <returns>true if found, false if regex is incorrect or if not found</returns>
         public static bool findNext(TextEditor textbox, string regex, 
             int start, bool matchCase, bool lookback = false)
@@ -73,8 +72,8 @@ namespace PadSharp
         /// <param name="textbox">TextEditor to search in</param>
         /// <param name="regex">Regular Expression to apply to textbox.Text</param>
         /// <param name="start">Starting point in textbox.Text</param>
-        /// <param name="matchCase">use IgnoreCase flag?</param>
-        /// <param name="lookback">search back from this point?</param>
+        /// <param name="matchCase">Use IgnoreCase flag?</param>
+        /// <param name="lookback">Search back from this point?</param>
         /// <returns>true if found, false if regex is incorrect or if not found</returns>
         public static bool replaceNext(TextEditor textbox, string regex, string replacement,
             int start, bool matchCase, bool lookback = false)
@@ -109,7 +108,7 @@ namespace PadSharp
         /// <param name="textbox">TextEditor to search in</param>
         /// <param name="regex">Regular Expression to apply to textbox.Text</param>
         /// <param name="start">Starting point in textbox.Text</param>
-        /// <param name="matchCase">use IgnoreCase flag?</param>
+        /// <param name="matchCase">Use IgnoreCase flag?</param>
         /// <param name="predicate">
         /// Number of replacements will be passed to this.
         /// It will decide if the replacement will run.
@@ -143,17 +142,13 @@ namespace PadSharp
             return false;
         }
 
-        #endregion
-
-        #region Specific Text Manipulation
-
         /// <summary>
-        /// Replaces originalText with newText if it exists within the <see cref="TextEditor"/> provided.
+        /// Replaces the first instance of originalText with newText if it exists within the <see cref="TextEditor"/> provided.
         /// Does nothing otherwise.
         /// </summary>
         /// <param name="textbox"><see cref="TextEditor"/> to replace text in</param>
-        /// <param name="originalText">text to replace</param>
-        /// <param name="newText">text to replace originalText with</param>
+        /// <param name="originalText">Text to replace</param>
+        /// <param name="newText">Text to replace originalText with</param>
         private static void replaceIfExists(TextEditor textbox, string originalText, string newText)
         {
             int index = textbox.Text.IndexOf(originalText);
@@ -166,101 +161,30 @@ namespace PadSharp
                     .Insert(index, newText);
             }
         }
-            
-
-        /// <summary>
-        /// Reverses the order of the specified lines in the <see cref="TextEditor"/> provided.
-        /// Does nothing if textbox fors not contain linesToReverse.
-        /// </summary>
-        /// <param name="textbox"><see cref="TextEditor"/> to reverse lines in</param>
-        /// <param name="linesToReverse">Lines to reverse</param>
-        public static void reverseLines(TextEditor textbox, string linesToReverse)
-        {
-            replaceIfExists(textbox, linesToReverse,
-                string.Join("\r\n", linesToReverse
-                    .Replace("\r", "")
-                    .Split('\n')
-                    .Reverse()));
-        }
-
-        /// <summary>
-        /// Sorts the specified lines in the <see cref="TextEditor"/> provided.
-        /// Does nothing if textbox does not conain linesToSort.
-        /// </summary>
-        /// <param name="textbox"><see cref="TextEditor"/> to sort lines in</param>
-        /// <param name="linesToSort">Lines to sort</param>
-        /// <param name="descending">Sort in descending order?</param>
-        public static void sortLines(TextEditor textbox, string linesToSort, bool descending = false)
-        {
-            // get a collection of the lines
-            var lines = linesToSort.Replace("\r", "").Split('\n');
-
-            // sort 'em (ascending or descending based on passed param)
-            var sortedlines = descending ? lines.OrderByDescending(x => x) : lines.OrderBy(x => x);
-
-            replaceIfExists(textbox, linesToSort, string.Join("\r\n", sortedlines));
-        }
-
-        /// <summary>
-        /// Converts text specified text to lowercase if it's contained in the <see cref="TextEditor"/> provided
-        /// </summary>
-        /// <param name="textbox"><see cref="TextEditor"/> to convert text in</param>
-        /// <param name="textToConvert">Text you want to convert to lowercase</param>
-        public static void lowerCase(TextEditor textbox, string textToConvert)
-        {
-            replaceIfExists(textbox, textToConvert, textToConvert.ToLower());
-        }
-
-        /// <summary>
-        /// Converts text specified text to UPPERCASE if it's contained in the <see cref="TextEditor"/> provided
-        /// </summary>
-        /// <param name="textbox"><see cref="TextEditor"/> to convert text in</param>
-        /// <param name="textToConvert">Text you want to convert to UPPERCASE</param>
-        public static void upperCase(TextEditor textbox, string textToConvert)
-        {
-            replaceIfExists(textbox, textToConvert, textToConvert.ToUpper());
-        }
-
-        /// <summary>
-        /// Converts text specified text to Titlecase if it's contained in the <see cref="TextEditor"/> provided
-        /// </summary>
-        /// <param name="textbox"><see cref="TextEditor"/> to convert text in</param>
-        /// <param name="textToConvert">Text you want to convert to Titlecase</param>
-        public static void titleCase(TextEditor textbox, string textToConvert)
-        {
-            string newText = textToConvert;
-            var matches = Regex.Matches(textToConvert, @"\w+");
-
-            foreach (Match match in matches)
-            {
-                newText = newText
-                    .Remove(match.Index, match.Length)
-                    .Insert(match.Index, match.Value.Length == 1 // 1-length word: don't try to do anything with chars after first
-                        ? match.Value.ToUpper()
-                        : match.Value.Substring(0, 1).ToUpper() + match.Value.Substring(1).ToLower());
-            }
-
-            replaceIfExists(textbox, textToConvert, newText);
-        }
-
-        /// <summary>
-        /// Converts text specified text to tOGGLECASE if it's contained in the <see cref="TextEditor"/> provided
-        /// </summary>
-        /// <param name="textbox"><see cref="TextEditor"/> to convert text in</param>
-        /// <param name="textToConvert">Text you feel needs a case toggle</param>
-        public static void toggleCase(TextEditor textbox, string textToConvert)
-        {
-            string toggledText = "";
-
-            foreach (char c in textToConvert)
-            {
-                toggledText += char.IsUpper(c) ? c.ToString().ToLower() : c.ToString().ToUpper();
-            }
-
-            replaceIfExists(textbox, textToConvert, toggledText);
-        }
 
         #endregion
+
+        /// <summary>
+        /// Replaces the selected text within the <see cref="TextEditor"/> provided.
+        /// Does nothing is textbox.SelectionLength < 0.
+        /// </summary>
+        /// <param name="textbox"><see cref="TextEditor"/> to replace selection in</param>
+        /// <param name="replacement">Text to replace selection with</param>
+        public static void replaceSelectedText(TextEditor textbox, string replacement)
+        {
+            if (textbox.SelectionLength > 0)
+            {
+                int start = textbox.SelectionStart;
+
+                // replace selected text
+                textbox.Document.Text = textbox.Document.Text
+                    .Remove(start, textbox.SelectionLength)
+                    .Insert(start, replacement);
+
+                // select the new text
+                textbox.Select(start, replacement.Length);
+            }
+        }
 
         /// <summary>
         /// Set all line endings to \r\n (windows = true) or \n (windows = false)
