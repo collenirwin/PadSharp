@@ -5,6 +5,8 @@ VisualStudioVersion = 12.0.40629.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PadSharp", "PadSharp\PadSharp.csproj", "{BD8DDC80-DDDD-4C93-8856-11E3098C13FA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PadSharpTest", "PadSharpTest\PadSharpTest.csproj", "{410E6BEF-1811-46CA-A79A-CAFB78D2E1E8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{BD8DDC80-DDDD-4C93-8856-11E3098C13FA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BD8DDC80-DDDD-4C93-8856-11E3098C13FA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BD8DDC80-DDDD-4C93-8856-11E3098C13FA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{410E6BEF-1811-46CA-A79A-CAFB78D2E1E8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{410E6BEF-1811-46CA-A79A-CAFB78D2E1E8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{410E6BEF-1811-46CA-A79A-CAFB78D2E1E8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{410E6BEF-1811-46CA-A79A-CAFB78D2E1E8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

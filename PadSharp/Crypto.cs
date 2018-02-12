@@ -4,12 +4,12 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace BoinVault
+namespace PadSharp
 {
     public static class Crypto
     {
         const int KEY_SIZE_BYTES = 32;
-        const int PBKDF2_ITERATIONS = 4000;
+        const int PBKDF2_ITERATIONS = 10000;
 
         /// <summary>
         /// Uses SHA256 to hash a string (password) with the specified salt added
