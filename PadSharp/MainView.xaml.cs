@@ -78,13 +78,6 @@ namespace PadSharp
         public UICommand gotoGoCommand { get; private set; }
         public UICommand checkSpellingCommand { get; private set; }
         public UICommand normalizeLineEndingdCommand { get; private set; }
-        public UICommand lowerCaseCommand { get; private set; }
-        public UICommand upperCaseCommand { get; private set; }
-        public UICommand titleCaseCommand { get; private set; }
-        public UICommand toggleCaseCommand { get; private set; }
-        public UICommand defineCommand { get; private set; }
-        public UICommand reverseCommand { get; private set; }
-        public UICommandWithParam sortCommand { get; private set; }
         public UICommand selectAllCommand { get; private set; }
 
         #endregion
@@ -96,6 +89,19 @@ namespace PadSharp
         public UICommand todaysDateCommand { get; private set; }
         public UICommand currentTimeCommand { get; private set; }
         public UICommand dateAndTimeCommand { get; private set; }
+
+        #endregion
+
+        #region Selection
+
+        public UICommand boldCommand { get; private set; }
+        public UICommand lowerCaseCommand { get; private set; }
+        public UICommand upperCaseCommand { get; private set; }
+        public UICommand titleCaseCommand { get; private set; }
+        public UICommand toggleCaseCommand { get; private set; }
+        public UICommand defineCommand { get; private set; }
+        public UICommand reverseCommand { get; private set; }
+        public UICommandWithParam sortCommand { get; private set; }
 
         #endregion
 
@@ -267,13 +273,6 @@ namespace PadSharp
             gotoGoCommand = new UICommand(GotoGo_Command);
             checkSpellingCommand = new UICommand(CheckSpelling_Command);
             normalizeLineEndingdCommand = new UICommand(NormalizeLineEndings_Command);
-            lowerCaseCommand = new UICommand(LowerCase_Command);
-            upperCaseCommand = new UICommand(UpperCase_Command);
-            titleCaseCommand = new UICommand(TitleCase_Command);
-            toggleCaseCommand = new UICommand(ToggleCase_Command);
-            defineCommand = new UICommand(Define_Command);
-            reverseCommand = new UICommand(Reverse_Command);
-            sortCommand = new UICommandWithParam(Sort_Command);
             selectAllCommand = new UICommand(SelectAll_Command);
 
             // insert
@@ -282,6 +281,16 @@ namespace PadSharp
             todaysDateCommand = new UICommand(TodaysDate_Command);
             currentTimeCommand = new UICommand(CurrentTime_Command);
             dateAndTimeCommand = new UICommand(DateAndTime_Command);
+
+            // selection
+            boldCommand = new UICommand(Bold_Command);
+            lowerCaseCommand = new UICommand(LowerCase_Command);
+            upperCaseCommand = new UICommand(UpperCase_Command);
+            titleCaseCommand = new UICommand(TitleCase_Command);
+            toggleCaseCommand = new UICommand(ToggleCase_Command);
+            defineCommand = new UICommand(Define_Command);
+            reverseCommand = new UICommand(Reverse_Command);
+            sortCommand = new UICommandWithParam(Sort_Command);
 
             #endregion
 
@@ -703,77 +712,10 @@ namespace PadSharp
         private void NormalizeLineEndings_Command()
         {
             // set all line endings to \r\n
-            TextEditorUtils.normalizeLineEndings(textbox, true);
+            textbox.normalizeLineEndings(true);
 
             // give the user some feedback - this change won't be obvious
             Alert.showDialog(@"Done. All line endings are now \r\n.", Global.APP_NAME);
-        }
-        
-        private void LowerCase_Command()
-        {
-            TextEditorUtils.replaceSelectedText(textbox,
-                textbox.SelectedText.ToLower());
-        }
-
-        private void UpperCase_Command()
-        {
-            TextEditorUtils.replaceSelectedText(textbox,
-                textbox.SelectedText.ToUpper());
-        }
-
-        private void TitleCase_Command()
-        {
-            TextEditorUtils.replaceSelectedText(textbox,
-                StringUtils.titleCase(textbox.SelectedText));
-        }
-
-        private void ToggleCase_Command()
-        {
-            TextEditorUtils.replaceSelectedText(textbox,
-                StringUtils.toggleCase(textbox.SelectedText));
-        }
-
-        private void Define_Command()
-        {
-            string text = textbox.SelectedText.Trim();
-
-            if (text != "")
-            {
-                // we have a file
-                if (LocalDictionary.downloaded)
-                {
-                    // it's in memory
-                    if (LocalDictionary.loaded)
-                    {
-                        showDefinition(text);
-                    }
-                    else // load file, showDefinition
-                    {
-                        loadDictionary(() => showDefinition(text));
-                    }
-                }
-                else // no file
-                {
-                    // download, load, showDefinition
-                    downloadDictionary(() => showDefinition(text));
-                }
-            }
-            else
-            {
-                Alert.showDialog("Please select a word to define.", Global.APP_NAME);
-            }
-        }
-
-        private void Reverse_Command()
-        {
-            TextEditorUtils.replaceSelectedText(textbox,
-                StringUtils.reverseLines(textbox.SelectedText));
-        }
-
-        private void Sort_Command(object descending)
-        {
-            TextEditorUtils.replaceSelectedText(textbox,
-                StringUtils.sortLines(textbox.SelectedText, (bool)descending));
         }
 
         private void SelectAll_Command()
@@ -831,6 +773,86 @@ namespace PadSharp
         private void DateAndTime_Command()
         {
             insert(DateTime.Now.ToString(settings.dateFormat + " " + settings.timeFormat));
+        }
+
+        #endregion
+
+        #region Selection
+
+        private void Bold_Command()
+        {
+            string text = textbox.SelectedText;
+
+            // toggle bold for all lines
+            if (text.Contains('\n'))
+            {
+                textbox.replaceSelectedText(text.toggleLineStart("# "));
+            }
+            else // toggle bold within line
+            {
+                textbox.replaceSelectedText(text.toggleStartAndEnd("# ", " #"));
+            }
+        }
+
+        private void LowerCase_Command()
+        {
+            textbox.replaceSelectedText(textbox.SelectedText.ToLower());
+        }
+
+        private void UpperCase_Command()
+        {
+            textbox.replaceSelectedText(textbox.SelectedText.ToUpper());
+        }
+
+        private void TitleCase_Command()
+        {
+            textbox.replaceSelectedText(textbox.SelectedText.titleCase());
+        }
+
+        private void ToggleCase_Command()
+        {
+            textbox.replaceSelectedText(textbox.SelectedText.toggleCase());
+        }
+
+        private void Define_Command()
+        {
+            string text = textbox.SelectedText.Trim();
+
+            if (text != "")
+            {
+                // we have a file
+                if (LocalDictionary.downloaded)
+                {
+                    // it's in memory
+                    if (LocalDictionary.loaded)
+                    {
+                        showDefinition(text);
+                    }
+                    else // load file, showDefinition
+                    {
+                        loadDictionary(() => showDefinition(text));
+                    }
+                }
+                else // no file
+                {
+                    // download, load, showDefinition
+                    downloadDictionary(() => showDefinition(text));
+                }
+            }
+            else
+            {
+                Alert.showDialog("Please select a word to define.", Global.APP_NAME);
+            }
+        }
+
+        private void Reverse_Command()
+        {
+            textbox.replaceSelectedText(textbox.SelectedText.reverseLines());
+        }
+
+        private void Sort_Command(object descending)
+        {
+            textbox.replaceSelectedText(textbox.SelectedText.sortLines((bool)descending));
         }
 
         #endregion
@@ -1098,7 +1120,7 @@ namespace PadSharp
 
         private bool findHelper(int start, bool lookback = false)
         {
-            bool found = TextEditorUtils.findNext(textbox, txtFind.Text, 
+            bool found = textbox.findNext(txtFind.Text, 
                 start, matchCase.IsChecked == true, lookback);
 
             setFoundForeground(found);
@@ -1137,7 +1159,7 @@ namespace PadSharp
 
         private bool replaceHelper()
         {
-            bool replaced = TextEditorUtils.replaceNext(textbox, txtFind.Text, txtReplace.Text, 
+            bool replaced = textbox.replaceNext(txtFind.Text, txtReplace.Text, 
                 textbox.SelectionStart + textbox.SelectionLength, matchCase.IsChecked == true);
 
             setFoundForeground(replaced);
@@ -1152,7 +1174,7 @@ namespace PadSharp
 
         private void replaceAll_Click(object sender, RoutedEventArgs e)
         {
-            TextEditorUtils.replaceAll(textbox, txtFind.Text, txtReplace.Text, 
+            textbox.replaceAll(txtFind.Text, txtReplace.Text, 
                 matchCase.IsChecked == true, (count) =>
             {
                 return count > 0 && Alert.showDialog(

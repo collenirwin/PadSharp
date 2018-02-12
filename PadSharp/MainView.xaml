@@ -13,7 +13,7 @@
         PreviewMouseWheel="window_MouseWheel"
         ResizeMode="CanResizeWithGrip"
         DataContext="{Binding RelativeSource={RelativeSource Self}}">
-    
+
     <Window.Resources>
         <Style TargetType="TextBox">
             <Setter Property="BorderThickness" Value="0"/>
@@ -30,7 +30,7 @@
             <Setter Property="Foreground" Value="#23272d"/>
         </Style>
     </Window.Resources>
-    
+
     <Window.InputBindings>
         <!-- File -->
         <KeyBinding Modifiers="Ctrl" Key="N" Command="{Binding newCommand}"/>
@@ -51,10 +51,6 @@
         <KeyBinding Modifiers="Ctrl" Key="H" Command="{Binding findAndReplaceCommand}"/>
         <KeyBinding Modifiers="Ctrl" Key="G" Command="{Binding gotoCommand}"/>
         <KeyBinding Key="F7" Command="{Binding checkSpellingCommand}"/>
-        <KeyBinding Modifiers="Alt" Key="D" Command="{Binding defineCommand}"/>
-        <KeyBinding Modifiers="Alt" Key="R" Command="{Binding reverseCommand}"/>
-        <KeyBinding Modifiers="Alt" Key="S" Command="{Binding sortCommand}" CommandParameter="{StaticResource false}"/>
-        <KeyBinding Modifiers="Ctrl+Alt" Key="S" Command="{Binding sortCommand}" CommandParameter="{StaticResource true}"/>
         <KeyBinding Modifiers="Ctrl" Key="A" Command="{Binding selectAllCommand}"/>
 
         <!-- Insert -->
@@ -62,6 +58,13 @@
         <KeyBinding Modifiers="Ctrl+Alt" Key="C" Command="{Binding addCheckMarkCommand}"/>
         <KeyBinding Modifiers="Ctrl" Key="M" Command="{Binding todaysDateCommand}"/>
         <KeyBinding Modifiers="Ctrl" Key="T" Command="{Binding currentTimeCommand}"/>
+
+        <!-- Selection -->
+        <KeyBinding Modifiers="Ctrl" Key="B" Command="{Binding boldCommand}"/>
+        <KeyBinding Modifiers="Alt" Key="D" Command="{Binding defineCommand}"/>
+        <KeyBinding Modifiers="Alt" Key="R" Command="{Binding reverseCommand}"/>
+        <KeyBinding Modifiers="Alt" Key="S" Command="{Binding sortCommand}" CommandParameter="{StaticResource false}"/>
+        <KeyBinding Modifiers="Ctrl+Alt" Key="S" Command="{Binding sortCommand}" CommandParameter="{StaticResource true}"/>
     </Window.InputBindings>
 
     <DockPanel FocusManager.FocusedElement="{Binding ElementName=textbox}" Background="{DynamicResource backColorDark}">
@@ -120,17 +123,18 @@
                         <MenuItem.Header>
                             <TextBlock Text="Selection" VerticalAlignment="Center"/>
                         </MenuItem.Header>
-                        <MenuItem Header="Convert Case" Style="{StaticResource checkMenu}">
+                        <MenuItem Header="Bold" InputGestureText="Ctrl+B" Command="{Binding boldCommand}"/>
+                        <MenuItem Header="Convert Case">
                             <MenuItem Header="lower case" Command="{Binding lowerCaseCommand}" Style="{StaticResource checkMenu}"/>
                             <MenuItem Header="UPPER CASE" Command="{Binding upperCaseCommand}" Style="{StaticResource checkMenu}"/>
                             <MenuItem Header="Title Case" Command="{Binding titleCaseCommand}" Style="{StaticResource checkMenu}"/>
                             <MenuItem Header="tOGGLE cASE" Command="{Binding toggleCaseCommand}" Style="{StaticResource checkMenu}"/>
                         </MenuItem>
                         <MenuItem Header="Define Selection" InputGestureText="Alt+D"
-                                      Command="{Binding defineCommand}" Style="{StaticResource checkMenu}"/>
+                                      Command="{Binding defineCommand}"/>
                         <MenuItem Header="Reverse Selected Lines" InputGestureText="Alt+R"
-                                      Command="{Binding reverseCommand}" Style="{StaticResource checkMenu}"/>
-                        <MenuItem Header="Sort Selected Lines" Style="{StaticResource checkMenu}">
+                                      Command="{Binding reverseCommand}"/>
+                        <MenuItem Header="Sort Selected Lines">
                             <MenuItem Header="Ascending" InputGestureText="Alt+S"
                                           Command="{Binding sortCommand}" CommandParameter="{StaticResource false}" Style="{StaticResource checkMenu}"/>
                             <MenuItem Header="Descending" InputGestureText="Ctrl+Alt+S"
@@ -223,7 +227,7 @@
                     </TextBlock>
                 </StackPanel>
             </DockPanel>
-            
+
             <StackPanel Name="findPanelParent" Orientation="Horizontal" HorizontalAlignment="Right" Visibility="Collapsed">
 
                 <CheckBox Name="matchCase" Foreground="{DynamicResource foreColorDark}" FlowDirection="RightToLeft" IsTabStop="False" Margin="9">
@@ -231,7 +235,7 @@
                 </CheckBox>
 
                 <TextBlock Foreground="{DynamicResource foreColorDark}">Find</TextBlock>
-                
+
                 <StackPanel Name="findPanel" Orientation="Horizontal" HorizontalAlignment="Right"
                             Margin="0" Width="262" 
                             Background="{DynamicResource backColorDark}">
@@ -252,9 +256,9 @@
             </StackPanel>
 
             <StackPanel Name="replacePanelParent" Orientation="Horizontal" HorizontalAlignment="Right" Visibility="Collapsed">
-                
+
                 <TextBlock Foreground="{DynamicResource foreColorDark}">Replace</TextBlock>
-                
+
                 <StackPanel Name="replacePanel" Orientation="Horizontal" HorizontalAlignment="Right"
                             Margin="0" Width="{Binding Width, ElementName=findPanel}"
                             Background="{DynamicResource backColorDark}">
@@ -274,7 +278,7 @@
                             Style="{DynamicResource ButtonStyle}"/>
                 </StackPanel>
             </StackPanel>
-            
+
             <StackPanel Name="gotoPanel" Orientation="Horizontal" HorizontalAlignment="Right" Visibility="Collapsed">
                 <TextBlock Foreground="{DynamicResource foreColorDark}">Go to line</TextBlock>
                 <Border BorderBrush="{DynamicResource backColorLight}"
