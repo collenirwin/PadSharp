@@ -129,7 +129,7 @@ namespace PadSharp
             if (text.StartsWith(start) && text.EndsWith(end))
             {
                 // return the string without the start and end
-                return text.Substring(start.Length, text.Length - end.Length - 2);
+                return text.Substring(start.Length, text.Length - end.Length - start.Length);
             }
 
             return start + text + end;

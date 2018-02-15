@@ -61,6 +61,8 @@
 
         <!-- Selection -->
         <KeyBinding Modifiers="Ctrl" Key="B" Command="{Binding boldCommand}"/>
+        <KeyBinding Modifiers="Ctrl" Key="I" Command="{Binding italicCommand}"/>
+        <KeyBinding Modifiers="Ctrl" Key="U" Command="{Binding underlineCommand}"/>
         <KeyBinding Modifiers="Alt" Key="D" Command="{Binding defineCommand}"/>
         <KeyBinding Modifiers="Alt" Key="R" Command="{Binding reverseCommand}"/>
         <KeyBinding Modifiers="Alt" Key="S" Command="{Binding sortCommand}" CommandParameter="{StaticResource false}"/>
@@ -124,6 +126,9 @@
                             <TextBlock Text="Selection" VerticalAlignment="Center"/>
                         </MenuItem.Header>
                         <MenuItem Header="Bold" InputGestureText="Ctrl+B" Command="{Binding boldCommand}"/>
+                        <MenuItem Header="Italic" InputGestureText="Ctrl+I" Command="{Binding italicCommand}"/>
+                        <MenuItem Header="Underline" InputGestureText="Ctrl+U" Command="{Binding underlineCommand}"/>
+                        <Separator/>
                         <MenuItem Header="Convert Case">
                             <MenuItem Header="lower case" Command="{Binding lowerCaseCommand}" Style="{StaticResource checkMenu}"/>
                             <MenuItem Header="UPPER CASE" Command="{Binding upperCaseCommand}" Style="{StaticResource checkMenu}"/>
@@ -131,14 +136,16 @@
                             <MenuItem Header="tOGGLE cASE" Command="{Binding toggleCaseCommand}" Style="{StaticResource checkMenu}"/>
                         </MenuItem>
                         <MenuItem Header="Define Selection" InputGestureText="Alt+D"
-                                      Command="{Binding defineCommand}"/>
+                                  Command="{Binding defineCommand}"/>
                         <MenuItem Header="Reverse Selected Lines" InputGestureText="Alt+R"
-                                      Command="{Binding reverseCommand}"/>
+                                  Command="{Binding reverseCommand}"/>
                         <MenuItem Header="Sort Selected Lines">
                             <MenuItem Header="Ascending" InputGestureText="Alt+S"
-                                          Command="{Binding sortCommand}" CommandParameter="{StaticResource false}" Style="{StaticResource checkMenu}"/>
+                                      Command="{Binding sortCommand}" CommandParameter="{StaticResource false}" 
+                                      Style="{StaticResource checkMenu}"/>
                             <MenuItem Header="Descending" InputGestureText="Ctrl+Alt+S"
-                                          Command="{Binding sortCommand}" CommandParameter="{StaticResource true}" Style="{StaticResource checkMenu}"/>
+                                      Command="{Binding sortCommand}" CommandParameter="{StaticResource true}" 
+                                      Style="{StaticResource checkMenu}"/>
                         </MenuItem>
                     </MenuItem>
 
@@ -202,6 +209,7 @@
                         <MenuItem Header="Date/Time Format Guide" 
                                   Tag="https://docs.microsoft.com/en-us/dotnet/standard/base-types/custom-date-and-time-format-strings"
                                   Click="help_Click"/>
+                        <MenuItem Header="Font Styling Guide" Click="fontStyleGuide_Click"/>
                         <MenuItem Header="GitHub" Tag="https://github.com/collenirwin/PadSharp" Click="help_Click"/>
                     </MenuItem>
                 </Menu>

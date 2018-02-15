@@ -12,7 +12,7 @@ using System.Windows;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("PadSharp")]
-[assembly: AssemblyCopyright("Copyright © Collen Irwin 2017")]
+[assembly: AssemblyCopyright("Copyright © Collen Irwin 2018")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

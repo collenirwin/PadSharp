@@ -59,5 +59,30 @@ namespace PadSharp.Properties {
                 resourceCulture = value;
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Line Styles:
+        ///	* Italic line
+        ///	** Bold line
+        ///	*** Bold and italic line
+        ///	__ Underlined line
+        ///	__* Underlined italic line
+        ///	__** Underlined bold line
+        ///	__*** Underlined bold italic line
+        ///
+        ///In-line styles:
+        ///	normal * italic * normal
+        ///	normal ** bold ** normal
+        ///	normal *** bold and italic *** normal
+        ///	normal __ underlined __ normal
+        ///	normal __* underlined and italic *__ normal
+        ///	normal __** underlined and bold **__ normal
+        ///	normal __*** bold, underlined, and italic ***__ normal.
+        /// </summary>
+        internal static string font_style_guide {
+            get {
+                return ResourceManager.GetString("font_style_guide", resourceCulture);
+            }
+        }
     }
 }

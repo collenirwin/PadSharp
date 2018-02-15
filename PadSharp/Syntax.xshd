@@ -1,0 +1,20 @@
+﻿<SyntaxDefinition name="CheckMark" xmlns="http://icsharpcode.net/sharpdevelop/syntaxdefinition/2008">
+  <Color name="Check" foreground="Gray" />
+  <Color name="Bold" fontWeight="bold" />
+  <Color name="Italic" fontWeight="normal" fontStyle="italic" />
+  <Color name="BoldItalic" fontWeight="bold" fontStyle="italic" />
+  <Color name="Underline" underline="true" />
+  <Color name="UnderlineBold" underline="true" fontWeight="bold" />
+  <Color name="UnderlineItalic" underline="true" fontWeight="normal" fontStyle="italic" />
+  <Color name="UnderlineBoldItalic" underline="true" fontWeight="bold" fontStyle="italic" />
+  <RuleSet>
+    <Span color="Check" begin="✔" />
+    <Span color="UnderlineBoldItalic" begin="__\*\*\*" end="\*\*\*__" multiline="false" />
+    <Span color="UnderlineBold" begin="__\*\*" end="\*\*__" multiline="false" />
+    <Span color="UnderlineItalic" begin="__\*" end="\*__" multiline="false" />
+    <Span color="Underline" begin="__" end="__" multiline="false" />
+    <Span color="BoldItalic" begin="\*\*\*" end="\*\*\*" multiline="false" />
+    <Span color="Bold" begin="\*\*" end="\*\*" multiline="false" />
+    <Span color="Italic" begin="\*" end="\*" multiline="false" />
+  </RuleSet>
+</SyntaxDefinition>

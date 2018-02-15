@@ -143,7 +143,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="CheckMark.xshd" />
+    <EmbeddedResource Include="Syntax.xshd" />
     <None Include="packages.config" />
     <None Include="PadSharp_TemporaryKey.pfx" />
     <None Include="Properties\Settings.settings">
@@ -186,6 +186,9 @@
       <Progid>Text</Progid>
       <DefaultIcon>favicon.ico</DefaultIcon>
     </FileAssociation>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="font-style-guide.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

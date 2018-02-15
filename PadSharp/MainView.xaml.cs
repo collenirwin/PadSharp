@@ -1,5 +1,6 @@
 ﻿using BoinWPF;
 using BoinWPF.Themes;
+using ICSharpCode.AvalonEdit;
 using ICSharpCode.AvalonEdit.Highlighting;
 using ICSharpCode.AvalonEdit.Highlighting.Xshd;
 using ICSharpCode.AvalonEdit.Utils;
@@ -95,6 +96,8 @@ namespace PadSharp
         #region Selection
 
         public UICommand boldCommand { get; private set; }
+        public UICommand italicCommand { get; private set; }
+        public UICommand underlineCommand { get; private set; }
         public UICommand lowerCaseCommand { get; private set; }
         public UICommand upperCaseCommand { get; private set; }
         public UICommand titleCaseCommand { get; private set; }
@@ -284,6 +287,8 @@ namespace PadSharp
 
             // selection
             boldCommand = new UICommand(Bold_Command);
+            italicCommand = new UICommand(Italic_Command);
+            underlineCommand = new UICommand(Underline_Command);
             lowerCaseCommand = new UICommand(LowerCase_Command);
             upperCaseCommand = new UICommand(UpperCase_Command);
             titleCaseCommand = new UICommand(TitleCase_Command);
@@ -293,6 +298,8 @@ namespace PadSharp
             sortCommand = new UICommandWithParam(Sort_Command);
 
             #endregion
+
+            AvalonEditCommands.IndentSelection.InputGestures.Clear();
 
             InitializeComponent();
 
@@ -318,7 +325,7 @@ namespace PadSharp
             textbox.TextArea.SelectionChanged += textArea_SelectionChanged;
 
             // load the syntax highlighting xml from our resource file
-            using (var file = Assembly.GetExecutingAssembly().GetManifestResourceStream("PadSharp.CheckMark.xshd"))
+            using (var file = Assembly.GetExecutingAssembly().GetManifestResourceStream("PadSharp.Syntax.xshd"))
             using (var reader = new XmlTextReader(file))
             {
                 textbox.SyntaxHighlighting = HighlightingLoader.Load(reader, HighlightingManager.Instance);
@@ -781,17 +788,17 @@ namespace PadSharp
 
         private void Bold_Command()
         {
-            string text = textbox.SelectedText;
+            toggleFontStyle("**");
+        }
 
-            // toggle bold for all lines
-            if (text.Contains('\n'))
-            {
-                textbox.replaceSelectedText(text.toggleLineStart("# "));
-            }
-            else // toggle bold within line
-            {
-                textbox.replaceSelectedText(text.toggleStartAndEnd("# ", " #"));
-            }
+        private void Italic_Command()
+        {
+            toggleFontStyle("*");
+        }
+
+        private void Underline_Command()
+        {
+            toggleFontStyle("__");
         }
 
         private void LowerCase_Command()
@@ -854,6 +861,25 @@ namespace PadSharp
         {
             textbox.replaceSelectedText(textbox.SelectedText.sortLines((bool)descending));
         }
+
+        #region Helpers
+
+        private void toggleFontStyle(string marker)
+        {
+            string text = textbox.SelectedText;
+
+            // toggle marker for all lines
+            if (text.Contains('\n'))
+            {
+                textbox.replaceSelectedText(text.toggleLineStart(marker + " "));
+            }
+            else // toggle bold within line
+            {
+                textbox.replaceSelectedText(text.toggleStartAndEnd(marker + " ", " " + marker));
+            }
+        }
+
+        #endregion
 
         #endregion
 
@@ -948,6 +974,29 @@ namespace PadSharp
         #endregion
 
         #region Help
+
+        private void fontStyleGuide_Click(object sender, RoutedEventArgs e)
+        {
+            var fontStyleFile = Path.Combine(Global.DATA_PATH, "font-style-guide.txt");
+
+            // file isn't there yet. See if we can create it.
+            if (!File.Exists(fontStyleFile))
+            {
+                try
+                {
+                    Global.createDirectoryAndFile(fontStyleFile);
+                    File.WriteAllText(fontStyleFile, Properties.Resources.font_style_guide);
+                }
+                catch (Exception ex)
+                {
+                    Global.actionMessage("Cannot access your APPDATA folder.", ex.Message);
+                    return;
+                }
+            }
+
+            // open the file in the user's default text editor
+            Global.launch(fontStyleFile);
+        }
 
         private void help_Click(object sender, RoutedEventArgs e)
         {
