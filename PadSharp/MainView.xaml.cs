@@ -11,6 +11,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
@@ -48,6 +49,9 @@ namespace PadSharp
 
         // text from currently open file
         string savedText = "";
+
+        // should we prompt the user to reload the file if it has been modified
+        bool promptForReload = false;
 
         #region Properties
 
@@ -1267,6 +1271,43 @@ namespace PadSharp
 
         #region Window Events
 
+        private void window_Activated(object sender, EventArgs e)
+        {
+            // check to see if the open file has been modified
+            if (file != null && file.Exists && promptForReload)
+            {
+                try
+                {
+                    string fileText = File.ReadAllText(file.FullName);
+
+                    // file has been modified
+                    if (fileText != savedText)
+                    {
+                        promptForReload = false;
+
+                        // set savedText to the new text from the file
+                        savedText = fileText;
+                        fileSaved = fileSaved;
+
+                        // want to reload it?
+                        var result = Alert.showDialog(
+                            string.Format("\"{0}\" has been modified by another program. Would you like to reload it?", file.Name),
+                            Global.APP_NAME, "Yes", "No");
+
+                        // yes i do
+                        if (result == AlertResult.button1Clicked)
+                        {
+                            open(file.FullName);
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Logger.log(this.GetType(), ex);
+                }
+            }
+        }
+
         private void window_MouseWheel(object sender, MouseWheelEventArgs e)
         {
             // Ctrl+Scroll
@@ -1359,6 +1400,9 @@ namespace PadSharp
                         textbox.Text = File.ReadAllText(path);
                         savedText = textbox.Text;
                         file = _file;
+
+                        // prompt the user if the file changes
+                        promptForReload = true;
                     }
                     else
                     {
@@ -1385,6 +1429,9 @@ namespace PadSharp
                 File.WriteAllText(path, textbox.Text);
                 savedText = textbox.Text;
                 file = new FileInfo(path);
+
+                // prompt the user if the file changes
+                promptForReload = true;
             }
             catch (Exception ex)
             {

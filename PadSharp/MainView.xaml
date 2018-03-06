@@ -12,7 +12,7 @@
         Closing="window_Closing"
         PreviewMouseWheel="window_MouseWheel"
         ResizeMode="CanResizeWithGrip"
-        DataContext="{Binding RelativeSource={RelativeSource Self}}">
+        DataContext="{Binding RelativeSource={RelativeSource Self}}" Activated="window_Activated">
 
     <Window.Resources>
         <Style TargetType="TextBox">
