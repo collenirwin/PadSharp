@@ -518,8 +518,13 @@ namespace PadSharp
         {
             try
             {
-                // start another process from the executable
-                Process.Start(Process.GetCurrentProcess().MainModule.FileName);
+                // make sure the new window has the same settings as this one
+                setSettings(settings);
+                settings.save();
+
+                // make the new window and show it
+                var newWindow = new MainView();
+                newWindow.Show();
             }
             catch (Exception ex)
             {
@@ -993,7 +998,8 @@ namespace PadSharp
                 }
                 catch (Exception ex)
                 {
-                    Global.actionMessage("Cannot access your APPDATA folder.", ex.Message);
+                    Global.actionMessage(
+                        "Cannot access your APPDATA folder, which is where the font style guide is located.", ex.Message);
                     return;
                 }
             }
@@ -1292,7 +1298,7 @@ namespace PadSharp
                         // want to reload it?
                         var result = Alert.showDialog(
                             string.Format("\"{0}\" has been modified by another program. Would you like to reload it?", file.Name),
-                            Global.APP_NAME, "Yes", "No");
+                            Global.APP_NAME, "Reload from file", "Keep my changes");
 
                         // yes i do
                         if (result == AlertResult.button1Clicked)
