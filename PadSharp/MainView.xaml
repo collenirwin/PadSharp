@@ -9,10 +9,11 @@
         MinHeight="200" MinWidth="350"
         WindowStartupLocation="Manual"
         Icon="./favicon.ico"
+        Activated="window_Activated"
         Closing="window_Closing"
         PreviewMouseWheel="window_MouseWheel"
         ResizeMode="CanResizeWithGrip"
-        DataContext="{Binding RelativeSource={RelativeSource Self}}" Activated="window_Activated">
+        DataContext="{Binding RelativeSource={RelativeSource Self}}">
 
     <Window.Resources>
         <Style TargetType="TextBox">
