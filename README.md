@@ -1,5 +1,5 @@
 # ![PadSharp Icon](https://github.com/collenirwin/PadSharp/raw/master/PadSharp/favicon.ico) Pad#
-![PadSharp Example Image](https://github.com/collenirwin/PadSharp/raw/master/images/pad#_summary.png)
+![PadSharp Example Image](https://raw.githubusercontent.com/collenirwin/PadSharp/master/images/pad%23_summary.png)
 
 ## Notable Features
 - 2 themes (Light & Dark)
