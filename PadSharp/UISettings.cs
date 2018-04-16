@@ -67,7 +67,7 @@ namespace PadSharp
             }
             catch (Exception ex)
             {
-                Logger.log(typeof(UISettings), ex);
+                Logger.log(typeof(UISettings), ex, "loading");
             }
 
             return null;
@@ -101,7 +101,7 @@ namespace PadSharp
             }
             catch (Exception ex)
             {
-                Logger.log(typeof(UISettings), ex);
+                Logger.log(typeof(UISettings), ex, "saving");
                 return false;
             }
 

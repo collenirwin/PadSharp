@@ -13,7 +13,8 @@
         Closing="window_Closing"
         PreviewMouseWheel="window_MouseWheel"
         ResizeMode="CanResizeWithGrip"
-        DataContext="{Binding RelativeSource={RelativeSource Self}}">
+        DataContext="{Binding RelativeSource={RelativeSource Self}}"
+        Title="{Binding title}">
 
     <Window.Resources>
         <Style TargetType="TextBox">
@@ -250,7 +251,7 @@
                             Background="{DynamicResource backColorDark}">
                     <Border BorderBrush="{DynamicResource backColorLight}" 
                             BorderThickness="1" CornerRadius="2" Margin="0,5,5,5">
-                        <TextBox Name="txtFind" FontSize="14" Width="180" TextAlignment="Right"
+                        <TextBox Name="txtFind" FontSize="14" Width="180" TextAlignment="Right" MaxHeight="22"
                                  Background="{DynamicResource backColorLight}"
                                  Foreground="{DynamicResource foreColorDark}"
                                  TextChanged="txtFind_TextChanged"/>
@@ -273,7 +274,7 @@
                             Background="{DynamicResource backColorDark}">
                     <Border BorderBrush="{DynamicResource backColorLight}"
                             BorderThickness="1" CornerRadius="2" Margin="0,5,5,5">
-                        <TextBox Name="txtReplace" FontSize="14" Width="180" TextAlignment="Right"
+                        <TextBox Name="txtReplace" FontSize="14" Width="180" TextAlignment="Right" MaxHeight="22"
                                  Background="{DynamicResource backColorLight}"
                                  Foreground="{DynamicResource foreColorDark}"/>
                     </Border>
@@ -292,7 +293,7 @@
                 <TextBlock Foreground="{DynamicResource foreColorDark}">Go to line</TextBlock>
                 <Border BorderBrush="{DynamicResource backColorLight}"
                             BorderThickness="1" CornerRadius="2" Margin="0,5,5,5">
-                    <TextBox Name="txtGoto" FontSize="14" Width="180" TextAlignment="Right"
+                    <TextBox Name="txtGoto" FontSize="14" Width="180" TextAlignment="Right" MaxHeight="22"
                                  Background="{DynamicResource backColorLight}"
                                  Foreground="{DynamicResource foreColorDark}">
                         <TextBox.InputBindings>

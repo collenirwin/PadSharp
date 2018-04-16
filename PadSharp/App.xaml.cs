@@ -14,7 +14,7 @@ namespace PadSharp
                 Application.Current.Dispatcher.Invoke(() =>
                 {
                     // check for a new version
-                    VersionChecker.checkVersion(version =>
+                    VersionChecker.checkVersion((version) =>
                     {
                         var result = Alert.showDialog(
                             string.Format("A new version of {0} is available (version {1}). Would you like to download it?",
@@ -25,6 +25,10 @@ namespace PadSharp
                         {
                             Global.launch("https://github.com/collenirwin/PadSharp/blob/master/setup/pad_sharp_setup.exe");
                         }
+                    },
+                    (ex) =>
+                    {
+                        Logger.log(typeof(App), ex, "Checking Version");
                     });
                 });
             }

@@ -51,7 +51,9 @@ namespace PadSharp
             }
             catch (Exception ex)
             {
-                Global.actionMessage("Failed to launch '" + path + "'", ex.Message);
+                string message = "Failed to launch '" + path + "'";
+                Global.actionMessage(message, ex.Message);
+                Logger.log(typeof(Global), ex);
             }
         }
 

@@ -40,6 +40,9 @@ namespace PadSharp
         // our marker for highlighting a checked line
         const string CHECK_MARK = "✔";
 
+        // title: Pad# <version #>
+        const string TITLE = Global.APP_NAME + " " + Global.VERSION;
+
         // settings object (contains all user settings)
         readonly UISettings settings;
 
@@ -113,6 +116,19 @@ namespace PadSharp
 
         #endregion
 
+        public string title
+        {
+            get
+            {
+                return file != null ? file.Name + " - " + TITLE : TITLE;
+            }
+            private set
+            {
+                // just force the UI to update
+                PropertyChanged(this, new PropertyChangedEventArgs("title"));
+            }
+        }
+
         FileInfo _file;
 
         /// <summary>
@@ -128,6 +144,7 @@ namespace PadSharp
                     _file = value;
                     PropertyChanged(this, new PropertyChangedEventArgs("file"));
                     fileSaved = true;
+                    title = title; // force title to update
                 }
             }
         }
@@ -141,7 +158,7 @@ namespace PadSharp
             {
                 return file != null && textbox.Text == savedText;
             }
-            set
+            private set
             {
                 // hack? update the UI while keeping this essentially readonly
                 PropertyChanged(this, new PropertyChangedEventArgs("fileSaved"));
@@ -208,7 +225,7 @@ namespace PadSharp
         public double fontSize
         {
             get { return textbox.FontSize; }
-            set
+            private set
             {
                 // make sure fontSize is within acceptable range
                 if (value > MAX_FONT_SIZE)
@@ -302,12 +319,10 @@ namespace PadSharp
 
             #endregion
 
+            // get rid of indent selection keybind
             AvalonEditCommands.IndentSelection.InputGestures.Clear();
 
             InitializeComponent();
-
-            // titlebar: Pad# <version #>
-            this.Title = Global.APP_NAME + " " + Global.VERSION;
 
             var args = Environment.GetCommandLineArgs();
 
@@ -515,20 +530,17 @@ namespace PadSharp
 
         private void NewWindow_Command()
         {
-            try
-            {
-                // make sure the new window has the same settings as this one
-                setSettings(settings);
-                settings.save();
+            // make sure the new window has the same settings as this one
+            setSettings(settings);
+            settings.save();
 
-                // make the new window and show it
-                var newWindow = new MainView();
-                newWindow.Show();
-            }
-            catch (Exception ex)
-            {
-                Global.actionMessage("Failed to open a new window", ex.Message);
-            }
+            // make the new window and show it
+            var newWindow = new MainView();
+
+            // make sure there's no file open because there will be if there is a path in the command line args
+            newWindow.file = null;
+            newWindow.textbox.Text = "";
+            newWindow.Show();
         }
 
         private void Open_Command()
@@ -1422,7 +1434,9 @@ namespace PadSharp
             }
             catch (Exception ex)
             {
-                Global.actionMessage("Failed to open '" + path + "'", ex.Message);
+                string message = "Failed to open '" + path + "'";
+                Global.actionMessage(message, ex.Message);
+                Logger.log(typeof(MainView), ex, message);
             }
         }
 
@@ -1440,7 +1454,9 @@ namespace PadSharp
             }
             catch (Exception ex)
             {
-                Global.actionMessage("Failed to save to '" + path + "'", ex.Message);
+                string message = "Failed to save to '" + path + "'";
+                Global.actionMessage(message, ex.Message);
+                Logger.log(typeof(MainView), ex, message);
             }
         }
 

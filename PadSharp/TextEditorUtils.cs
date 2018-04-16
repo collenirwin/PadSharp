@@ -30,7 +30,7 @@ namespace PadSharp
                     ? RegexOptions.None
                     : RegexOptions.IgnoreCase;
 
-                string allText = textbox.Text;
+                options |= RegexOptions.Multiline;
 
                 if (lookback)
                 {
@@ -38,7 +38,7 @@ namespace PadSharp
                 }
 
                 var _regex = new Regex(regex, options);
-                var match = _regex.Match(allText, start);
+                var match = _regex.Match(textbox.Text, start);
 
                 if (!match.Success)
                 {

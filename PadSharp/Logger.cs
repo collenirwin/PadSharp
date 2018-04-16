@@ -5,7 +5,7 @@ namespace PadSharp
 {
     public static class Logger
     {
-        public const string FILE_PATH = "log.txt";
+        public static readonly string FILE_PATH = Path.Combine(Global.DATA_PATH, "log.txt");
 
         /// <summary>
         /// Log the specified text to Logger.FILE_PATH with the current date/time prepended
@@ -15,9 +15,11 @@ namespace PadSharp
         {
             try
             {
+                Global.createDirectoryAndFile(FILE_PATH);
+
                 using (var writer = new StreamWriter(FILE_PATH, true))
                 {
-                    writer.WriteLine(DateTime.Now.ToLongTimeString() + ": " + text);
+                    writer.WriteLine(DateTime.Now.ToString("MM/dd/yyyy hh:mm:ss tt") + ": " + text);
                 }
             }
             catch { }
@@ -28,9 +30,11 @@ namespace PadSharp
         /// </summary>
         /// <param name="sender">Type from which the Exception was thrown</param>
         /// <param name="ex">Exception that was thrown</param>
-        public static void log(Type sender, Exception ex)
+        /// <param name="message">Optional additional information</param>
+        public static void log(Type sender, Exception ex, string message = "")
         {
-            log(string.Format("[{0} Exception]: {1}", sender.Name, ex.Message));
+            log(string.Format("[{0} {1} (site: {2})]: {3} ({4})", 
+                sender.Name, ex.GetType().ToString(), ex.TargetSite, ex.Message, message));
         }
     }
 }
