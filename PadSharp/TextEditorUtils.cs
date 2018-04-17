@@ -43,7 +43,7 @@ namespace PadSharp
                 if (!match.Success)
                 {
                     // loop around and start from the opposite end
-                    match = _regex.Match(textbox.Text, lookback ? textbox.Text.Length : 0);
+                    match = _regex.Match(textbox.Document.Text, lookback ? textbox.Document.Text.Length : 0);
                 }
 
                 if (match.Success)
@@ -88,7 +88,7 @@ namespace PadSharp
                 int oldStart = textbox.SelectionStart;
 
                 // replace the selection
-                textbox.Text = textbox.Text
+                textbox.Document.Text = textbox.Document.Text
                     .Remove(oldStart, textbox.SelectionLength)
                     .Insert(oldStart, replacement);
 
@@ -135,7 +135,7 @@ namespace PadSharp
 
             if (predicate == null || predicate(matches.Count))
             {
-                textbox.Text = _regex.Replace(textbox.Text, replacement);
+                textbox.Document.Text = _regex.Replace(textbox.Document.Text, replacement);
                 return true;
             }
 

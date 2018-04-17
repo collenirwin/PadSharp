@@ -1,8 +1,11 @@
-﻿Directory treeview?
-✔Some sort of markdown-esque support? checkmarks?
+Directory treeview?
+✔ Some sort of markdown-esque support? checkmarks?
 File encryption?
-✔More opportunities to save settings (new window should have the same settings)
-✔Prompt when the open file has been modified by another program
-✔Add screenshots + more info to GitHub
+✔ More opportunities to save settings (new window should have the same settings)
+✔ Prompt when the open file has been modified by another program
+✔ Add screenshots + more info to GitHub
 Automated install?
-Fix behavior of ^ and $ in Find
+✔ Fix behavior of ^ and $ in Find (must use \r?$ instead of just $)
+✔ Don't stay open if we can't open the file in the command line args
+Add ability to customize status bar (maybe more status bar 'stats' too)
+✔ Space after checkmark?

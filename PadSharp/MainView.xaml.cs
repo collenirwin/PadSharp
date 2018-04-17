@@ -331,6 +331,12 @@ namespace PadSharp
             {
                 // assume it is a path to a file, try to open the file
                 open(args[1]);
+
+                // couldn't open the file, shutdown
+                if (file == null)
+                {
+                    Application.Current.Shutdown();
+                }
             }
 
             // set hyperlink color
@@ -767,13 +773,13 @@ namespace PadSharp
 
             if (!hasCheck)
             {
-                // throw a CHECK_MARK at the beginning of the line we're on
-                lines[lineIndex] = CHECK_MARK + line;
+                // throw a CHECK_MARK and a space at the beginning of the line we're on
+                lines[lineIndex] = CHECK_MARK + " " + line;
             }
             else
             {
-                // remove the CHECK_MARK from beginning of the line we're on
-                lines[lineIndex] = line.Remove(0, 1);
+                // remove the CHECK_MARK (and the space if it's there) from beginning of the line we're on
+                lines[lineIndex] = line.Remove(0, line.Length > 1 && line.Substring(1, 1) == " " ? 2 : 1);
             }
 
             // throw our edited lines back into the textbox
@@ -1402,6 +1408,12 @@ namespace PadSharp
 
         #region IO helpers
 
+        /// <summary>
+        /// Attempts to open the file specified by path in the editor.
+        /// Gives appropriate error prompts.
+        /// Also sets this.file to the newly opened file's FileInfo.
+        /// </summary>
+        /// <param name="path">Path to the desired file</param>
         private void open(string path)
         {
             try
@@ -1440,6 +1452,12 @@ namespace PadSharp
             }
         }
 
+        /// <summary>
+        /// Attempts to save the file specified by path.
+        /// Gives an appropriate error message if it can't save.
+        /// Also sets this.file to the (possibly updated) file's FileInfo.
+        /// </summary>
+        /// <param name="path">Path to the desired file</param>
         private void save(string path)
         {
             try
@@ -1460,6 +1478,10 @@ namespace PadSharp
             }
         }
 
+        /// <summary>
+        /// Opens a SaveFileDialog prompting the user to select a place to save,
+        /// then calls save with the selected path.
+        /// </summary>
         private void saveAs()
         {
             var saveDialog = new SaveFileDialog();
