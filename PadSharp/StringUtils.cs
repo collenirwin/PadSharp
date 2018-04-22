@@ -1,5 +1,7 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 
 namespace PadSharp
 {
@@ -133,6 +135,36 @@ namespace PadSharp
             }
 
             return start + text + end;
+        }
+
+        /// <summary>
+        /// Attempts to count the number of matches of the specified Regular Expression within the string asyncronously.
+        /// </summary>
+        /// <param name="text">Text to search in</param>
+        /// <param name="regex">Regular Expression to apply to text</param>
+        /// <param name="matchCase">Use IgnoreCase flag?</param>
+        /// <param name="action">Action to call when count is complete (takes count as only parameter)</param>
+        /// <param name="error">Action to call when an Exception is thrown</param>
+        public static async void countMatchesAsync(this string text, string regex, bool matchCase,
+            Action<int> action, Action<Exception> error = null)
+        {
+            try
+            {
+                int result = await Task<int>.Run(() =>
+                    Regex.Matches(text, regex, RegexOptions.Multiline | (matchCase ? RegexOptions.IgnoreCase : 0)).Count);
+
+                if (action != null)
+                {
+                    action(result);
+                }
+            }
+            catch (Exception ex)
+            {
+                if (error != null)
+                {
+                    error(ex);
+                }
+            }
         }
     }
 }

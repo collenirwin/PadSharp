@@ -185,13 +185,13 @@
                             <MenuItem Header="h:mm tt" IsCheckable="True" Checked="time_Checked" Unchecked="time_Unchecked" Style="{StaticResource checkMenu}"/>
                             <MenuItem Header="h:mm" IsCheckable="True" Checked="time_Checked" Unchecked="time_Unchecked" Style="{StaticResource checkMenu}"/>
                         </MenuItem>
-                        <MenuItem Header="Show Line Numbers" Name="showLineNumbersDropdown" 
+                        <MenuItem Header="Show Line Numbers" Name="showLineNumbersDropdown"
                                   IsCheckable="True" Checked="showLineNumbers_Checked" Unchecked="showLineNumbers_Checked"/>
-                        <MenuItem Header="Show Status Bar" Name="showStatusBarDropdown" 
+                        <MenuItem Header="Show Status Bar" Name="showStatusBarDropdown"
                                   IsCheckable="True" Checked="showStatusBar_Checked" Unchecked="showStatusBar_Checked"/>
-                        <MenuItem Header="Word Wrap" Name="wordWrapDropdown" 
+                        <MenuItem Header="Word Wrap" Name="wordWrapDropdown"
                                   IsCheckable="True" Checked="wordWrap_Checked" Unchecked="wordWrap_Checked"/>
-                        <MenuItem Header="Topmost" Name="topmostDrowndown" 
+                        <MenuItem Header="Topmost" Name="topmostDrowndown"
                                   IsCheckable="True" Checked="topmost_Checked" Unchecked="topmost_Checked"/>
                     </MenuItem>
 
@@ -245,9 +245,9 @@
                 </CheckBox>
 
                 <TextBlock Foreground="{DynamicResource foreColorDark}">Find</TextBlock>
+                <TextBlock Name="lblMatches" Margin="0,5,5,5" Foreground="{DynamicResource foreColorLight}">-</TextBlock>
 
-                <StackPanel Name="findPanel" Orientation="Horizontal" HorizontalAlignment="Right"
-                            Margin="0" Width="262" 
+                <StackPanel Name="findPanel" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0" 
                             Background="{DynamicResource backColorDark}">
                     <Border BorderBrush="{DynamicResource backColorLight}" 
                             BorderThickness="1" CornerRadius="2" Margin="0,5,5,5">
@@ -256,6 +256,7 @@
                                  Foreground="{DynamicResource foreColorDark}"
                                  TextChanged="txtFind_TextChanged"/>
                     </Border>
+
                     <Button Content="˄" FontFamily="Consolas" FontWeight="Bold" Click="findUp_Click" IsTabStop="False"
                             Margin="0,5,5,5" Padding="4,6,4,0" Width="20" FontSize="14" Style="{DynamicResource ButtonStyle}"/>
                     <Button Content="˅" FontFamily="Consolas" FontWeight="Bold" Click="findDown_Click" IsTabStop="False"
@@ -270,7 +271,7 @@
                 <TextBlock Foreground="{DynamicResource foreColorDark}">Replace</TextBlock>
 
                 <StackPanel Name="replacePanel" Orientation="Horizontal" HorizontalAlignment="Right"
-                            Margin="0" Width="{Binding Width, ElementName=findPanel}"
+                            Margin="0" Width="{Binding ActualWidth, ElementName=findPanel}"
                             Background="{DynamicResource backColorDark}">
                     <Border BorderBrush="{DynamicResource backColorLight}"
                             BorderThickness="1" CornerRadius="2" Margin="0,5,5,5">
@@ -278,6 +279,7 @@
                                  Background="{DynamicResource backColorLight}"
                                  Foreground="{DynamicResource foreColorDark}"/>
                     </Border>
+                    
                     <Button Content="Next" Margin="0,5,5,5" Padding="5" FontSize="10"
                             Click="replaceNext_Click"
                             IsTabStop="False"
@@ -311,14 +313,36 @@
         </StackPanel>
 
         <DockPanel Name="statusBar" DockPanel.Dock="Bottom" Background="{DynamicResource backColorLight}">
+            <DockPanel.ContextMenu>
+                <ContextMenu Visibility="Collapsed" Background="{DynamicResource backColorLight}">
+                    <MenuItem Header="Show Line Number" Command="{Binding lineNumberCommand}"/>
+                    <MenuItem Header="Show Column Number" Command="{Binding columnNumberCommand}"/>
+                    <MenuItem Header="Show Word Count" Command="{Binding wordCountCommand}"/>
+                    <MenuItem Header="Show Character Count" Command="{Binding charCountCommand}"/>
+                </ContextMenu>
+            </DockPanel.ContextMenu>
             <StackPanel DockPanel.Dock="Left" Orientation="Horizontal">
-                <TextBlock Text="Ln" Foreground="{DynamicResource foreColorDark}"/>
-                <TextBlock Text="{Binding lineNumber}" Foreground="{DynamicResource foreColorLight}"/>
-                <TextBlock Text="Col" Foreground="{DynamicResource foreColorDark}"/>
-                <TextBlock Text="{Binding columnNumber}" Foreground="{DynamicResource foreColorLight}"/>
-                <TextBlock Text="Words" Foreground="{DynamicResource foreColorDark}"/>
-                <TextBlock Text="{Binding wordCount}" Foreground="{DynamicResource foreColorLight}"/>
+                <StackPanel Visibility="{Binding lineNumberVisibility}" Orientation="Horizontal">
+                    <TextBlock Text="Ln" Foreground="{DynamicResource foreColorDark}"/>
+                    <TextBlock Text="{Binding lineNumber}" Foreground="{DynamicResource foreColorLight}"/>
+                </StackPanel>
+
+                <StackPanel Visibility="{Binding columnNumberVisibility}" Orientation="Horizontal">
+                    <TextBlock Text="Col" Foreground="{DynamicResource foreColorDark}"/>
+                    <TextBlock Text="{Binding columnNumber}" Foreground="{DynamicResource foreColorLight}"/>
+                </StackPanel>
+
+                <StackPanel Visibility="{Binding wordCountVisibility}" Orientation="Horizontal">
+                    <TextBlock Text="Words" Foreground="{DynamicResource foreColorDark}"/>
+                    <TextBlock Text="{Binding wordCount}" Foreground="{DynamicResource foreColorLight}"/>
+                </StackPanel>
+
+                <StackPanel Visibility="{Binding charCountVisibility}" Orientation="Horizontal">
+                    <TextBlock Text="Chars" Foreground="{DynamicResource foreColorDark}"/>
+                    <TextBlock Text="{Binding ElementName=textbox, Path=Document.Text.Length}" Foreground="{DynamicResource foreColorLight}"/>
+                </StackPanel>
             </StackPanel>
+            
             <StackPanel DockPanel.Dock="right" Orientation="Horizontal" HorizontalAlignment="Right">
                 <TextBlock Text="Font" Foreground="{DynamicResource foreColorDark}"/>
                 <ComboBox Name="fontDropdown" IsEditable="True" Margin="0,2,5,2"

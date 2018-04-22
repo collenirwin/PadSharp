@@ -78,27 +78,35 @@ namespace PadSharp
         public static bool replaceNext(this TextEditor textbox, string regex, string replacement,
             int start, bool matchCase, bool lookback = false)
         {
-            if (regex == "")
+            try
             {
+                if (regex == "")
+                {
+                    return false;
+                }
+
+                if (findNext(textbox, regex, start, matchCase, lookback))
+                {
+                    int oldStart = textbox.SelectionStart;
+
+                    // replace the selection
+                    textbox.Document.Text = textbox.Document.Text
+                        .Remove(oldStart, textbox.SelectionLength)
+                        .Insert(oldStart, replacement);
+
+                    // place our caret after the inserted replacement
+                    textbox.CaretOffset = oldStart + replacement.Length;
+                    return true;
+                }
+
+                // nothing to replace
                 return false;
             }
-
-            if (findNext(textbox, regex, start, matchCase, lookback))
+            catch
             {
-                int oldStart = textbox.SelectionStart;
-
-                // replace the selection
-                textbox.Document.Text = textbox.Document.Text
-                    .Remove(oldStart, textbox.SelectionLength)
-                    .Insert(oldStart, replacement);
-
-                // place our caret after the inserted replacement
-                textbox.CaretOffset = oldStart + replacement.Length;
-                return true;
+                // invalid regular expression
+                return false;
             }
-
-            // nothing to replace
-            return false;
         }
 
         /// <summary>
@@ -119,27 +127,36 @@ namespace PadSharp
         public static bool replaceAll(this TextEditor textbox, string regex, string replacement,
             bool matchCase, Predicate<int> predicate = null)
         {
-            if (regex == "")
+            try
             {
+                if (regex == "")
+                {
+                    return false;
+                }
+
+                var options = matchCase
+                    ? RegexOptions.None
+                    : RegexOptions.IgnoreCase;
+
+                options |= RegexOptions.Multiline;
+
+                var _regex = new Regex(regex, options);
+                var matches = _regex.Matches(textbox.Text);
+
+                if (predicate == null || predicate(matches.Count))
+                {
+                    textbox.Document.Text = _regex.Replace(textbox.Document.Text, replacement);
+                    return true;
+                }
+
+                // nothing to replace
                 return false;
             }
-
-            var options = matchCase
-                ? RegexOptions.None
-                : RegexOptions.IgnoreCase;
-
-            options |= RegexOptions.Multiline;
-
-            var _regex = new Regex(regex, options);
-            var matches = _regex.Matches(textbox.Text);
-
-            if (predicate == null || predicate(matches.Count))
+            catch
             {
-                textbox.Document.Text = _regex.Replace(textbox.Document.Text, replacement);
-                return true;
+                // invalid regular expression
+                return false;
             }
-
-            return false;
         }
 
         /// <summary>

@@ -116,6 +116,9 @@ namespace PadSharp
 
         #endregion
 
+        /// <summary>
+        /// Goes in the title bar of the app. Format: [filename?] - TITLE
+        /// </summary>
         public string title
         {
             get
@@ -183,6 +186,24 @@ namespace PadSharp
             }
         }
 
+        Visibility _lineNumberVisibility;
+
+        /// <summary>
+        /// Visibility of the line number in the status bar
+        /// </summary>
+        public Visibility lineNumberVisibulity
+        {
+            get { return _lineNumberVisibility; }
+            private set
+            {
+                if (_lineNumberVisibility != value)
+                {
+                    _lineNumberVisibility = value;
+                    PropertyChanged(this, new PropertyChangedEventArgs("lineNumberVisibulity"));
+                }
+            }
+        }
+
         int _columnNumber = 1;
 
         /// <summary>
@@ -201,6 +222,24 @@ namespace PadSharp
             }
         }
 
+        Visibility _columnNumberVisibility;
+
+        /// <summary>
+        /// Visibility of the column number in the status bar
+        /// </summary>
+        public Visibility columnNumberVisibility
+        {
+            get { return _columnNumberVisibility; }
+            private set
+            {
+                if (_columnNumberVisibility != value)
+                {
+                    _columnNumberVisibility = value;
+                    PropertyChanged(this, new PropertyChangedEventArgs("columnNumberVisibility"));
+                }
+            }
+        }
+
         int _wordCount = 0;
 
         /// <summary>
@@ -215,6 +254,42 @@ namespace PadSharp
                 {
                     _wordCount = value;
                     PropertyChanged(this, new PropertyChangedEventArgs("wordCount"));
+                }
+            }
+        }
+
+        Visibility _wordCountVisibility;
+
+        /// <summary>
+        /// Visibility of the word count in the status bar
+        /// </summary>
+        public Visibility wordCountVisibility
+        {
+            get { return _wordCountVisibility; }
+            private set
+            {
+                if (_wordCountVisibility != value)
+                {
+                    _wordCountVisibility = value;
+                    PropertyChanged(this, new PropertyChangedEventArgs("wordCountVisibility"));
+                }
+            }
+        }
+
+        Visibility _charCountVisibility;
+
+        /// <summary>
+        /// Visibility of the word count in the status bar
+        /// </summary>
+        public Visibility charCountVisibility
+        {
+            get { return _charCountVisibility; }
+            private set
+            {
+                if (_charCountVisibility != value)
+                {
+                    _charCountVisibility = value;
+                    PropertyChanged(this, new PropertyChangedEventArgs("charCountVisibility"));
                 }
             }
         }
@@ -431,6 +506,12 @@ namespace PadSharp
             showLineNumbers_Checked(null, null);
             showStatusBar_Checked(null, null);
             wordWrap_Checked(null, null);
+
+            // set visibilities
+            lineNumberVisibulity = settings.lineNumberVisibility;
+            columnNumberVisibility = settings.columnNumberVisibility;
+            wordCountVisibility = settings.wordCountVisibility;
+            charCountVisibility = settings.charCountVisibility;
         }
 
         /// <summary>
@@ -1194,14 +1275,38 @@ namespace PadSharp
             }
         }
 
-        private bool findHelper(int start, bool lookback = false)
+        /// <summary>
+        /// Calls textbox.findNext() with the appropriate arguments based on the ui.
+        /// loopback should be true if searching backwards from the start.
+        /// Updates lblMatches.Text with the number of matches found using the regex in txtFind.Text.
+        /// </summary>
+        /// <param name="start">Where to start searching</param>
+        /// <param name="lookback">Look back from this point?</param>
+        private void findHelper(int start, bool lookback = false)
         {
+            bool _matchCase = matchCase.IsChecked == true;
+
             bool found = textbox.findNext(txtFind.Text, 
-                start, matchCase.IsChecked == true, lookback);
+                start, _matchCase, lookback);
 
             setFoundForeground(found);
 
-            return found;
+            // if there's nothing in txtFind, don't count the matches
+            if (txtFind.Text == "")
+            {
+                lblMatches.Text = "-";
+                return;
+            }
+
+            // update lblMatches with the number of matches (async)
+            textbox.Document.Text.countMatchesAsync(txtFind.Text, _matchCase, (count) =>
+            {
+                lblMatches.Text = count.ToString();
+            },
+            (ex) =>
+            {
+                lblMatches.Text = "-";
+            });
         }
 
         private void txtFind_TextChanged(object sender, RoutedEventArgs e)
