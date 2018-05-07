@@ -39,11 +39,11 @@ namespace PadSharp
         public bool wordWrap = true;
         public bool topmost = false;
 
-        // visibilities
-        public Visibility lineNumberVisibility = Visibility.Visible;
-        public Visibility columnNumberVisibility = Visibility.Visible;
-        public Visibility wordCountVisibility = Visibility.Visible;
-        public Visibility charCountVisibility = Visibility.Collapsed;
+        // status bar visibilities
+        public bool lineNumberVisible = true;
+        public bool columnNumberVisible = true;
+        public bool wordCountVisible = true;
+        public bool charCountVisible = false;
 
         /// <summary>
         /// Creates a UISettings object based on the JSON file at FILE_PATH

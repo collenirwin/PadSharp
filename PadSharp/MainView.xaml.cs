@@ -28,6 +28,8 @@ namespace PadSharp
     {
         #region Fields, Properties
 
+        #region Fields
+
         // required to implement (from INotifyPropertyChanged)
         public event PropertyChangedEventHandler PropertyChanged = (sender, e) => { };
 
@@ -54,6 +56,8 @@ namespace PadSharp
 
         // should we prompt the user to reload the file if it has been modified
         bool promptForReload = false;
+
+        #endregion
 
         #region Properties
 
@@ -114,7 +118,18 @@ namespace PadSharp
 
         #endregion
 
+        #region Settings
+
+        public UICommand toggleLineNumbersCommand { get; private set; }
+        public UICommand toggleStatusBarCommand { get; private set; }
+        public UICommand toggleWordWrapCommand { get; private set; }
+        public UICommand toggleTopmostCommand { get; private set; }
+
         #endregion
+
+        #endregion
+
+        #region Properties with Associated Fields
 
         /// <summary>
         /// Goes in the title bar of the app. Format: [filename?] - TITLE
@@ -168,6 +183,29 @@ namespace PadSharp
             }
         }
 
+        /// <summary>
+        /// Hides or shows statusBar
+        /// </summary>
+        public bool statusBarVisible
+        {
+            get
+            {
+                return statusBar != null
+                    ? statusBar.Visibility == Visibility.Visible 
+                    : false;
+            }
+            set
+            {
+                if (statusBar == null)
+                {
+                    return;
+                }
+
+                statusBar.Visibility = value ? Visibility.Visible : Visibility.Collapsed;
+                PropertyChanged(this, new PropertyChangedEventArgs("statusBarVisible"));
+            }
+        }
+
         int _lineNumber = 1;
 
         /// <summary>
@@ -186,20 +224,20 @@ namespace PadSharp
             }
         }
 
-        Visibility _lineNumberVisibility;
+        bool _lineNumberVisible;
 
         /// <summary>
-        /// Visibility of the line number in the status bar
+        /// Show the line number in the status bar?
         /// </summary>
-        public Visibility lineNumberVisibulity
+        public bool lineNumberVisible
         {
-            get { return _lineNumberVisibility; }
+            get { return _lineNumberVisible; }
             private set
             {
-                if (_lineNumberVisibility != value)
+                if (_lineNumberVisible != value)
                 {
-                    _lineNumberVisibility = value;
-                    PropertyChanged(this, new PropertyChangedEventArgs("lineNumberVisibulity"));
+                    _lineNumberVisible = value;
+                    PropertyChanged(this, new PropertyChangedEventArgs("lineNumberVisible"));
                 }
             }
         }
@@ -222,20 +260,20 @@ namespace PadSharp
             }
         }
 
-        Visibility _columnNumberVisibility;
+        bool _columnNumberVisible;
 
         /// <summary>
-        /// Visibility of the column number in the status bar
+        /// Show the column number in the status bar?
         /// </summary>
-        public Visibility columnNumberVisibility
+        public bool columnNumberVisible
         {
-            get { return _columnNumberVisibility; }
+            get { return _columnNumberVisible; }
             private set
             {
-                if (_columnNumberVisibility != value)
+                if (_columnNumberVisible != value)
                 {
-                    _columnNumberVisibility = value;
-                    PropertyChanged(this, new PropertyChangedEventArgs("columnNumberVisibility"));
+                    _columnNumberVisible = value;
+                    PropertyChanged(this, new PropertyChangedEventArgs("columnNumberVisible"));
                 }
             }
         }
@@ -258,38 +296,38 @@ namespace PadSharp
             }
         }
 
-        Visibility _wordCountVisibility;
+        bool _wordCountVisible;
 
         /// <summary>
-        /// Visibility of the word count in the status bar
+        /// Show the word count in the status bar?
         /// </summary>
-        public Visibility wordCountVisibility
+        public bool wordCountVisible
         {
-            get { return _wordCountVisibility; }
+            get { return _wordCountVisible; }
             private set
             {
-                if (_wordCountVisibility != value)
+                if (_wordCountVisible != value)
                 {
-                    _wordCountVisibility = value;
-                    PropertyChanged(this, new PropertyChangedEventArgs("wordCountVisibility"));
+                    _wordCountVisible = value;
+                    PropertyChanged(this, new PropertyChangedEventArgs("wordCountVisible"));
                 }
             }
         }
 
-        Visibility _charCountVisibility;
+        bool _charCountVisible;
 
         /// <summary>
-        /// Visibility of the word count in the status bar
+        /// Show the char count in the status bar?
         /// </summary>
-        public Visibility charCountVisibility
+        public bool charCountVisible
         {
-            get { return _charCountVisibility; }
+            get { return _charCountVisible; }
             private set
             {
-                if (_charCountVisibility != value)
+                if (_charCountVisible != value)
                 {
-                    _charCountVisibility = value;
-                    PropertyChanged(this, new PropertyChangedEventArgs("charCountVisibility"));
+                    _charCountVisible = value;
+                    PropertyChanged(this, new PropertyChangedEventArgs("charCountVisible"));
                 }
             }
         }
@@ -336,6 +374,8 @@ namespace PadSharp
                     new PropertyChangedEventArgs("selectionMenuVisibility"));
             }
         }
+
+        #endregion
 
         #endregion
 
@@ -391,6 +431,12 @@ namespace PadSharp
             defineCommand = new UICommand(Define_Command);
             reverseCommand = new UICommand(Reverse_Command);
             sortCommand = new UICommandWithParam(Sort_Command);
+
+            // settings
+            toggleLineNumbersCommand = new UICommand(ToggleLineNumbers_Command);
+            toggleStatusBarCommand = new UICommand(ToggleStatusBar_Command);
+            toggleWordWrapCommand = new UICommand(ToggleWordWrap_Command);
+            toggleTopmostCommand = new UICommand(ToggleTopmost_Command);
 
             #endregion
 
@@ -497,21 +543,16 @@ namespace PadSharp
             checkIfSameValue(timeFormatMenu, settings.timeFormat);
 
             // set toggles
-            showLineNumbersDropdown.IsChecked = settings.showLineNumbers;
             showStatusBarDropdown.IsChecked = settings.showStatusBar;
-            wordWrapDropdown.IsChecked = settings.wordWrap;
-            topmostDrowndown.IsChecked = settings.topmost;
+            textbox.WordWrap = settings.wordWrap;
+            textbox.ShowLineNumbers = settings.showLineNumbers;
+            this.Topmost = settings.topmost;
 
-            // call toggle events? ...
-            showLineNumbers_Checked(null, null);
-            showStatusBar_Checked(null, null);
-            wordWrap_Checked(null, null);
-
-            // set visibilities
-            lineNumberVisibulity = settings.lineNumberVisibility;
-            columnNumberVisibility = settings.columnNumberVisibility;
-            wordCountVisibility = settings.wordCountVisibility;
-            charCountVisibility = settings.charCountVisibility;
+            // set status bar visibilities
+            lineNumberVisible = settings.lineNumberVisible;
+            columnNumberVisible = settings.columnNumberVisible;
+            wordCountVisible = settings.wordCountVisible;
+            charCountVisible = settings.charCountVisible;
         }
 
         /// <summary>
@@ -523,10 +564,21 @@ namespace PadSharp
             settings.fontFamily = textbox.FontFamily;
             settings.fontSize = this.fontSize;
             settings.windowState = this.WindowState;
+
             settings.top = this.Top;
             settings.left = this.Left;
             settings.height = this.Height;
             settings.width = this.Width;
+
+            settings.showLineNumbers = textbox.ShowLineNumbers;
+            settings.showStatusBar = statusBar.Visibility == Visibility.Visible;
+            settings.wordWrap = textbox.WordWrap;
+            settings.topmost = this.Topmost;
+
+            settings.lineNumberVisible = lineNumberVisible;
+            settings.columnNumberVisible = columnNumberVisible;
+            settings.wordCountVisible = wordCountVisible;
+            settings.charCountVisible = charCountVisible;
         }
 
         #endregion
@@ -1054,27 +1106,30 @@ namespace PadSharp
             }
         }
 
-        private void showLineNumbers_Checked(object sender, RoutedEventArgs e)
+        private void ToggleLineNumbers_Command()
         {
+            // toggle the IsChecked of the MenuItem
+            showLineNumbersDropdown.IsChecked = !showLineNumbersDropdown.IsChecked;
             textbox.ShowLineNumbers = showLineNumbersDropdown.IsChecked;
-            settings.showLineNumbers = showLineNumbersDropdown.IsChecked;
         }
 
-        private void showStatusBar_Checked(object sender, RoutedEventArgs e)
+        private void ToggleStatusBar_Command()
         {
-            statusBar.Visibility = showStatusBarDropdown.IsChecked ? Visibility.Visible : Visibility.Collapsed;
-            settings.showStatusBar = showStatusBarDropdown.IsChecked;
+            // toggle the visibility of the status bar
+            statusBarVisible = !statusBarVisible;
         }
 
-        private void wordWrap_Checked(object sender, RoutedEventArgs e)
+        private void ToggleWordWrap_Command()
         {
+            // toggle the IsChecked of the MenuItem
+            wordWrapDropdown.IsChecked = !wordWrapDropdown.IsChecked;
             textbox.WordWrap = wordWrapDropdown.IsChecked;
-            settings.wordWrap = wordWrapDropdown.IsChecked;
         }
 
-        private void topmost_Checked(object sender, RoutedEventArgs e)
+        private void ToggleTopmost_Command()
         {
-            settings.topmost = topmostDrowndown.IsChecked;
+            // toggle the IsChecked of the MenuItem
+            topmostDrowndown.IsChecked = !topmostDrowndown.IsChecked;
             this.Topmost = topmostDrowndown.IsChecked;
         }
 

@@ -79,14 +79,14 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="PadSharp.exe" size="2005440">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="PadSharp.exe" size="2008000">
       <assemblyIdentity name="PadSharp" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>vmuQ/C9OutOdmmgUBmKS7I0EOiIWi4lwyi00I6zzzCs=</dsig:DigestValue>
+        <dsig:DigestValue>ndousGl5RKe6KRqvQr74lADHkduNISnmVx0vUUCTKqQ=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
