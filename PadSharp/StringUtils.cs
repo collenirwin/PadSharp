@@ -27,10 +27,7 @@ namespace PadSharp
         /// <returns>linesToReverse in reverse order</returns>
         public static string reverseLines(this string linesToReverse)
         {
-            return string.Join("\r\n", linesToReverse
-                .Replace("\r", "")
-                .Split('\n')
-                .Reverse());
+            return string.Join("\r\n", linesToReverse.splitLines().Reverse());
         }
 
         /// <summary>
@@ -84,7 +81,7 @@ namespace PadSharp
 
             foreach (char c in textToConvert)
             {
-                toggledText += char.IsUpper(c) ? c.ToString().ToLower() : c.ToString().ToUpper();
+                toggledText += char.IsUpper(c) ? char.ToLower(c) : char.ToUpper(c);
             }
 
             return toggledText;

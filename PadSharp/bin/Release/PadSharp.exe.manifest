@@ -86,7 +86,7 @@
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>ndousGl5RKe6KRqvQr74lADHkduNISnmVx0vUUCTKqQ=</dsig:DigestValue>
+        <dsig:DigestValue>cJHxMqVSRFTGzWLFDPLBHTg3rRmL0LEguD8bHvXTAQ0=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>

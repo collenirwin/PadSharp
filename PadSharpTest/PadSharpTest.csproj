@@ -52,6 +52,7 @@
   <ItemGroup>
     <Compile Include="CryptoTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="StringUtilsTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\PadSharp\PadSharp.csproj">
