@@ -1167,7 +1167,7 @@ namespace PadSharp
         }
 
         #endregion
-
+        void dog() { }
         #region Helpers
 
         /// <summary>
