@@ -210,11 +210,11 @@ namespace PadSharp
         /// <param name="windows">Use Windows line endings?</param>
         public static void normalizeLineEndings(this TextEditor textbox, bool windows)
         {
-            textbox.Text = textbox.Text.Replace("\r", "");
+            textbox.Document.Text = textbox.Document.Text.Replace("\r", "");
 
             if (windows)
             {
-                textbox.Text = textbox.Text.Replace("\n", "\r\n");
+                textbox.Document.Text = textbox.Document.Text.Replace("\n", "\r\n");
             }
         }
     }

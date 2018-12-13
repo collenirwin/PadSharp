@@ -855,7 +855,7 @@ namespace PadSharp
 
                     var result = Alert.showDialog(
                         string.Format("'{0}' isn't in Pad#'s dictionary.", word.Value),
-                        Global.APP_NAME, "Skip", "Stop Spelling Check");
+                        Global.APP_NAME, "Next", "Stop Spelling Check");
 
                     if (result == AlertResult.button2Clicked)
                     {
@@ -1457,7 +1457,7 @@ namespace PadSharp
         private void window_Activated(object sender, EventArgs e)
         {
             // check to see if the open file has been modified
-            if (file != null && file.Exists && promptForReload)
+            if (file != null && File.Exists(file.FullName) && promptForReload)
             {
                 try
                 {
