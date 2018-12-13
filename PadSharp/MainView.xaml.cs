@@ -1413,6 +1413,7 @@ namespace PadSharp
             textbox.replaceAll(txtFind.Text, txtReplace.Text, 
                 matchCase.IsChecked == true, (count) =>
             {
+                // this determines whether or not to run the replace
                 return count > 0 && Alert.showDialog(
                     string.Format("Replace {0} instances of {1} with {2}?", count, txtFind.Text, txtReplace.Text), 
                     Global.APP_NAME, "OK", "Cancel") == AlertResult.button1Clicked;

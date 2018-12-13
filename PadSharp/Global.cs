@@ -53,7 +53,7 @@ namespace PadSharp
             {
                 string message = "Failed to launch '" + path + "'";
                 Global.actionMessage(message, ex.Message);
-                Logger.log(typeof(Global), ex);
+                Logger.log(typeof(Global), ex, message);
             }
         }
 
