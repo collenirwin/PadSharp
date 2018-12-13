@@ -15,3 +15,5 @@ Multiline checking? (if so, add to Selection menu)
 Add more tests
 Organize MainView.xaml.cs (maybe move to MVVM?)
 Add option to disable markdown formatting
+Look at other options for dictionary lookup
+Add proper nouns, contractions to words.txt

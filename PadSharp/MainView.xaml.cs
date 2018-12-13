@@ -593,9 +593,11 @@ namespace PadSharp
             // add 'em all to the dropdown
             foreach (var font in fonts)
             {
-                var item = new ComboBoxItem();
-                item.FontFamily = font;
-                item.Content = font.Source;
+                var item = new ComboBoxItem
+                {
+                    FontFamily = font,
+                    Content = font.Source
+                };
 
                 dropdown.Items.Add(item);
             }
@@ -612,7 +614,7 @@ namespace PadSharp
                 }
             }
 
-            // default to 0 if we can't find given font
+            // default to the first font if we can't find given font
             if (dropdown.Items.Count != 0)
             {
                 dropdown.SelectedIndex = 0;
@@ -881,7 +883,7 @@ namespace PadSharp
             textbox.normalizeLineEndings(true);
 
             // give the user some feedback - this change won't be obvious
-            Alert.showDialog(@"Done. All line endings are now \r\n.", Global.APP_NAME);
+            Alert.showDialog(@"Done. All line endings have been converted to the Windows format (CRLF).", Global.APP_NAME);
         }
 
         private void SelectAll_Command()
@@ -1167,7 +1169,7 @@ namespace PadSharp
         }
 
         #endregion
-        void dog() { }
+        
         #region Helpers
 
         /// <summary>
