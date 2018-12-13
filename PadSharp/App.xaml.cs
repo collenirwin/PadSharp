@@ -1,6 +1,9 @@
 ﻿using BoinWPF;
+using System;
 using System.Diagnostics;
+using System.IO;
 using System.Windows;
+using System.Windows.Threading;
 
 namespace PadSharp
 {
@@ -8,6 +11,9 @@ namespace PadSharp
     {
         public App()
         {
+            // register uncaught exception handler
+            DispatcherUnhandledException += App_DispatcherUnhandledException;
+
             // only check for new version if we're not debugging
             if (!Debugger.IsAttached)
             {
@@ -31,6 +37,36 @@ namespace PadSharp
                         Logger.log(typeof(App), ex, "Checking Version");
                     });
                 });
+            }
+        }
+
+        private void App_DispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
+        {
+            // log the exception, noting it was unhandled
+            Logger.log(typeof(App), e.Exception, "Unhandled Exception");
+            
+            // attempt to recover the open file
+            try
+            {
+                string fileText = (MainWindow as MainView).textbox.Text;
+
+                // get a unique file name by hashing the file text and the current time
+                string fileName = Crypto.hash(fileText, DateTime.Now.Ticks.ToString()) + ".txt";
+
+                // %appdata%\Pad#\recovery\<file_name>
+                string path = Path.Combine(Path.Combine(Global.DATA_PATH, "recovery"), fileName);
+
+                // create and write to the file
+                Global.createDirectoryAndFile(path);
+                File.WriteAllText(path, fileText);
+
+                // let the user know where to find the file
+                Global.actionMessage("Pad# has experienced a fatal error. There has been an attempt to recover your file. " +
+                    "Please click More for the path to the recovered file.", path);
+            }
+            catch (Exception ex)
+            {
+                Logger.log(typeof(App), ex, "Recovering file");
             }
         }
     }
