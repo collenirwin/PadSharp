@@ -193,10 +193,20 @@
                             <MenuItem Header="h:mm tt" IsCheckable="True" Checked="time_Checked" Unchecked="time_Unchecked" Style="{StaticResource checkMenu}"/>
                             <MenuItem Header="h:mm" IsCheckable="True" Checked="time_Checked" Unchecked="time_Unchecked" Style="{StaticResource checkMenu}"/>
                         </MenuItem>
+                        <MenuItem Header="Status Bar">
+                            <MenuItem Header="Show Status Bar" Name="showStatusBarDropdown" InputGestureText="Alt+B"
+                                      IsCheckable="True" IsChecked="{Binding statusBarVisible, Mode=TwoWay}"/>
+                            <MenuItem Header="Show Line Number"
+                                      IsCheckable="True" IsChecked="{Binding lineNumberVisible, Mode=TwoWay}"/>
+                            <MenuItem Header="Show Column Number"
+                                      IsCheckable="True" IsChecked="{Binding columnNumberVisible, Mode=TwoWay}"/>
+                            <MenuItem Header="Show Word Count"
+                                      IsCheckable="True" IsChecked="{Binding wordCountVisible, Mode=TwoWay}"/>
+                            <MenuItem Header="Show Character Count"
+                                      IsCheckable="True" IsChecked="{Binding charCountVisible, Mode=TwoWay}"/>
+                        </MenuItem>
                         <MenuItem Header="Show Line Numbers" Name="showLineNumbersDropdown" InputGestureText="Alt+L"
                                   IsCheckable="True" IsChecked="{Binding ElementName=textbox, Path=ShowLineNumbers, Mode=TwoWay}"/>
-                        <MenuItem Header="Show Status Bar" Name="showStatusBarDropdown" InputGestureText="Alt+B"
-                                  IsCheckable="True" IsChecked="{Binding statusBarVisible, Mode=TwoWay}"/>
                         <MenuItem Header="Word Wrap" Name="wordWrapDropdown" InputGestureText="Alt+W"
                                   IsCheckable="True" IsChecked="{Binding ElementName=textbox, Path=WordWrap, Mode=TwoWay}"/>
                         <MenuItem Header="Topmost" Name="topmostDrowndown" InputGestureText="Alt+T"
@@ -323,13 +333,13 @@
         <DockPanel Name="statusBar" DockPanel.Dock="Bottom" Background="{DynamicResource backColorLight}">
             <DockPanel.ContextMenu>
                 <ContextMenu Background="{DynamicResource backColorLight}">
-                    <MenuItem Name="showLineNumbers" Header="Show Line Number"
+                    <MenuItem Header="Show Line Number"
                               IsCheckable="True" IsChecked="{Binding lineNumberVisible, Mode=TwoWay}"/>
-                    <MenuItem Name="showColumnNumbers" Header="Show Column Number"
+                    <MenuItem Header="Show Column Number"
                               IsCheckable="True" IsChecked="{Binding columnNumberVisible, Mode=TwoWay}"/>
-                    <MenuItem Name="showWordCount" Header="Show Word Count"
+                    <MenuItem Header="Show Word Count"
                               IsCheckable="True" IsChecked="{Binding wordCountVisible, Mode=TwoWay}"/>
-                    <MenuItem Name="showCharCount" Header="Show Character Count"
+                    <MenuItem Header="Show Character Count"
                               IsCheckable="True" IsChecked="{Binding charCountVisible, Mode=TwoWay}"/>
                 </ContextMenu>
             </DockPanel.ContextMenu>
