@@ -14,7 +14,7 @@ namespace PadSharp
     public static class LocalDictionary
     {
         public const string FILE_NAME = "dictionary.json";
-        public const string FILE_URL = "http://www.plattsburghtabletennis.com/host/dictionary.json";
+        public const string FILE_URL = "https://raw.githubusercontent.com/collenirwin/PadSharp/master/dictionary/dictionary.json";
 
         // c:/users/<user>/appdata/roaming/pad#/dictionary.json
         public static readonly string FULL_PATH = Path.Combine(Global.DATA_PATH, FILE_NAME);
