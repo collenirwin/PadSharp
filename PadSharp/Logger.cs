@@ -33,8 +33,8 @@ namespace PadSharp
         /// <param name="message">Optional additional information</param>
         public static void log(Type sender, Exception ex, string message = "")
         {
-            log(string.Format("[{0} {1} (site: {2})]: {3} ({4})", 
-                sender.Name, ex.GetType().ToString(), ex.TargetSite, ex.Message, message));
+            log(string.Format("[{0} {1} (site: {2})]: {3} ({4}) Call stack:\r\n{5}", 
+                sender.Name, ex.GetType().ToString(), ex.TargetSite, ex.Message, message, ex.StackTrace));
         }
     }
 }

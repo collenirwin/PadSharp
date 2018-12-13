@@ -1486,7 +1486,7 @@ namespace PadSharp
                 }
                 catch (Exception ex)
                 {
-                    Logger.log(this.GetType(), ex);
+                    Logger.log(typeof(MainView), ex, "window_Activated");
                 }
             }
         }
