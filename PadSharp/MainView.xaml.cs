@@ -1235,7 +1235,7 @@ namespace PadSharp
             int position = textbox.CaretOffset + text.Length;
 
             // insert the text
-            textbox.Text = textbox.Text.Insert(textbox.CaretOffset, text);
+            textbox.Document.Text = textbox.Document.Text.Insert(textbox.CaretOffset, text);
 
             // go to the previously calculated position
             textbox.CaretOffset = position;
