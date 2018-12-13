@@ -59,7 +59,7 @@ namespace PadSharp
 
         /// <summary>
         /// Creates the file's parent directory if it hasn't been created,
-        /// then creates the specified (empty) file within it
+        /// then creates the specified (empty) file within it if it hasn't been created
         /// </summary>
         /// <param name="path">Full path to file</param>
         public static void createDirectoryAndFile(string path)
@@ -70,9 +70,12 @@ namespace PadSharp
                 Directory.CreateDirectory(dirPath);
             }
 
-            using (var writer = File.CreateText(path))
+            if (!File.Exists(path))
             {
-                writer.Write("");
+                using (var writer = File.CreateText(path))
+                {
+                    writer.Write("");
+                }
             }
         }
     }
