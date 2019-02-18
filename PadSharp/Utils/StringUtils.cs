@@ -15,7 +15,7 @@ namespace PadSharp
         /// </summary>
         /// <param name="lines">lines to split</param>
         /// <returns>lines separated into an array</returns>
-        public static string[] splitLines(this string lines)
+        public static string[] SplitLines(this string lines)
         {
             return lines.Replace("\r", "").Split('\n');
         }
@@ -25,9 +25,9 @@ namespace PadSharp
         /// </summary>
         /// <param name="linesToReverse">Lines to reverse</param>
         /// <returns>linesToReverse in reverse order</returns>
-        public static string reverseLines(this string linesToReverse)
+        public static string ReverseLines(this string linesToReverse)
         {
-            return string.Join("\r\n", linesToReverse.splitLines().Reverse());
+            return string.Join("\r\n", linesToReverse.SplitLines().Reverse());
         }
 
         /// <summary>
@@ -36,10 +36,10 @@ namespace PadSharp
         /// <param name="linesToSort">Lines to sort</param>
         /// <param name="descending">Sort in descending order?</param>
         /// <returns>Sorted linesToSort</returns>
-        public static string sortLines(this string linesToSort, bool descending = false)
+        public static string SortLines(this string linesToSort, bool descending = false)
         {
             // get a collection of the lines
-            var lines = linesToSort.splitLines();
+            var lines = linesToSort.SplitLines();
 
             // sort 'em (ascending or descending based on passed param)
             var sortedlines = descending ? lines.OrderByDescending(x => x) : lines.OrderBy(x => x);
@@ -52,7 +52,7 @@ namespace PadSharp
         /// </summary>
         /// <param name="textToConvert">Text you want to convert to Titlecase</param>
         /// <returns>textToConvert in title case</returns>
-        public static string titleCase(this string textToConvert)
+        public static string ToTitleCase(this string textToConvert)
         {
             string newText = textToConvert;
             var matches = Regex.Matches(textToConvert, @"\w+");
@@ -75,7 +75,7 @@ namespace PadSharp
         /// </summary>
         /// <param name="textToConvert">Text you feel needs a case toggle</param>
         /// <returns>textToConvert in with each letter's case toggled</returns>
-        public static string toggleCase(this string textToConvert)
+        public static string ToggleCase(this string textToConvert)
         {
             string toggledText = "";
 
@@ -93,10 +93,10 @@ namespace PadSharp
         /// <param name="linesToPrepend">Lines to prepend with textToPrepend</param>
         /// <param name="textToPrepend">String to prepend to the passed lines</param>
         /// <returns>linesToPrepend with textToPrepend prepended to each line</returns>
-        public static string prependLines(this string linesToPrepend, string textToPrepend)
+        public static string PrependLines(this string linesToPrepend, string textToPrepend)
         {
             return string.Join("\r\n", linesToPrepend
-                .splitLines()
+                .SplitLines()
                 .Select(x => textToPrepend + x));
         }
 
@@ -107,10 +107,10 @@ namespace PadSharp
         /// <param name="lines">Lines to toggle</param>
         /// <param name="start">Start of the lines to toggle</param>
         /// <returns></returns>
-        public static string toggleLineStart(this string lines, string start)
+        public static string ToggleLineStart(this string lines, string start)
         {
             return string.Join("\r\n", lines
-                .splitLines()
+                .SplitLines()
                 .Select(x => x.StartsWith(start) ? x.Substring(start.Length) : start + x));
         }
 
@@ -122,7 +122,7 @@ namespace PadSharp
         /// <param name="start">Start of the string to toggle</param>
         /// <param name="end">End of the string to toggle</param>
         /// <returns>text with start and end added or removed</returns>
-        public static string toggleStartAndEnd(this string text, string start, string end)
+        public static string ToggleStartAndEnd(this string text, string start, string end)
         {
             // start and end aalready there
             if (text.StartsWith(start) && text.EndsWith(end))
@@ -142,7 +142,7 @@ namespace PadSharp
         /// <param name="matchCase">Use IgnoreCase flag?</param>
         /// <param name="action">Action to call when count is complete (takes count as only parameter)</param>
         /// <param name="error">Action to call when an Exception is thrown</param>
-        public static async void countMatchesAsync(this string text, string regex, bool matchCase,
+        public static async void CountMatchesAsync(this string text, string regex, bool matchCase,
             Action<int> action, Action<Exception> error = null)
         {
             try

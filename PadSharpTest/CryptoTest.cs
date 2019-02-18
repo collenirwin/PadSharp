@@ -16,7 +16,7 @@ namespace PadSharpTest
             string data = "Hello world!\nIt's a wonderful  day";
             string password = "shgs7^nhsAufgGh983jmf";
 
-            string encrpyted = Crypto.encrypt(data, password);
+            string encrpyted = Crypto.Encrypt(data, password);
 
             Console.WriteLine(encrpyted);
             Assert.AreNotEqual(data, encrpyted);
@@ -28,8 +28,8 @@ namespace PadSharpTest
             string data = "Hello world!\nIt's a wonderful  day ✔";
             string password = "shgs7^nhsA✔ufgGh983jmf";
 
-            string encrpyted = Crypto.encrypt(data, password);
-            string decrypted = Crypto.decrypt(encrpyted, password);
+            string encrpyted = Crypto.Encrypt(data, password);
+            string decrypted = Crypto.Decrypt(encrpyted, password);
 
             Assert.AreEqual(data, decrypted);
         }
@@ -53,8 +53,8 @@ namespace PadSharpTest
                     password.Append(Convert.ToChar(ran.Next(32, 127)));
                 }
 
-                string encrypted = Crypto.encrypt(data.ToString(), password.ToString());
-                string decrypted = Crypto.decrypt(encrypted, password.ToString());
+                string encrypted = Crypto.Encrypt(data.ToString(), password.ToString());
+                string decrypted = Crypto.Decrypt(encrypted, password.ToString());
 
                 Assert.AreEqual(data.ToString(), decrypted);
             }
@@ -71,8 +71,8 @@ namespace PadSharpTest
                 data.Append(Convert.ToChar(ran.Next(32, 127)));
             }
 
-            string encrypted = Crypto.encrypt(data.ToString(), password);
-            string decrypted = Crypto.decrypt(encrypted, password);
+            string encrypted = Crypto.Encrypt(data.ToString(), password);
+            string decrypted = Crypto.Decrypt(encrypted, password);
 
             Assert.AreEqual(data.ToString(), decrypted);
         }
@@ -88,8 +88,8 @@ namespace PadSharpTest
                 password.Append(Convert.ToChar(ran.Next(32, 127)));
             }
 
-            string encrypted = Crypto.encrypt(data, password.ToString());
-            string decrypted = Crypto.decrypt(encrypted, password.ToString());
+            string encrypted = Crypto.Encrypt(data, password.ToString());
+            string decrypted = Crypto.Decrypt(encrypted, password.ToString());
 
             Assert.AreEqual(data.ToString(), decrypted);
         }
@@ -110,8 +110,8 @@ namespace PadSharpTest
                 password.Append(Convert.ToChar(ran.Next(32, 127)));
             }
 
-            string encrypted = Crypto.encrypt(data.ToString(), password.ToString());
-            string decrypted = Crypto.decrypt(encrypted, password.ToString());
+            string encrypted = Crypto.Encrypt(data.ToString(), password.ToString());
+            string decrypted = Crypto.Decrypt(encrypted, password.ToString());
 
             Assert.AreEqual(data.ToString(), decrypted);
         }

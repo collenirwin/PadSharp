@@ -13,65 +13,65 @@ namespace PadSharp
     /// </summary>
     public static class LocalDictionary
     {
-        public const string FILE_NAME = "dictionary.json";
-        public const string FILE_URL = "https://raw.githubusercontent.com/collenirwin/PadSharp/master/dictionary/dictionary.json";
+        public const string FileName = "dictionary.json";
+        public const string FileUrl = "https://raw.githubusercontent.com/collenirwin/PadSharp/master/dictionary/dictionary.json";
 
         // c:/users/<user>/appdata/roaming/pad#/dictionary.json
-        public static readonly string FULL_PATH = Path.Combine(Global.DATA_PATH, FILE_NAME);
+        public static readonly string FilePath = Path.Combine(Global.DataPath, FileName);
 
         /// <summary>
         /// Dictionary containing the contents of dictionary.json
         /// </summary>
-        public static Dictionary<string, string> dictionary { get; private set; }
+        public static Dictionary<string, string> Dictionary { get; private set; }
 
         /// <summary>
-        /// Has <see cref="dictionary"/> been initialized?
+        /// Has <see cref="Dictionary"/> been initialized?
         /// </summary>
-        public static bool loaded
+        public static bool Loaded
         {
-            get { return dictionary != null; }
+            get { return Dictionary != null; }
         }
 
-        public static bool loading { get; private set; }
+        public static bool Loading { get; private set; }
 
         /// <summary>
-        /// Is there a file at <see cref="FULL_PATH"/>?
+        /// Is there a file at <see cref="FilePath"/>?
         /// </summary>
-        public static bool downloaded
+        public static bool Downloaded
         {
-            get { return File.Exists(FULL_PATH); }
+            get { return File.Exists(FilePath); }
         }
 
         /// <summary>
         /// Are we in the middle of downloading the file?
         /// </summary>
-        public static bool downloading { get; private set; }
+        public static bool Downloading { get; private set; }
 
         /// <summary>
-        /// Attempts to load <see cref="FULL_PATH"/> into <see cref="dictionary"/>
+        /// Attempts to load <see cref="FilePath"/> into <see cref="Dictionary"/>
         /// </summary>
         /// <param name="success">Action to run when finished (successful)</param>
         /// <param name="error">Action to run if an error was encountered</param>
-        public static async void load(Action success = null, Action<Exception> error = null)
+        public static async void Load(Action success = null, Action<Exception> error = null)
         {
             try
             {
                 // avoid collisions
-                if (loading)
+                if (Loading)
                 {
                     return;
                 }
 
-                loading = true;
+                Loading = true;
 
                 // read from FULL_PATH
-                string json = File.ReadAllText(FULL_PATH);
+                string json = File.ReadAllText(FilePath);
 
                 // deserialize json into dictionary
-                dictionary = await Task<Dictionary<string, string>>.Run(() => 
+                Dictionary = await Task<Dictionary<string, string>>.Run(() => 
                     JsonConvert.DeserializeObject<Dictionary<string, string>>(json));
 
-                loading = false;
+                Loading = false;
 
                 // run success callback
                 if (success != null)
@@ -81,7 +81,7 @@ namespace PadSharp
             }
             catch (Exception ex)
             {
-                loading = false;
+                Loading = false;
 
                 // failed - run error callback
                 if (error != null)
@@ -92,35 +92,35 @@ namespace PadSharp
         }
 
         /// <summary>
-        /// Attempts to download dictionary.json from <see cref="FILE_URL"/>
+        /// Attempts to download dictionary.json from <see cref="FileUrl"/>
         /// </summary>
         /// <param name="success">Action to run when finished (successful)</param>
         /// <param name="error">Action to run if an error was encountered</param>
-        public static async void download(Action success = null, Action<Exception> error = null)
+        public static async void Download(Action success = null, Action<Exception> error = null)
         {
             try
             {
                 // avoid collisions
-                if (downloading)
+                if (Downloading)
                 {
                     return;
                 }
 
-                downloading = true;
+                Downloading = true;
 
                 // make sure we have a folder to write to
-                if (!Directory.Exists(Global.DATA_PATH))
+                if (!Directory.Exists(Global.DataPath))
                 {
-                    Directory.CreateDirectory(Global.DATA_PATH);
+                    Directory.CreateDirectory(Global.DataPath);
                 }
 
                 using (var client = new WebClient())
                 {
                     // fetch file from url
-                    await Task.Run(() => client.DownloadFile(new Uri(FILE_URL), FULL_PATH));
+                    await Task.Run(() => client.DownloadFile(new Uri(FileUrl), FilePath));
                 }
 
-                downloading = false;
+                Downloading = false;
 
                 // run success callback
                 if (success != null)
@@ -130,7 +130,7 @@ namespace PadSharp
             }
             catch (Exception ex)
             {
-                downloading = false;
+                Downloading = false;
 
                 // failed - run error callback
                 if (error != null)
@@ -141,16 +141,16 @@ namespace PadSharp
         }
 
         /// <summary>
-        /// Fetch definition for <see cref="word"/> from <see cref="dictionary"/>
+        /// Fetch definition for <see cref="word"/> from <see cref="Dictionary"/>
         /// </summary>
         /// <param name="word">Word to define</param>
         /// <returns>
-        /// definition or null if !<see cref="loaded"/> or if word is not in <see cref="dictionary"/>
+        /// definition or null if !<see cref="Loaded"/> or if word is not in <see cref="Dictionary"/>
         /// </returns>
-        public static string define(string word)
+        public static string Define(string word)
         {
             // dictionary not in memory
-            if (!loaded)
+            if (!Loaded)
             {
                 return null;
             }
@@ -158,9 +158,9 @@ namespace PadSharp
             word = word.ToUpper();
 
             // see if it's in there
-            if (dictionary.ContainsKey(word))
+            if (Dictionary.ContainsKey(word))
             {
-                return dictionary[word]; // found!
+                return Dictionary[word]; // found!
             }
 
             var endings = new string[] { "S", "ED", "ES", "ING", "IES" };
@@ -172,9 +172,9 @@ namespace PadSharp
                 {
                     // lop that ending off
                     string endingless = word.Substring(0, word.Length - ending.Length);
-                    if (dictionary.ContainsKey(endingless))
+                    if (Dictionary.ContainsKey(endingless))
                     {
-                        return dictionary[endingless]; // aha!
+                        return Dictionary[endingless]; // aha!
                     }
                 }
             }
@@ -184,11 +184,11 @@ namespace PadSharp
         }
 
         /// <summary>
-        /// Set <see cref="dictionary"/> to null
+        /// Set <see cref="Dictionary"/> to null
         /// </summary>
-        public static void flush()
+        public static void Flush()
         {
-            dictionary = null;
+            Dictionary = null;
         }
     }
 }

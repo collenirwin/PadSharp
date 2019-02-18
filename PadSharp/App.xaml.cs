@@ -17,24 +17,24 @@ namespace PadSharp
             // only check for new version if we're not debugging
             if (!Debugger.IsAttached)
             {
-                Application.Current.Dispatcher.Invoke(() =>
+                Current.Dispatcher.Invoke(() =>
                 {
                     // check for a new version
-                    VersionChecker.checkVersion((version) =>
+                    VersionChecker.CheckVersion((version) =>
                     {
-                        var result = Alert.showDialog(
-                            string.Format("A new version of {0} is available (version {1}). Would you like to download it?",
-                            Global.APP_NAME, version), "Pad#", "Yes", "No");
+                        var result = Alert
+                            .showDialog($"A new version of {Global.AppName} is available (version {version}). Would you like to download it?",
+                            title: "Pad#", button1Text: "Yes", button2Text: "No");
 
                         // go to the link to the setup file in the repo
                         if (result == AlertResult.button1Clicked)
                         {
-                            Global.launch("https://github.com/collenirwin/PadSharp/blob/master/setup/pad_sharp_setup.exe");
+                            Global.Launch("https://github.com/collenirwin/PadSharp/blob/master/setup/pad_sharp_setup.exe");
                         }
                     },
                     (ex) =>
                     {
-                        Logger.log(typeof(App), ex, "Checking Version");
+                        Logger.Log(typeof(App), ex, "Checking Version");
                     });
                 });
             }
@@ -43,7 +43,7 @@ namespace PadSharp
         private void App_DispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
         {
             // log the exception, noting it was unhandled
-            Logger.log(typeof(App), e.Exception, "Unhandled Exception");
+            Logger.Log(typeof(App), e.Exception, "Unhandled Exception");
             
             // attempt to recover the open file
             try
@@ -51,22 +51,22 @@ namespace PadSharp
                 string fileText = (MainWindow as MainView).textbox.Text;
 
                 // get a unique file name by hashing the file text and the current time
-                string fileName = Crypto.hash(fileText, DateTime.Now.Ticks.ToString()) + ".txt";
+                string fileName = Crypto.Hash(fileText, DateTime.Now.Ticks.ToString()) + ".txt";
 
                 // %appdata%\Pad#\recovery\<file_name>
-                string path = Path.Combine(Path.Combine(Global.DATA_PATH, "recovery"), fileName);
+                string path = Path.Combine(Path.Combine(Global.DataPath, "recovery"), fileName);
 
                 // create and write to the file
-                Global.createDirectoryAndFile(path);
+                Global.CreateDirectoryAndFile(path);
                 File.WriteAllText(path, fileText);
 
                 // let the user know where to find the file
-                Global.actionMessage("Pad# has experienced a fatal error. There has been an attempt to recover your file. " +
+                Global.ActionMessage("Pad# has experienced a fatal error. There has been an attempt to recover your file. " +
                     "Please click More for the path to the recovered file.", path);
             }
             catch (Exception ex)
             {
-                Logger.log(typeof(App), ex, "Recovering file");
+                Logger.Log(typeof(App), ex, "Recovering file");
             }
         }
     }

@@ -5,6 +5,7 @@ using ICSharpCode.AvalonEdit.Highlighting;
 using ICSharpCode.AvalonEdit.Highlighting.Xshd;
 using ICSharpCode.AvalonEdit.Utils;
 using Microsoft.Win32;
+using RegularExtensions;
 using System;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -30,32 +31,32 @@ namespace PadSharp
 
         #region Fields
 
-        // required to implement (from INotifyPropertyChanged)
+        // required to implement INotifyPropertyChanged
         public event PropertyChangedEventHandler PropertyChanged = (sender, e) => { };
 
         // 5m file size max
-        const int FILE_SIZE_LIMIT = 5000000;
+        private const int _fileSizeLimit = 5_000_000;
 
         // 500px font size max
-        const double MAX_FONT_SIZE = 500;
+        private const double _maxFontSize = 500;
 
         // our marker for highlighting a checked line
-        const string CHECK_MARK = "✔";
+        private const string _checkMark = "✔";
 
         // title: Pad# <version #>
-        const string TITLE = Global.APP_NAME + " " + Global.VERSION;
+        private const string _title = Global.AppName + " " + Global.Version;
 
         // settings object (contains all user settings)
-        readonly UISettings settings;
+        private readonly UISettings _settings;
 
         // Theme we're using
-        Theme theme;
+        private Theme _theme;
 
         // text from currently open file
-        string savedText = "";
+        private string _savedText = "";
 
         // should we prompt the user to reload the file if it has been modified
-        bool promptForReload = false;
+        private bool _promptForReload = false;
 
         #endregion
 
@@ -65,65 +66,65 @@ namespace PadSharp
 
         #region File
 
-        public UICommand newCommand { get; private set; }
-        public UICommand newWindowCommand { get; private set; }
-        public UICommand openCommand { get; private set; }
-        public UICommand openInExplorerCommand { get; private set; }
-        public UICommand saveCommand { get; private set; }
-        public UICommand saveAsCommand { get; private set; }
-        public UICommand printCommand { get; private set; }
-        public UICommand exitCommand { get; private set; }
+        public UICommand NewCommand { get; private set; }
+        public UICommand NewWindowCommand { get; private set; }
+        public UICommand OpenCommand { get; private set; }
+        public UICommand OpenInExplorerCommand { get; private set; }
+        public UICommand SaveCommand { get; private set; }
+        public UICommand SaveAsCommand { get; private set; }
+        public UICommand PrintCommand { get; private set; }
+        public UICommand ExitCommand { get; private set; }
 
         #endregion
 
         #region Edit
 
-        public UICommand undoCommand { get; private set; }
-        public UICommand redoCommand { get; private set; }
-        public UICommand cutCommand { get; private set; }
-        public UICommand copyCommand { get; private set; }
-        public UICommand pasteCommand { get; private set; }
-        public UICommand findCommand { get; private set; }
-        public UICommand findAndReplaceCommand { get; private set; }
-        public UICommand gotoCommand { get; private set; }
-        public UICommand gotoGoCommand { get; private set; }
-        public UICommand checkSpellingCommand { get; private set; }
-        public UICommand normalizeLineEndingdCommand { get; private set; }
-        public UICommand selectAllCommand { get; private set; }
+        public UICommand UndoCommand { get; private set; }
+        public UICommand RedoCommand { get; private set; }
+        public UICommand CutCommand { get; private set; }
+        public UICommand CopyCommand { get; private set; }
+        public UICommand PasteCommand { get; private set; }
+        public UICommand FindCommand { get; private set; }
+        public UICommand FindAndReplaceCommand { get; private set; }
+        public UICommand GotoCommand { get; private set; }
+        public UICommand GotoGoCommand { get; private set; }
+        public UICommand CheckSpellingCommand { get; private set; }
+        public UICommand NormalizeLineEndingdCommand { get; private set; }
+        public UICommand SelectAllCommand { get; private set; }
 
         #endregion
 
         #region Insert
 
-        public UICommand checkMarkCommand { get; private set; }
-        public UICommand addCheckMarkCommand { get; private set; }
-        public UICommand todaysDateCommand { get; private set; }
-        public UICommand currentTimeCommand { get; private set; }
-        public UICommand dateAndTimeCommand { get; private set; }
+        public UICommand CheckMarkCommand { get; private set; }
+        public UICommand AddCheckMarkCommand { get; private set; }
+        public UICommand TodaysDateCommand { get; private set; }
+        public UICommand CurrentTimeCommand { get; private set; }
+        public UICommand DateAndTimeCommand { get; private set; }
 
         #endregion
 
         #region Selection
 
-        public UICommand boldCommand { get; private set; }
-        public UICommand italicCommand { get; private set; }
-        public UICommand underlineCommand { get; private set; }
-        public UICommand lowerCaseCommand { get; private set; }
-        public UICommand upperCaseCommand { get; private set; }
-        public UICommand titleCaseCommand { get; private set; }
-        public UICommand toggleCaseCommand { get; private set; }
-        public UICommand defineCommand { get; private set; }
-        public UICommand reverseCommand { get; private set; }
-        public UICommandWithParam sortCommand { get; private set; }
+        public UICommand BoldCommand { get; private set; }
+        public UICommand ItalicCommand { get; private set; }
+        public UICommand UnderlineCommand { get; private set; }
+        public UICommand LowerCaseCommand { get; private set; }
+        public UICommand UpperCaseCommand { get; private set; }
+        public UICommand TitleCaseCommand { get; private set; }
+        public UICommand ToggleCaseCommand { get; private set; }
+        public UICommand DefineCommand { get; private set; }
+        public UICommand ReverseCommand { get; private set; }
+        public UICommandWithParam SortCommand { get; private set; }
 
         #endregion
 
         #region Settings
 
-        public UICommand toggleLineNumbersCommand { get; private set; }
-        public UICommand toggleStatusBarCommand { get; private set; }
-        public UICommand toggleWordWrapCommand { get; private set; }
-        public UICommand toggleTopmostCommand { get; private set; }
+        public UICommand ToggleLineNumbersCommand { get; private set; }
+        public UICommand ToggleStatusBarCommand { get; private set; }
+        public UICommand ToggleWordWrapCommand { get; private set; }
+        public UICommand ToggleTopmostCommand { get; private set; }
 
         #endregion
 
@@ -134,35 +135,35 @@ namespace PadSharp
         /// <summary>
         /// Goes in the title bar of the app. Format: [filename?] - TITLE
         /// </summary>
-        public string title
+        public string FullTitle
         {
             get
             {
-                return file != null ? file.Name + " - " + TITLE : TITLE;
+                return OpenFile != null ? OpenFile.Name + " - " + _title : _title;
             }
-            private set
+            set
             {
                 // just force the UI to update
-                PropertyChanged(this, new PropertyChangedEventArgs("title"));
+                PropertyChanged(this, new PropertyChangedEventArgs(nameof(FullTitle)));
             }
         }
 
-        FileInfo _file;
+        private FileInfo _openFile;
 
         /// <summary>
         /// Currently open file
         /// </summary>
-        public FileInfo file
+        public FileInfo OpenFile
         {
-            get { return _file; }
-            private set
+            get { return _openFile; }
+            set
             {
-                if (_file != value)
+                if (_openFile != value)
                 {
-                    _file = value;
-                    PropertyChanged(this, new PropertyChangedEventArgs("file"));
-                    fileSaved = true;
-                    title = title; // force title to update
+                    _openFile = value;
+                    PropertyChanged(this, new PropertyChangedEventArgs(nameof(OpenFile)));
+                    FileSaved = true;
+                    FullTitle = FullTitle; // force title to update
                 }
             }
         }
@@ -170,23 +171,23 @@ namespace PadSharp
         /// <summary>
         /// Is the file saved?
         /// </summary>
-        public bool fileSaved
+        public bool FileSaved
         {
             get
             {
-                return file != null && textbox.Text == savedText;
+                return OpenFile != null && textbox.Text == _savedText;
             }
-            private set
+            set
             {
                 // hack? update the UI while keeping this essentially readonly
-                PropertyChanged(this, new PropertyChangedEventArgs("fileSaved"));
+                PropertyChanged(this, new PropertyChangedEventArgs(nameof(FileSaved)));
             }
         }
 
         /// <summary>
         /// Hides or shows statusBar
         /// </summary>
-        public bool statusBarVisible
+        public bool StatusBarVisible
         {
             get
             {
@@ -202,132 +203,132 @@ namespace PadSharp
                 }
 
                 statusBar.Visibility = value ? Visibility.Visible : Visibility.Collapsed;
-                PropertyChanged(this, new PropertyChangedEventArgs("statusBarVisible"));
+                PropertyChanged(this, new PropertyChangedEventArgs(nameof(StatusBarVisible)));
             }
         }
 
-        int _lineNumber = 1;
+        private int _lineNumber = 1;
 
         /// <summary>
         /// Line number the caret is on
         /// </summary>
-        public int lineNumber
+        public int LineNumber
         {
             get { return _lineNumber; }
-            private set
+            set
             {
                 if (_lineNumber != value)
                 {
                     _lineNumber = value;
-                    PropertyChanged(this, new PropertyChangedEventArgs("lineNumber"));
+                    PropertyChanged(this, new PropertyChangedEventArgs(nameof(LineNumber)));
                 }
             }
         }
 
-        bool _lineNumberVisible;
+        private bool _lineNumberVisible;
 
         /// <summary>
         /// Show the line number in the status bar?
         /// </summary>
-        public bool lineNumberVisible
+        public bool LineNumberVisible
         {
             get { return _lineNumberVisible; }
-            private set
+            set
             {
                 if (_lineNumberVisible != value)
                 {
                     _lineNumberVisible = value;
-                    PropertyChanged(this, new PropertyChangedEventArgs("lineNumberVisible"));
+                    PropertyChanged(this, new PropertyChangedEventArgs(nameof(LineNumberVisible)));
                 }
             }
         }
 
-        int _columnNumber = 1;
+        private int _columnNumber = 1;
 
         /// <summary>
         /// Column number the caret is on
         /// </summary>
-        public int columnNumber
+        public int ColumnNumber
         {
             get { return _columnNumber; }
-            private set
+            set
             {
                 if (_columnNumber != value)
                 {
                     _columnNumber = value;
-                    PropertyChanged(this, new PropertyChangedEventArgs("columnNumber"));
+                    PropertyChanged(this, new PropertyChangedEventArgs(nameof(ColumnNumber)));
                 }
             }
         }
 
-        bool _columnNumberVisible;
+        private bool _columnNumberVisible;
 
         /// <summary>
         /// Show the column number in the status bar?
         /// </summary>
-        public bool columnNumberVisible
+        public bool ColumnNumberVisible
         {
             get { return _columnNumberVisible; }
-            private set
+            set
             {
                 if (_columnNumberVisible != value)
                 {
                     _columnNumberVisible = value;
-                    PropertyChanged(this, new PropertyChangedEventArgs("columnNumberVisible"));
+                    PropertyChanged(this, new PropertyChangedEventArgs(nameof(ColumnNumberVisible)));
                 }
             }
         }
 
-        int _wordCount = 0;
+        private int _wordCount = 0;
 
         /// <summary>
         /// Number of words in textbox (found using \b\S+\b)
         /// </summary>
-        public int wordCount
+        public int WordCount
         {
             get { return _wordCount; }
-            private set
+            set
             {
                 if (_wordCount != value)
                 {
                     _wordCount = value;
-                    PropertyChanged(this, new PropertyChangedEventArgs("wordCount"));
+                    PropertyChanged(this, new PropertyChangedEventArgs(nameof(WordCount)));
                 }
             }
         }
 
-        bool _wordCountVisible;
+        private bool _wordCountVisible;
 
         /// <summary>
         /// Show the word count in the status bar?
         /// </summary>
-        public bool wordCountVisible
+        public bool WordCountVisible
         {
             get { return _wordCountVisible; }
-            private set
+            set
             {
                 if (_wordCountVisible != value)
                 {
                     _wordCountVisible = value;
-                    PropertyChanged(this, new PropertyChangedEventArgs("wordCountVisible"));
+                    PropertyChanged(this, new PropertyChangedEventArgs(nameof(WordCountVisible)));
                 }
             }
         }
 
-        bool _charCountVisible;
+        private bool _charCountVisible;
 
         /// <summary>
         /// Show the char count in the status bar?
         /// </summary>
-        public bool charCountVisible
+        public bool CharCountVisible
         {
             get { return _charCountVisible; }
-            private set
+            set
             {
                 if (_charCountVisible != value)
                 {
                     _charCountVisible = value;
-                    PropertyChanged(this, new PropertyChangedEventArgs("charCountVisible"));
+                    PropertyChanged(this, new PropertyChangedEventArgs(nameof(CharCountVisible)));
                 }
             }
         }
@@ -335,15 +336,15 @@ namespace PadSharp
         /// <summary>
         /// Font size of the textbox
         /// </summary>
-        public double fontSize
+        public new double FontSize
         {
             get { return textbox.FontSize; }
-            private set
+            set
             {
                 // make sure fontSize is within acceptable range
-                if (value > MAX_FONT_SIZE)
+                if (value > _maxFontSize)
                 {
-                    textbox.FontSize = MAX_FONT_SIZE;
+                    textbox.FontSize = _maxFontSize;
                 }
                 else if (value < 1)
                 {
@@ -359,7 +360,7 @@ namespace PadSharp
         /// <summary>
         /// Show the Selection Menu whenever text is selected
         /// </summary>
-        public Visibility selectionMenuVisibility
+        public Visibility SelectionMenuVisibility
         {
             get
             {
@@ -367,11 +368,11 @@ namespace PadSharp
                     ? Visibility.Visible
                     : Visibility.Collapsed;
             }
-            private set
+            set
             {
                 // just force the UI to update
                 PropertyChanged(this,
-                    new PropertyChangedEventArgs("selectionMenuVisibility"));
+                    new PropertyChangedEventArgs(nameof(SelectionMenuVisibility)));
             }
         }
 
@@ -390,53 +391,53 @@ namespace PadSharp
             #region Assigning Commands
 
             // file
-            newCommand = new UICommand(New_Command);
-            newWindowCommand = new UICommand(NewWindow_Command);
-            openCommand = new UICommand(Open_Command);
-            openInExplorerCommand = new UICommand(OpenInExplorer_Command);
-            saveCommand = new UICommand(Save_Command);
-            saveAsCommand = new UICommand(SaveAs_Command);
-            printCommand = new UICommand(Print_Command);
-            exitCommand = new UICommand(Exit_Command);
+            NewCommand = new UICommand(New_Command);
+            NewWindowCommand = new UICommand(NewWindow_Command);
+            OpenCommand = new UICommand(Open_Command);
+            OpenInExplorerCommand = new UICommand(OpenInExplorer_Command);
+            SaveCommand = new UICommand(Save_Command);
+            SaveAsCommand = new UICommand(SaveAs_Command);
+            PrintCommand = new UICommand(Print_Command);
+            ExitCommand = new UICommand(Exit_Command);
 
             // edit
-            undoCommand = new UICommand(Undo_Command);
-            redoCommand = new UICommand(Redo_Command);
-            cutCommand = new UICommand(Cut_Command);
-            copyCommand = new UICommand(Copy_Command);
-            pasteCommand = new UICommand(Paste_Command);
-            findCommand = new UICommand(Find_Command);
-            findAndReplaceCommand = new UICommand(FindReplace_Command);
-            gotoCommand = new UICommand(Goto_Command);
-            gotoGoCommand = new UICommand(GotoGo_Command);
-            checkSpellingCommand = new UICommand(CheckSpelling_Command);
-            normalizeLineEndingdCommand = new UICommand(NormalizeLineEndings_Command);
-            selectAllCommand = new UICommand(SelectAll_Command);
+            UndoCommand = new UICommand(Undo_Command);
+            RedoCommand = new UICommand(Redo_Command);
+            CutCommand = new UICommand(Cut_Command);
+            CopyCommand = new UICommand(Copy_Command);
+            PasteCommand = new UICommand(Paste_Command);
+            FindCommand = new UICommand(Find_Command);
+            FindAndReplaceCommand = new UICommand(FindReplace_Command);
+            GotoCommand = new UICommand(Goto_Command);
+            GotoGoCommand = new UICommand(GotoGo_Command);
+            CheckSpellingCommand = new UICommand(CheckSpelling_Command);
+            NormalizeLineEndingdCommand = new UICommand(NormalizeLineEndings_Command);
+            SelectAllCommand = new UICommand(SelectAll_Command);
 
             // insert
-            checkMarkCommand = new UICommand(CheckMark_Command);
-            addCheckMarkCommand = new UICommand(AddCheckMark_Command);
-            todaysDateCommand = new UICommand(TodaysDate_Command);
-            currentTimeCommand = new UICommand(CurrentTime_Command);
-            dateAndTimeCommand = new UICommand(DateAndTime_Command);
+            CheckMarkCommand = new UICommand(CheckMark_Command);
+            AddCheckMarkCommand = new UICommand(AddCheckMark_Command);
+            TodaysDateCommand = new UICommand(TodaysDate_Command);
+            CurrentTimeCommand = new UICommand(CurrentTime_Command);
+            DateAndTimeCommand = new UICommand(DateAndTime_Command);
 
             // selection
-            boldCommand = new UICommand(Bold_Command);
-            italicCommand = new UICommand(Italic_Command);
-            underlineCommand = new UICommand(Underline_Command);
-            lowerCaseCommand = new UICommand(LowerCase_Command);
-            upperCaseCommand = new UICommand(UpperCase_Command);
-            titleCaseCommand = new UICommand(TitleCase_Command);
-            toggleCaseCommand = new UICommand(ToggleCase_Command);
-            defineCommand = new UICommand(Define_Command);
-            reverseCommand = new UICommand(Reverse_Command);
-            sortCommand = new UICommandWithParam(Sort_Command);
+            BoldCommand = new UICommand(Bold_Command);
+            ItalicCommand = new UICommand(Italic_Command);
+            UnderlineCommand = new UICommand(Underline_Command);
+            LowerCaseCommand = new UICommand(LowerCase_Command);
+            UpperCaseCommand = new UICommand(UpperCase_Command);
+            TitleCaseCommand = new UICommand(TitleCase_Command);
+            ToggleCaseCommand = new UICommand(ToggleCase_Command);
+            DefineCommand = new UICommand(Define_Command);
+            ReverseCommand = new UICommand(Reverse_Command);
+            SortCommand = new UICommandWithParam(Sort_Command);
 
             // settings
-            toggleLineNumbersCommand = new UICommand(ToggleLineNumbers_Command);
-            toggleStatusBarCommand = new UICommand(ToggleStatusBar_Command);
-            toggleWordWrapCommand = new UICommand(ToggleWordWrap_Command);
-            toggleTopmostCommand = new UICommand(ToggleTopmost_Command);
+            ToggleLineNumbersCommand = new UICommand(ToggleLineNumbers_Command);
+            ToggleStatusBarCommand = new UICommand(ToggleStatusBar_Command);
+            ToggleWordWrapCommand = new UICommand(ToggleWordWrap_Command);
+            ToggleTopmostCommand = new UICommand(ToggleTopmost_Command);
 
             #endregion
 
@@ -451,10 +452,10 @@ namespace PadSharp
             if (args.Length > 1 && args[1].Length > 0)
             {
                 // assume it is a path to a file, try to open the file
-                open(args[1]);
+                Open(args[1]);
 
                 // couldn't open the file, shutdown
-                if (file == null)
+                if (OpenFile == null)
                 {
                     Application.Current.Shutdown();
                 }
@@ -476,25 +477,25 @@ namespace PadSharp
                 textbox.SyntaxHighlighting = HighlightingLoader.Load(reader, HighlightingManager.Instance);
             }
 
-            settings = UISettings.load();
+            _settings = UISettings.Load();
 
             // if settings couldn't load
-            if (settings == null)
+            if (_settings == null)
             {
-                Global.actionMessage("Failed to load settings.json.", 
+                Global.ActionMessage("Failed to load settings.json.", 
                     "A potential fix may be to run " +
-                    Global.APP_NAME + " as an administrator.");
+                    Global.AppName + " as an administrator.");
 
                 // call constructor for default settings
-                settings = new UISettings();
+                _settings = new UISettings();
             }
 
             // apply settings to UI
-            applySettings(settings);
+            ApplySettings(_settings);
 
             // set font, size
-            populateFontDropdown(fontDropdown);
-            selectFont(fontDropdown, textbox.FontFamily);
+            PopulateFontDropdown(fontDropdown);
+            SelectFont(fontDropdown, textbox.FontFamily);
         }
 
         #endregion
@@ -504,88 +505,92 @@ namespace PadSharp
         /// <summary>
         /// Set all window properties to match settings fields
         /// </summary>
-        private void applySettings(UISettings settings)
+        private void ApplySettings(UISettings settings)
         {
             // set theme
-            this.theme = settings.theme;
+            _theme = settings.Theme;
             Application.Current.Resources.
-                MergedDictionaries[0].Source = ThemeManager.themeUri(this.theme);
+                MergedDictionaries[0].Source = ThemeManager.themeUri(this._theme);
 
-            checkIfSameValue(themeMenu, this.theme == Theme.light ? "Light" : "Dark");
+            CheckIfSameValue(themeMenu, _theme == Theme.light ? "Light" : "Dark");
 
             // font
-            textbox.FontFamily = settings.fontFamily;
-            this.fontSize = settings.fontSize;
-            fontSizeDropdown.Text = this.fontSize.ToString();
+            textbox.FontFamily = settings.FontFamily;
+            FontSize = settings.FontSize;
+            fontSizeDropdown.Text = FontSize.ToString();
 
-            this.WindowState = settings.windowState;
+            WindowState = settings.WindowState;
 
             // only apply size settings if not maximized
-            if (this.WindowState == WindowState.Normal)
+            if (WindowState == WindowState.Normal)
             {
-                this.Height = settings.height;
-                this.Width = settings.width;
+                Height = settings.Height;
+                Width = settings.Width;
             }
 
             // only set our location if it's within the bounds of the user's screen(s)
-            if (settings.top >= SystemParameters.VirtualScreenTop && 
-                settings.left >= SystemParameters.VirtualScreenLeft &&
-                settings.top <= (SystemParameters.VirtualScreenHeight - Math.Abs(SystemParameters.VirtualScreenTop) - this.Height) &&
-                settings.left <= (SystemParameters.VirtualScreenWidth - Math.Abs(SystemParameters.VirtualScreenLeft) - this.Width))
+            if (settings.Top >= SystemParameters.VirtualScreenTop && 
+                settings.Left >= SystemParameters.VirtualScreenLeft &&
+                settings.Top <= (SystemParameters.VirtualScreenHeight - Math.Abs(SystemParameters.VirtualScreenTop) - Height) &&
+                settings.Left <= (SystemParameters.VirtualScreenWidth - Math.Abs(SystemParameters.VirtualScreenLeft) - Width))
             {
-                this.Top = settings.top;
-                this.Left = settings.left;
+                Top = settings.Top;
+                Left = settings.Left;
             }
             
 
             // check the selected date/time formats
-            checkIfSameValue(dateFormatMenu, settings.dateFormat);
-            checkIfSameValue(timeFormatMenu, settings.timeFormat);
+            CheckIfSameValue(dateFormatMenu, settings.DateFormat);
+            CheckIfSameValue(timeFormatMenu, settings.TimeFormat);
 
             // set toggles
-            showStatusBarDropdown.IsChecked = settings.showStatusBar;
-            textbox.WordWrap = settings.wordWrap;
-            textbox.ShowLineNumbers = settings.showLineNumbers;
-            this.Topmost = settings.topmost;
+            showStatusBarDropdown.IsChecked = settings.ShowStatusBar;
+            textbox.WordWrap = settings.WordWrap;
+            textbox.ShowLineNumbers = settings.ShowLineNumbers;
+            Topmost = settings.Topmost;
 
             // set status bar visibilities
-            lineNumberVisible = settings.lineNumberVisible;
-            columnNumberVisible = settings.columnNumberVisible;
-            wordCountVisible = settings.wordCountVisible;
-            charCountVisible = settings.charCountVisible;
+            LineNumberVisible = settings.LineNumberVisible;
+            ColumnNumberVisible = settings.ColumnNumberVisible;
+            WordCountVisible = settings.WordCountVisible;
+            CharCountVisible = settings.CharCountVisible;
         }
 
         /// <summary>
         /// Set all fields in settings object to match window properties
         /// </summary>
-        private void setSettings(UISettings settings)
+        private void SetSettings(UISettings settings)
         {
-            settings.theme = this.theme;
-            settings.fontFamily = textbox.FontFamily;
-            settings.fontSize = this.fontSize;
-            settings.windowState = this.WindowState;
+            settings.Theme = _theme;
+            settings.FontFamily = textbox.FontFamily;
+            settings.FontSize = FontSize;
+            settings.WindowState = WindowState;
 
-            settings.top = this.Top;
-            settings.left = this.Left;
-            settings.height = this.Height;
-            settings.width = this.Width;
+            settings.Top = Top;
+            settings.Left = Left;
+            settings.Height = Height;
+            settings.Width = Width;
 
-            settings.showLineNumbers = textbox.ShowLineNumbers;
-            settings.showStatusBar = statusBar.Visibility == Visibility.Visible;
-            settings.wordWrap = textbox.WordWrap;
-            settings.topmost = this.Topmost;
+            settings.ShowLineNumbers = textbox.ShowLineNumbers;
+            settings.ShowStatusBar = statusBar.Visibility == Visibility.Visible;
+            settings.WordWrap = textbox.WordWrap;
+            settings.Topmost = Topmost;
 
-            settings.lineNumberVisible = lineNumberVisible;
-            settings.columnNumberVisible = columnNumberVisible;
-            settings.wordCountVisible = wordCountVisible;
-            settings.charCountVisible = charCountVisible;
+            settings.LineNumberVisible = LineNumberVisible;
+            settings.ColumnNumberVisible = ColumnNumberVisible;
+            settings.WordCountVisible = WordCountVisible;
+            settings.CharCountVisible = CharCountVisible;
         }
 
         #endregion
 
         #region Font
 
-        private void populateFontDropdown(ComboBox dropdown)
+        /// <summary>
+        /// Grab all of the system fonts, sort them by name, and add them to a <see cref="ComboBox"/>
+        /// </summary>
+        /// <param name="dropdown"><see cref="ComboBox"/> to add the font family names to</param>
+        private void PopulateFontDropdown(ComboBox dropdown)
         {
             // sort system fonts
             var fonts = Fonts.SystemFontFamilies.OrderBy(x => x.Source);
@@ -603,7 +608,12 @@ namespace PadSharp
             }
         }
 
-        private void selectFont(ComboBox dropdown, FontFamily font)
+        /// <summary>
+        /// Selects the given font in the given <see cref="ComboBox"/>. Defaults to the first item.
+        /// </summary>
+        /// <param name="dropdown"><see cref="ComboBox"/> to select the font within</param>
+        /// <param name="font">font to select</param>
+        private void SelectFont(ComboBox dropdown, FontFamily font)
         {
             foreach (ComboBoxItem item in dropdown.Items)
             {
@@ -621,6 +631,9 @@ namespace PadSharp
             }
         }
 
+        /// <summary>
+        /// handles changing the textbox font via the dropdown
+        /// </summary>
         private void fontDropdown_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             try
@@ -633,17 +646,19 @@ namespace PadSharp
             catch { /* go with the last best matched font */ }
         }
 
+        /// <summary>
+        /// Handles changing the textbox font size via the dropdown
+        /// </summary>
         private void fontSizeDropdown_Changed(object sender, EventArgs e)
         {
-            double size;
-            if (double.TryParse(fontSizeDropdown.Text, out size))
+            if (double.TryParse(fontSizeDropdown.Text, out double size))
             {
-                fontSize = size;
-                fontSizeDropdown.Text = fontSize.ToString();
+                FontSize = size;
+                fontSizeDropdown.Text = FontSize.ToString();
             }
             else
             {
-                fontSizeDropdown.Text = fontSize.ToString();
+                fontSizeDropdown.Text = FontSize.ToString();
             }
         }
 
@@ -656,49 +671,55 @@ namespace PadSharp
         private void New_Command()
         {
             // text not saved, promt them: are you sure?
-            if (textbox.Text != savedText && Alert.showDialog(
+            if (textbox.Text != _savedText && Alert.showDialog(
                 "Are you sure you want to make a new file? Your unsaved changes to the current file will be lost.",
-                Global.APP_NAME, "Yes", "Cancel") != AlertResult.button1Clicked)
+                Global.AppName, "Yes", "Cancel") != AlertResult.button1Clicked)
             {
                 return;
             }
 
             // reset all values to null/""
-            file = null;
-            savedText = "";
+            OpenFile = null;
+            _savedText = "";
             textbox.Text = "";
         }
 
         private void NewWindow_Command()
         {
             // make sure the new window has the same settings as this one
-            setSettings(settings);
-            settings.save();
+            SetSettings(_settings);
+            _settings.Save();
 
-            // make the new window and show it
-            var newWindow = new MainView();
-
-            // make sure there's no file open because there will be if there is a path in the command line args
-            newWindow.file = null;
-            newWindow.textbox.Text = "";
-            newWindow.Show();
+            try
+            {
+                // start another instance via the exe
+                Process.Start(GetType().Assembly.Location);
+            }
+            catch (Exception ex)
+            {
+                Global.ActionMessage($"Failed to open another instance of {Global.AppName}.", ex.Message);
+                Logger.Log(GetType(), ex, "opening a new window");
+            }
         }
 
         private void Open_Command()
         {
             // text not saved, promt them: are you sure?
-            if (textbox.Text != savedText && Alert.showDialog(
+            if (textbox.Text != _savedText && Alert.showDialog(
                 "Are you sure you want to open a file? Your unsaved changes to the current file will be lost.",
-                Global.APP_NAME, "Yes", "Cancel") != AlertResult.button1Clicked)
+                Global.AppName, "Yes", "Cancel") != AlertResult.button1Clicked)
             {
                 return;
             }
 
-            var openDialog = new OpenFileDialog();
-            openDialog.Title = "Open";
-            openDialog.DefaultExt = ".txt";
-            openDialog.Filter = "Text Files|*.txt|All Files|*.*";
-            openDialog.Multiselect = false;
+            var openDialog = new OpenFileDialog
+            {
+                Title = "Open",
+                DefaultExt = ".txt",
+                Filter = "Text Files|*.txt|All Files|*.*",
+                Multiselect = false
+            };
+
             var result = openDialog.ShowDialog();
 
             string path = openDialog.FileName;
@@ -706,40 +727,39 @@ namespace PadSharp
             // if a file was selected, save it
             if (result == true && path != null && path != "")
             {
-                open(path);
+                Open(path);
             }
         }
 
         private void OpenInExplorer_Command()
         {
-            if (file != null && file.Exists)
+            if (OpenFile != null && OpenFile.Exists)
             {
                 try
                 {
                     // open the current file's directory in Windows Explorer
-                    Process.Start("explorer.exe", file.DirectoryName);
+                    Process.Start("explorer.exe", OpenFile.DirectoryName);
                 }
                 catch (Exception ex)
                 {
-                    Global.actionMessage(
-                        "Failed to open the current file in Windows Explorer", ex.Message);
+                    Global.ActionMessage("Failed to open the current file in Windows Explorer", ex.Message);
                 }
             }
             else
             {
-                Alert.showDialog("No file is open.", Global.APP_NAME);
+                Alert.showDialog("No file is open.", Global.AppName);
             }
         }
 
         private void Save_Command()
         {
-            if (file == null)
+            if (OpenFile == null)
             {
                 saveAs();
             } 
             else
             {
-                save(file.FullName);
+                Save(OpenFile.FullName);
             }
         }
 
@@ -752,6 +772,7 @@ namespace PadSharp
         {
             var printDialog = new PrintDialog();
 
+            // user pressed 'ok' to print
             if (printDialog.ShowDialog() == true)
             {
                 // get a FlowDocument from our editor
@@ -768,7 +789,7 @@ namespace PadSharp
 
         private void Exit_Command()
         {
-            this.Close();
+            Close();
         }
 
         #endregion
@@ -808,7 +829,7 @@ namespace PadSharp
             // find open, replace closed
             findPanelParent.Visibility = Visibility.Visible;
             replacePanelParent.Visibility = Visibility.Collapsed;
-            openFindHelper();
+            OpenFindHelper();
         }
 
         private void FindReplace_Command()
@@ -819,7 +840,7 @@ namespace PadSharp
             // both find and replace open
             findPanelParent.Visibility = Visibility.Visible;
             replacePanelParent.Visibility = Visibility.Visible;
-            openFindHelper();
+            OpenFindHelper();
         }
 
         private void Goto_Command()
@@ -837,12 +858,12 @@ namespace PadSharp
         private void CheckSpelling_Command()
         {
             // words are 3 or more letters, no numbers/symbols other than '
-            var words = Regex.Matches(textbox.Text, @"\b([a-z]|'){3,}\b", RegexOptions.IgnoreCase);
+            var words = textbox.Text.Matches(@"\b([a-z]|'){3,}\b", RegexOptions.IgnoreCase);
 
             bool mistakes = false;
             foreach (Match word in words)
             {
-                if (!WordList.containsWord(word.Value))
+                if (!WordList.ContainsWord(word.Value))
                 {
                     mistakes = true; // spelling mistakes were made!
 
@@ -855,9 +876,8 @@ namespace PadSharp
                     var location = textbox.Document.GetLocation(word.Index);
                     textbox.ScrollTo(location.Line, location.Column);
 
-                    var result = Alert.showDialog(
-                        string.Format("'{0}' isn't in Pad#'s dictionary.", word.Value),
-                        Global.APP_NAME, "Next", "Stop Spelling Check");
+                    var result = Alert.showDialog($"'{word.Value}' isn't in Pad#'s dictionary.",
+                        title: Global.AppName, button1Text: "Next", button2Text: "Stop Spelling Check");
 
                     if (result == AlertResult.button2Clicked)
                     {
@@ -872,7 +892,7 @@ namespace PadSharp
                 ? "No other spelling mistakes were found"
                 : "No spelling mistakes were found";
 
-            Global.actionMessage(message, "Note: some words may not be in Pad#'s dictionary. " +
+            Global.ActionMessage(message, "Note: some words may not be in Pad#'s dictionary. " +
                 "In order for a word to be checked it must be at least 3 letters long, " +
                 "and it must not contain any numbers or symbols (other than apostrophes (')).");
         }
@@ -880,10 +900,10 @@ namespace PadSharp
         private void NormalizeLineEndings_Command()
         {
             // set all line endings to \r\n
-            textbox.normalizeLineEndings(true);
+            textbox.NormalizeLineEndings(true);
 
             // give the user some feedback - this change won't be obvious
-            Alert.showDialog(@"Done. All line endings have been converted to the Windows format (CRLF).", Global.APP_NAME);
+            Alert.showDialog("Done. All line endings have been converted to the Windows format (CRLF).", Global.AppName);
         }
 
         private void SelectAll_Command()
@@ -904,12 +924,12 @@ namespace PadSharp
             int lineIndex = textbox.TextArea.Caret.Line - 1;
             string line = lines[lineIndex];
 
-            bool hasCheck = line.Length > 0 && line.Substring(0, 1) == CHECK_MARK;
+            bool hasCheck = line.Length > 0 && line.Substring(0, 1) == _checkMark;
 
             if (!hasCheck)
             {
                 // throw a CHECK_MARK and a space at the beginning of the line we're on
-                lines[lineIndex] = CHECK_MARK + " " + line;
+                lines[lineIndex] = _checkMark + " " + line;
             }
             else
             {
@@ -925,22 +945,22 @@ namespace PadSharp
 
         private void AddCheckMark_Command()
         {
-            insert(CHECK_MARK);
+            Insert(_checkMark);
         }
 
         private void TodaysDate_Command()
         {
-            insert(DateTime.Now.ToString(settings.dateFormat));
+            Insert(DateTime.Now.ToString(_settings.DateFormat));
         }
 
         private void CurrentTime_Command()
         {
-            insert(DateTime.Now.ToString(settings.timeFormat));
+            Insert(DateTime.Now.ToString(_settings.TimeFormat));
         }
 
         private void DateAndTime_Command()
         {
-            insert(DateTime.Now.ToString(settings.dateFormat + " " + settings.timeFormat));
+            Insert(DateTime.Now.ToString(_settings.DateFormat + " " + _settings.TimeFormat));
         }
 
         #endregion
@@ -964,22 +984,22 @@ namespace PadSharp
 
         private void LowerCase_Command()
         {
-            textbox.replaceSelectedText(textbox.SelectedText.ToLower());
+            textbox.ReplaceSelectedText(textbox.SelectedText.ToLower());
         }
 
         private void UpperCase_Command()
         {
-            textbox.replaceSelectedText(textbox.SelectedText.ToUpper());
+            textbox.ReplaceSelectedText(textbox.SelectedText.ToUpper());
         }
 
         private void TitleCase_Command()
         {
-            textbox.replaceSelectedText(textbox.SelectedText.titleCase());
+            textbox.ReplaceSelectedText(textbox.SelectedText.ToTitleCase());
         }
 
         private void ToggleCase_Command()
         {
-            textbox.replaceSelectedText(textbox.SelectedText.toggleCase());
+            textbox.ReplaceSelectedText(textbox.SelectedText.ToggleCase());
         }
 
         private void Define_Command()
@@ -989,38 +1009,38 @@ namespace PadSharp
             if (text != "")
             {
                 // we have a file
-                if (LocalDictionary.downloaded)
+                if (LocalDictionary.Downloaded)
                 {
                     // it's in memory
-                    if (LocalDictionary.loaded)
+                    if (LocalDictionary.Loaded)
                     {
-                        showDefinition(text);
+                        ShowDefinition(text);
                     }
                     else // load file, showDefinition
                     {
-                        loadDictionary(() => showDefinition(text));
+                        LoadDictionary(() => ShowDefinition(text));
                     }
                 }
                 else // no file
                 {
                     // download, load, showDefinition
-                    downloadDictionary(() => showDefinition(text));
+                    DownloadDictionary(() => ShowDefinition(text));
                 }
             }
             else
             {
-                Alert.showDialog("Please select a word to define.", Global.APP_NAME);
+                Alert.showDialog("Please select a word to define.", Global.AppName);
             }
         }
 
         private void Reverse_Command()
         {
-            textbox.replaceSelectedText(textbox.SelectedText.reverseLines());
+            textbox.ReplaceSelectedText(textbox.SelectedText.ReverseLines());
         }
 
         private void Sort_Command(object descending)
         {
-            textbox.replaceSelectedText(textbox.SelectedText.sortLines((bool)descending));
+            textbox.ReplaceSelectedText(textbox.SelectedText.SortLines((bool)descending));
         }
 
         #region Helpers
@@ -1032,11 +1052,11 @@ namespace PadSharp
             // toggle marker for all lines
             if (text.Contains('\n'))
             {
-                textbox.replaceSelectedText(text.toggleLineStart(marker + " "));
+                textbox.ReplaceSelectedText(text.ToggleLineStart(marker + " "));
             }
             else // toggle bold within line
             {
-                textbox.replaceSelectedText(text.toggleStartAndEnd(marker + " ", " " + marker));
+                textbox.ReplaceSelectedText(text.ToggleStartAndEnd(marker + " ", " " + marker));
             }
         }
 
@@ -1051,14 +1071,14 @@ namespace PadSharp
             var item = sender as MenuItem;
 
             // select theme
-            this.theme = item.Header.ToString() == "Light" ? Theme.light : Theme.dark;
+            _theme = item.Header.ToString() == "Light" ? Theme.light : Theme.dark;
 
             // uncheck other themes
-            uncheckSiblings(item);
+            UncheckSiblings(item);
 
             // set theme for app
             Application.Current.Resources.
-                    MergedDictionaries[0].Source = ThemeManager.themeUri(this.theme);
+                MergedDictionaries[0].Source = ThemeManager.themeUri(_theme);
         }
 
         private void theme_Unchecked(object sender, RoutedEventArgs e)
@@ -1066,17 +1086,17 @@ namespace PadSharp
             var item = sender as MenuItem;
 
             // if this setting is selected
-            if (this.theme.ToString() == item.Header.ToString().ToLower())
+            if (_theme.ToString() == item.Header.ToString().ToLower())
             {
-                keepMenuItemChecked(item, theme_Checked);
+                KeepMenuItemChecked(item, theme_Checked);
             }
         }
 
         private void date_Checked(object sender, RoutedEventArgs e)
         {
             var item = sender as MenuItem;
-            settings.dateFormat = item.Header.ToString();
-            uncheckSiblings(item);
+            _settings.DateFormat = item.Header.ToString();
+            UncheckSiblings(item);
         }
 
         private void date_Unchecked(object sender, RoutedEventArgs e)
@@ -1084,17 +1104,17 @@ namespace PadSharp
             var item = sender as MenuItem;
 
             // if this setting is selected
-            if (settings.dateFormat == item.Header.ToString())
+            if (_settings.DateFormat == item.Header.ToString())
             {
-                keepMenuItemChecked(item, date_Checked);
+                KeepMenuItemChecked(item, date_Checked);
             }
         }
 
         private void time_Checked(object sender, RoutedEventArgs e)
         {
             var item = sender as MenuItem;
-            settings.timeFormat = item.Header.ToString();
-            uncheckSiblings(item);
+            _settings.TimeFormat = item.Header.ToString();
+            UncheckSiblings(item);
         }
 
         private void time_Unchecked(object sender, RoutedEventArgs e)
@@ -1102,9 +1122,9 @@ namespace PadSharp
             var item = sender as MenuItem;
 
             // if this setting is selected
-            if (settings.timeFormat == item.Header.ToString())
+            if (_settings.TimeFormat == item.Header.ToString())
             {
-                keepMenuItemChecked(item, time_Checked);
+                KeepMenuItemChecked(item, time_Checked);
             }
         }
 
@@ -1118,7 +1138,7 @@ namespace PadSharp
         private void ToggleStatusBar_Command()
         {
             // toggle the visibility of the status bar
-            statusBarVisible = !statusBarVisible;
+            StatusBarVisible = !StatusBarVisible;
         }
 
         private void ToggleWordWrap_Command()
@@ -1132,7 +1152,7 @@ namespace PadSharp
         {
             // toggle the IsChecked of the MenuItem
             topmostDrowndown.IsChecked = !topmostDrowndown.IsChecked;
-            this.Topmost = topmostDrowndown.IsChecked;
+            Topmost = topmostDrowndown.IsChecked;
         }
 
         #endregion
@@ -1141,31 +1161,31 @@ namespace PadSharp
 
         private void fontStyleGuide_Click(object sender, RoutedEventArgs e)
         {
-            var fontStyleFile = Path.Combine(Global.DATA_PATH, "font-style-guide.txt");
+            var fontStyleFile = Path.Combine(Global.DataPath, "font-style-guide.txt");
 
             // file isn't there yet. See if we can create it.
             if (!File.Exists(fontStyleFile))
             {
                 try
                 {
-                    Global.createDirectoryAndFile(fontStyleFile);
+                    Global.CreateDirectoryAndFile(fontStyleFile);
                     File.WriteAllText(fontStyleFile, Properties.Resources.font_style_guide);
                 }
                 catch (Exception ex)
                 {
-                    Global.actionMessage(
+                    Global.ActionMessage(
                         "Cannot access your APPDATA folder, which is where the font style guide is located.", ex.Message);
                     return;
                 }
             }
 
             // open the file in the user's default text editor
-            Global.launch(fontStyleFile);
+            Global.Launch(fontStyleFile);
         }
 
         private void help_Click(object sender, RoutedEventArgs e)
         {
-            Global.launch((sender as MenuItem).Tag.ToString());
+            Global.Launch((sender as MenuItem).Tag.ToString());
         }
 
         #endregion
@@ -1173,57 +1193,58 @@ namespace PadSharp
         #region Helpers
 
         /// <summary>
-        /// Call LocalDictionary.define with <see cref="word"/>,
+        /// Call <see cref="LocalDictionary.Define"/> with <see cref="word"/>,
         /// show an Alert dialog with the definition (or couldn't find ...)
         /// </summary>
         /// <param name="word">Word to define</param>
-        private void showDefinition(string word)
+        private void ShowDefinition(string word)
         {
-            string definition = LocalDictionary.define(word);
+            string definition = LocalDictionary.Define(word);
 
             if (definition != null)
             {
-                Alert.showDialog(word + ": " + definition, Global.APP_NAME);
+                Alert.showDialog(word + ": " + definition, Global.AppName);
             }
             else
             {
-                Alert.showDialog("Couldn't find a definition for '" + word + "'", Global.APP_NAME);
+                Alert.showDialog("Couldn't find a definition for '" + word + "'", Global.AppName);
             }
         }
 
         /// <summary>
-        /// Calls LocalDictionary.load with a default error callback
+        /// Calls <see cref="LocalDictionary.Load"/> with a default error callback
         /// </summary>
         /// <param name="callback">Success callback</param>
-        private void loadDictionary(Action callback)
+        private void LoadDictionary(Action callback)
         {
-            LocalDictionary.load(callback, (ex) =>
+            LocalDictionary.Load(callback, (ex) =>
             {
-                Global.actionMessage("Failed to read from the dictionary", ex.Message);
+                Global.ActionMessage("Failed to read from the dictionary", ex.Message);
             });
         }
 
         /// <summary>
-        /// Calls LocalDictionary.download, then loadDictionary with default error callbacks
+        /// Calls <see cref="LocalDictionary.Download"/>,
+        /// then <see cref="LoadDictionary"/> with default error callbacks
         /// </summary>
         /// <param name="callback">Success callback</param>
-        private void downloadDictionary(Action callback)
+        private void DownloadDictionary(Action callback)
         {
             // download, load, call callback
-            LocalDictionary.download(() =>
+            LocalDictionary.Download(() =>
             {
-                loadDictionary(() =>
+                LoadDictionary(() =>
                 {
                     callback();
                 });
             }, (ex) => // failed
             {
-                Global.actionMessage("Failed to download the dictionary", ex.Message);
+                Global.ActionMessage("Failed to download the dictionary", ex.Message);
             });
 
             Alert.showDialog(
                 "The dictionary is now downloading for the first time. This may take a moment.",
-                Global.APP_NAME);
+                Global.AppName);
         }
 
         /// <summary>
@@ -1231,7 +1252,7 @@ namespace PadSharp
         /// then move the caret to the end of the inserted text
         /// </summary>
         /// <param name="text">Text to insert</param>
-        private void insert(string text)
+        private void Insert(string text)
         {
             // grab position we're going to before we reset textbox.Text
             int position = textbox.CaretOffset + text.Length;
@@ -1244,9 +1265,9 @@ namespace PadSharp
         }
 
         /// <summary>
-        /// Unchecks all of the sibling MenuItems of provided <see cref="item"/>
+        /// Unchecks all of the siblings of the provided <see cref="MenuItem"/>
         /// </summary>
-        private void uncheckSiblings(MenuItem item)
+        private void UncheckSiblings(MenuItem item)
         {
             // if the item is checked, loop through all its parent's children and uncheck them
             if (item.IsChecked)
@@ -1263,11 +1284,11 @@ namespace PadSharp
         }
 
         /// <summary>
-        /// Check all child MenuItems whose header == provided <see cref="value"/>
+        /// Check all child MenuItems whose header == provided value
         /// </summary>
         /// <param name="parent">Parent MenuItem</param>
         /// <param name="value">Header value</param>
-        private void checkIfSameValue(MenuItem parent, string value)
+        private void CheckIfSameValue(MenuItem parent, string value)
         {
             foreach (MenuItem child in parent.Items)
             {
@@ -1281,7 +1302,7 @@ namespace PadSharp
         /// <summary>
         /// put selected text into find box, select it
         /// </summary>
-        private void openFindHelper()
+        private void OpenFindHelper()
         {
             // put selected text into find box
             if (textbox.SelectionLength > 0)
@@ -1298,7 +1319,7 @@ namespace PadSharp
         /// </summary>
         /// <param name="item">MenuItem to keep checked</param>
         /// <param name="handler">item's Checked event handler</param>
-        private void keepMenuItemChecked(MenuItem item, RoutedEventHandler handler)
+        private void KeepMenuItemChecked(MenuItem item, RoutedEventHandler handler)
         {
             item.Checked -= handler;
             item.IsChecked = true;
@@ -1318,7 +1339,7 @@ namespace PadSharp
         /// to its normal color or red based on <see cref="wasFound"/>
         /// </summary>
         /// <param name="wasFound">Was the text found within the textbox?</param>
-        private void setFoundForeground(bool wasFound)
+        private void SetFoundForeground(bool wasFound)
         {
             if (wasFound) // found
             {
@@ -1333,20 +1354,20 @@ namespace PadSharp
         }
 
         /// <summary>
-        /// Calls textbox.findNext() with the appropriate arguments based on the ui.
+        /// Calls <see cref="textbox.FindNext"/> with the appropriate arguments based on the ui.
         /// loopback should be true if searching backwards from the start.
         /// Updates lblMatches.Text with the number of matches found using the regex in txtFind.Text.
         /// </summary>
         /// <param name="start">Where to start searching</param>
         /// <param name="lookback">Look back from this point?</param>
-        private void findHelper(int start, bool lookback = false)
+        private void FindHelper(int start, bool lookback = false)
         {
             bool _matchCase = matchCase.IsChecked == true;
 
-            bool found = textbox.findNext(txtFind.Text, 
+            bool found = textbox.FindNext(txtFind.Text, 
                 start, _matchCase, lookback);
 
-            setFoundForeground(found);
+            SetFoundForeground(found);
 
             // if there's nothing in txtFind, don't count the matches
             if (txtFind.Text == "")
@@ -1356,7 +1377,7 @@ namespace PadSharp
             }
 
             // update lblMatches with the number of matches (async)
-            textbox.Document.Text.countMatchesAsync(txtFind.Text, _matchCase, (count) =>
+            textbox.Document.Text.CountMatchesAsync(txtFind.Text, _matchCase, (count) =>
             {
                 lblMatches.Text = count.ToString();
             },
@@ -1369,19 +1390,19 @@ namespace PadSharp
         private void txtFind_TextChanged(object sender, RoutedEventArgs e)
         {
             // find first instance of text entered
-            findHelper(0);
+            FindHelper(0);
         }
 
         private void findUp_Click(object sender, RoutedEventArgs e)
         {
             // look back from selection
-            findHelper(textbox.SelectionStart, true);
+            FindHelper(textbox.SelectionStart, true);
         }
 
         private void findDown_Click(object sender, RoutedEventArgs e)
         {
             // look forward from selection
-            findHelper(textbox.SelectionStart + textbox.SelectionLength);
+            FindHelper(textbox.SelectionStart + textbox.SelectionLength);
         }
 
         private void closeFindReplace_Click(object sender, RoutedEventArgs e)
@@ -1395,31 +1416,27 @@ namespace PadSharp
 
         #region Replace
 
-        private bool replaceHelper()
-        {
-            bool replaced = textbox.replaceNext(txtFind.Text, txtReplace.Text, 
-                textbox.SelectionStart + textbox.SelectionLength, matchCase.IsChecked == true);
-
-            setFoundForeground(replaced);
-
-            return replaced;
-        }
-
         private void replaceNext_Click(object sender, RoutedEventArgs e)
         {
-            replaceHelper();
+            bool replaced = textbox.ReplaceNext(txtFind.Text, txtReplace.Text,
+                textbox.SelectionStart + textbox.SelectionLength, matchCase.IsChecked == true);
+
+            // run find again to update the ui
+            FindHelper(0);
         }
 
         private void replaceAll_Click(object sender, RoutedEventArgs e)
         {
-            textbox.replaceAll(txtFind.Text, txtReplace.Text, 
+            textbox.ReplaceAll(txtFind.Text, txtReplace.Text, 
                 matchCase.IsChecked == true, (count) =>
             {
                 // this determines whether or not to run the replace
-                return count > 0 && Alert.showDialog(
-                    string.Format("Replace {0} instances of {1} with {2}?", count, txtFind.Text, txtReplace.Text), 
-                    Global.APP_NAME, "OK", "Cancel") == AlertResult.button1Clicked;
+                return count > 0 && Alert.showDialog($"Replace {count} instances of {txtFind.Text} with {txtReplace.Text}?",
+                    title: Global.AppName, button1Text: "OK", button2Text: "Cancel") == AlertResult.button1Clicked;
             });
+
+            // run find again to update the ui
+            FindHelper(0);
         }
 
         #endregion
@@ -1435,7 +1452,7 @@ namespace PadSharp
             }
             else
             {
-                Alert.showDialog("Line number must be an integer.", Global.APP_NAME);
+                Alert.showDialog("Line number must be an integer.", Global.AppName);
                 txtGoto.Focus();
                 txtGoto.SelectAll();
             }
@@ -1460,36 +1477,36 @@ namespace PadSharp
         private void window_Activated(object sender, EventArgs e)
         {
             // check to see if the open file has been modified
-            if (file != null && File.Exists(file.FullName) && promptForReload)
+            if (OpenFile != null && File.Exists(OpenFile.FullName) && _promptForReload)
             {
                 try
                 {
-                    string fileText = File.ReadAllText(file.FullName);
+                    string fileText = File.ReadAllText(OpenFile.FullName);
 
                     // file has been modified
-                    if (fileText != savedText)
+                    if (fileText != _savedText)
                     {
-                        promptForReload = false;
+                        _promptForReload = false;
 
                         // set savedText to the new text from the file
-                        savedText = fileText;
-                        fileSaved = fileSaved;
+                        _savedText = fileText;
+                        FileSaved = FileSaved;
 
                         // want to reload it?
-                        var result = Alert.showDialog(
-                            string.Format("\"{0}\" has been modified by another program. Would you like to reload it?", file.Name),
-                            Global.APP_NAME, "Reload from file", "Keep my changes");
+                        var result = Alert
+                            .showDialog($"'{OpenFile.Name}' has been modified by another program. Would you like to reload it?",
+                                title: Global.AppName, button1Text: "Reload from file", button2Text: "Keep my changes");
 
                         // yes i do
                         if (result == AlertResult.button1Clicked)
                         {
-                            open(file.FullName);
+                            Open(OpenFile.FullName);
                         }
                     }
                 }
                 catch (Exception ex)
                 {
-                    Logger.log(typeof(MainView), ex, "window_Activated");
+                    Logger.Log(typeof(MainView), ex, "window_Activated");
                 }
             }
         }
@@ -1506,31 +1523,31 @@ namespace PadSharp
                 }
                 
                 // increase/decrease the font size based on whether we're scrolling up or down
-                fontSize += delta;
-                fontSizeDropdown.Text = fontSize.ToString();
+                FontSize += delta;
+                fontSizeDropdown.Text = FontSize.ToString();
             }
         }
 
         private void window_Closing(object sender, CancelEventArgs e)
         {
             // if the user has not saved their changes, but they wish to
-            if (textbox.Text != savedText &&
+            if (textbox.Text != _savedText &&
                 Alert.showDialog("Close without saving?",
-                Global.APP_NAME, "Close", "Cancel") == AlertResult.button2Clicked)
+                Global.AppName, "Close", "Cancel") == AlertResult.button2Clicked)
             {
                 e.Cancel = true; // don't close
             }
             else
             {
                 // set all user settings
-                setSettings(settings);
+                SetSettings(_settings);
 
                 // save user settings, show a message if saving fails
-                if (settings != null && !settings.save())
+                if (_settings != null && !_settings.Save())
                 {
-                    Global.actionMessage("Failed to save settings.json",
+                    Global.ActionMessage("Failed to save settings.json",
                         "A potential fix may be to run " +
-                        Global.APP_NAME + " as an administrator.");
+                        Global.AppName + " as an administrator.");
                 }
             }
         }
@@ -1548,23 +1565,23 @@ namespace PadSharp
         private void textbox_PositionChanged(object sender, EventArgs e)
         {
             // set ln and col on caret position change
-            lineNumber = textbox.TextArea.Caret.Line;
-            columnNumber = textbox.TextArea.Caret.Column;
+            LineNumber = textbox.TextArea.Caret.Line;
+            ColumnNumber = textbox.TextArea.Caret.Column;
         }
 
         private void textbox_TextChanged(object sender, EventArgs e)
         {
             // count the words on textchanged
-            wordCount = Regex.Matches(textbox.Text, @"\b\S+\b").Count;
+            WordCount = Regex.Matches(textbox.Text, @"\b\S+\b").Count;
 
             // force UI to acknowledge fileSaved
-            fileSaved = false;
+            FileSaved = false;
         }
 
         private void textArea_SelectionChanged(object sender, EventArgs e)
         {
             // force UI to acknowledge selectionMenuVisibility (we're not actually affecting it)
-            selectionMenuVisibility = Visibility.Visible;
+            SelectionMenuVisibility = Visibility.Visible;
         }
 
         #endregion
@@ -1574,10 +1591,10 @@ namespace PadSharp
         /// <summary>
         /// Attempts to open the file specified by path in the editor.
         /// Gives appropriate error prompts.
-        /// Also sets this.file to the newly opened file's FileInfo.
+        /// Also sets <see cref="OpenFile"/> to the newly opened file's FileInfo.
         /// </summary>
         /// <param name="path">Path to the desired file</param>
-        private void open(string path)
+        private void Open(string path)
         {
             try
             {
@@ -1586,73 +1603,76 @@ namespace PadSharp
                 if (_file.Exists)
                 {
                     // under limit
-                    if (_file.Length < FILE_SIZE_LIMIT)
+                    if (_file.Length < _fileSizeLimit)
                     {
                         // read text from path into textbox
                         textbox.Text = File.ReadAllText(path);
-                        savedText = textbox.Text;
-                        file = _file;
+                        _savedText = textbox.Text;
+                        OpenFile = _file;
 
                         // prompt the user if the file changes
-                        promptForReload = true;
+                        _promptForReload = true;
                     }
                     else
                     {
-                        Global.actionMessage("Failed to open '" + path + "'", 
-                            string.Format("File is too large (must be under {0}k).", FILE_SIZE_LIMIT / 1000));
+                        Global.ActionMessage("Failed to open '" + path + "'",
+                            $"File is too large (must be under {_fileSizeLimit / 1000}k).");
                     }
                 }
                 else
                 {
-                    Global.actionMessage("Failed to open '" + path + "'", "File does not exist.");
+                    Global.ActionMessage("Failed to open '" + path + "'", "File does not exist.");
                 }
             }
             catch (Exception ex)
             {
                 string message = "Failed to open '" + path + "'";
-                Global.actionMessage(message, ex.Message);
-                Logger.log(typeof(MainView), ex, message);
+                Global.ActionMessage(message, ex.Message);
+                Logger.Log(typeof(MainView), ex, message);
             }
         }
 
         /// <summary>
         /// Attempts to save the file specified by path.
         /// Gives an appropriate error message if it can't save.
-        /// Also sets this.file to the (possibly updated) file's FileInfo.
+        /// Also sets <see cref="OpenFile"/> to the (possibly updated) file's FileInfo.
         /// </summary>
         /// <param name="path">Path to the desired file</param>
-        private void save(string path)
+        private void Save(string path)
         {
             try
             {
                 // write textbox text to path
                 File.WriteAllText(path, textbox.Text);
-                savedText = textbox.Text;
-                file = new FileInfo(path);
+                _savedText = textbox.Text;
+                OpenFile = new FileInfo(path);
 
                 // prompt the user if the file changes
-                promptForReload = true;
+                _promptForReload = true;
             }
             catch (Exception ex)
             {
                 string message = "Failed to save to '" + path + "'";
-                Global.actionMessage(message, ex.Message);
-                Logger.log(typeof(MainView), ex, message);
+                Global.ActionMessage(message, ex.Message);
+                Logger.Log(typeof(MainView), ex, message);
             }
         }
 
         /// <summary>
-        /// Opens a SaveFileDialog prompting the user to select a place to save,
+        /// Opens a <see cref="SaveFileDialog"/> prompting the user to select a place to save,
         /// then calls save with the selected path.
         /// </summary>
         private void saveAs()
         {
-            var saveDialog = new SaveFileDialog();
-            saveDialog.FileName = fileSaved ? file.Name : "document.txt";
-            saveDialog.Title = "Save As";
-            saveDialog.DefaultExt = ".txt";
-            saveDialog.Filter = "Text Files|*.txt|All Files|*.*";
-            saveDialog.AddExtension = true;
+            var saveDialog = new SaveFileDialog
+            {
+                FileName = FileSaved ? OpenFile.Name : "document.txt",
+                Title = "Save As",
+                DefaultExt = ".txt",
+                Filter = "Text Files|*.txt|All Files|*.*",
+                AddExtension = true
+            };
+
             var result = saveDialog.ShowDialog();
 
             string path = saveDialog.FileName;
@@ -1660,7 +1680,7 @@ namespace PadSharp
             // if a file was selected, save it
             if (result == true && path != null && path != "")
             {
-                save(path);
+                Save(path);
             }
         }
 

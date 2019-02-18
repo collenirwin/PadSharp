@@ -8,8 +8,8 @@ namespace PadSharp
 {
     public static class Crypto
     {
-        const int KEY_SIZE_BYTES = 32;
-        const int PBKDF2_ITERATIONS = 10000;
+        private const int _keyByteCount = 32;
+        private const int _pbkdf2Iterations = 10000;
 
         /// <summary>
         /// Uses SHA256 to hash a string (password) with the specified salt added
@@ -17,7 +17,7 @@ namespace PadSharp
         /// <param name="password">password to hash</param>
         /// <param name="salt">salt string to add to the password hash</param>
         /// <returns>the hashed password</returns>
-        public static string hash(string password, string salt)
+        public static string Hash(string password, string salt)
         {
             var hashString = new StringBuilder();
 
@@ -43,9 +43,9 @@ namespace PadSharp
         /// <param name="salt">salt string to add</param>
         /// <param name="hashString">hashed password to check against</param>
         /// <returns>true if the password matches</returns>
-        public static bool hashMatch(string password, string salt, string hashString)
+        public static bool HashIsMatch(string password, string salt, string hashString)
         {
-            return hash(password, salt) == hashString;
+            return Hash(password, salt) == hashString;
         }
 
         /// <summary>
@@ -54,24 +54,20 @@ namespace PadSharp
         /// <param name="text">text to encrypt</param>
         /// <param name="password">password to use</param>
         /// <returns>the encrypted string</returns>
-        public static string encrypt(string text, string password)
+        public static string Encrypt(string text, string password)
         {
             // generate random salt and initialization vector, we will prepend to string later
-            byte[] saltBytes = genRandomByteArray(KEY_SIZE_BYTES);
-            byte[] ivBytes = genRandomByteArray(KEY_SIZE_BYTES);
-            byte[] textBytes = Encoding.UTF8.GetBytes(text);
+            var saltBytes = GenerateRandomByteArray(_keyByteCount);
+            var ivBytes = GenerateRandomByteArray(_keyByteCount);
+            var textBytes = Encoding.UTF8.GetBytes(text);
 
             // use PBKDF2 to generate a key
-            using (var key = new Rfc2898DeriveBytes(password, saltBytes, PBKDF2_ITERATIONS))
+            using (var key = new Rfc2898DeriveBytes(password, saltBytes, _pbkdf2Iterations))
             {
-                byte[] keyBytes = key.GetBytes(KEY_SIZE_BYTES);
+                var keyBytes = key.GetBytes(_keyByteCount);
 
-                // not technically AES because our block size is not 128,
-                // but it's an easier name to remember
-                using (var aes = new RijndaelManaged())
+                using (var aes = CreateAes())
                 {
-                    setAesSettings(aes);
-
                     using (var encryptor = aes.CreateEncryptor(keyBytes, ivBytes))
                     using (var memoryStream = new MemoryStream())
                     using (var cryptoStream = new CryptoStream(memoryStream, encryptor, CryptoStreamMode.Write))
@@ -83,7 +79,7 @@ namespace PadSharp
                         cryptoStream.FlushFinalBlock();
 
                         // prepend the salt and iv to the encrypted bytes
-                        byte[] finalBytes = saltBytes; // salt
+                        var finalBytes = saltBytes; // salt
                         finalBytes = finalBytes.Concat(ivBytes).ToArray(); // IV
                         finalBytes = finalBytes.Concat(memoryStream.ToArray()).ToArray(); // the rest
 
@@ -100,34 +96,32 @@ namespace PadSharp
         /// <param name="encryptedText">previously encrypted text</param>
         /// <param name="password">password to encrypt decrypt with</param>
         /// <returns>the decrypted string</returns>
-        public static string decrypt(string encryptedText, string password)
+        public static string Decrypt(string encryptedText, string password)
         {
             // convert our encrypted string back to a byte array
-            byte[] allBytes = Convert.FromBase64String(encryptedText);
+            var allBytes = Convert.FromBase64String(encryptedText);
 
             // get the salt, which is the first KEY_SIZE_BYTES of the allBytes array
-            byte[] saltBytes = allBytes.Take(KEY_SIZE_BYTES).ToArray();
+            var saltBytes = allBytes.Take(_keyByteCount).ToArray();
 
             // get the initialization vector, which is right after the salt (and the same size)
-            byte[] ivBytes = allBytes.Skip(KEY_SIZE_BYTES).Take(KEY_SIZE_BYTES).ToArray();
+            var ivBytes = allBytes.Skip(_keyByteCount).Take(_keyByteCount).ToArray();
 
             // get the encrypted text, which comes after the salt and the bytes
-            byte[] encryptedBytes = allBytes.Skip(KEY_SIZE_BYTES * 2).ToArray();
+            var encryptedBytes = allBytes.Skip(_keyByteCount * 2).ToArray();
 
-            using (var key = new Rfc2898DeriveBytes(password, saltBytes, PBKDF2_ITERATIONS))
+            using (var key = new Rfc2898DeriveBytes(password, saltBytes, _pbkdf2Iterations))
             {
-                byte[] keyBytes = key.GetBytes(KEY_SIZE_BYTES);
+                byte[] keyBytes = key.GetBytes(_keyByteCount);
 
-                using (var aes = new RijndaelManaged())
+                using (var aes = CreateAes())
                 {
-                    setAesSettings(aes);
-
                     using (var decryptor = aes.CreateDecryptor(keyBytes, ivBytes))
                     using (var memoryStream = new MemoryStream(encryptedBytes))
                     using (var cryptoStream = new CryptoStream(memoryStream, decryptor, CryptoStreamMode.Read))
                     {
                         // a byte array to hold the unencrypted text
-                        byte[] textBytes = new byte[encryptedBytes.Length];
+                        var textBytes = new byte[encryptedBytes.Length];
 
                         // decrypt all text, throw it into textBytes, get the length of the actual decrpyted bytes
                         int count = cryptoStream.Read(textBytes, 0, textBytes.Length);
@@ -140,15 +134,19 @@ namespace PadSharp
         }
 
         /// <summary>
+        /// Creates a <see cref="RijndaelManaged"/> object,
         /// sets BlockSize to 256,
         /// sets Mode to CBC,
         /// sets Padding to PKCS7
         /// </summary>
-        private static void setAesSettings(RijndaelManaged aes)
+        private static RijndaelManaged CreateAes()
         {
-            aes.BlockSize = 256;
-            aes.Mode = CipherMode.CBC;
-            aes.Padding = PaddingMode.PKCS7;
+            return new RijndaelManaged
+            {
+                BlockSize = 256,
+                Mode = CipherMode.CBC,
+                Padding = PaddingMode.PKCS7
+            };
         }
 
         /// <summary>
@@ -156,9 +154,9 @@ namespace PadSharp
         /// </summary>
         /// <param name="numberOfBytes">size of the array in bytes</param>
         /// <returns>an array of random bytes</returns>
-        public static byte[] genRandomByteArray(int numberOfBytes)
+        public static byte[] GenerateRandomByteArray(int numberOfBytes)
         {
-            byte[] bytes = new byte[numberOfBytes];
+            var bytes = new byte[numberOfBytes];
 
             using (var ran = new RNGCryptoServiceProvider())
             {

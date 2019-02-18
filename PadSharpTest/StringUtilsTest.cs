@@ -13,7 +13,7 @@ namespace PadSharpTest
             string[] expected = { "hello,", "world ", "How are you?" };
             string input = "hello,\r\nworld \nHow are you?";
 
-            CollectionAssert.AreEqual(expected, input.splitLines());
+            CollectionAssert.AreEqual(expected, input.SplitLines());
         }
 
         [TestMethod]
@@ -22,7 +22,7 @@ namespace PadSharpTest
             string expected = "5\r\n4\r\n3\r\n2\r\n1";
             string input = "1\n2\r\n3\r\n4\n5";
 
-            Assert.AreEqual(expected, input.reverseLines());
+            Assert.AreEqual(expected, input.ReverseLines());
         }
 
         [TestMethod]
@@ -31,7 +31,7 @@ namespace PadSharpTest
             string expected = "_\r\n1\r\n2\r\na\r\nb\r\nc";
             string input = "a\r\n_\r\n2\nc\r\nb\n1";
 
-            Assert.AreEqual(expected, input.sortLines());
+            Assert.AreEqual(expected, input.SortLines());
         }
 
         [TestMethod]
@@ -40,7 +40,7 @@ namespace PadSharpTest
             string expected = "The  Quick Brown   Fox\r\n Jumped Over  The Lazy   \n    Dog";
             string input = "THe  qUiCK BROWN   fox\r\n JuMped oVEr  the Lazy   \n    Dog";
 
-            Assert.AreEqual(expected, input.titleCase());
+            Assert.AreEqual(expected, input.ToTitleCase());
         }
 
         [TestMethod]
@@ -49,7 +49,7 @@ namespace PadSharpTest
             string expected = "thE  QuIck brown   FOX\r\n jUmPED OveR  THE lAZY   \n    dOG";
             string input = "THe  qUiCK BROWN   fox\r\n JuMped oVEr  the Lazy   \n    Dog";
 
-            Assert.AreEqual(expected, input.toggleCase());
+            Assert.AreEqual(expected, input.ToggleCase());
         }
 
         [TestMethod]
@@ -58,7 +58,7 @@ namespace PadSharpTest
             string expected = "***Hello\r\n***World\r\n***2748";
             string input = "Hello\nWorld\r\n2748";
 
-            Assert.AreEqual(expected, input.prependLines("***"));
+            Assert.AreEqual(expected, input.PrependLines("***"));
         }
 
         [TestMethod]
@@ -67,22 +67,22 @@ namespace PadSharpTest
             string expected = "**Hello\r\n**World\r\n**2748";
             string input = "Hello\nWorld\r\n2748";
 
-            Assert.AreEqual(expected, input.toggleLineStart("**"));
+            Assert.AreEqual(expected, input.ToggleLineStart("**"));
 
             expected = "*Hello\r\n*World\r\n*2748";
             input = "**Hello\r\n**World\r\n**2748";
 
-            Assert.AreEqual(expected, input.toggleLineStart("*"));
+            Assert.AreEqual(expected, input.ToggleLineStart("*"));
 
             expected = "Hello\r\nWorld\r\n2748";
             input = "*Hello\r\n*World\r\n*2748";
 
-            Assert.AreEqual(expected, input.toggleLineStart("*"));
+            Assert.AreEqual(expected, input.ToggleLineStart("*"));
 
             expected = "* *Hello\r\n*World\r\n*_***2748";
             input = " *Hello\r\n**World\r\n_***2748";
 
-            Assert.AreEqual(expected, input.toggleLineStart("*"));
+            Assert.AreEqual(expected, input.ToggleLineStart("*"));
         }
 
         [TestMethod]
@@ -91,7 +91,7 @@ namespace PadSharpTest
             string expected = "Hello 1\r\n  2  \n3 World";
             string input = "1\r\n  2  \n3";
 
-            Assert.AreEqual(expected, input.toggleStartAndEnd("Hello ", " World"));
+            Assert.AreEqual(expected, input.ToggleStartAndEnd("Hello ", " World"));
         }
     }
 }

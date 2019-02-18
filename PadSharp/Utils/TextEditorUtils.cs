@@ -21,7 +21,7 @@ namespace PadSharp
         /// <param name="matchCase">Use IgnoreCase flag?</param>
         /// <param name="lookback">Search back from this point?</param>
         /// <returns>true if found, false if regex is incorrect or if not found</returns>
-        public static bool findNext(this TextEditor textbox, string regex, 
+        public static bool FindNext(this TextEditor textbox, string regex, 
             int start, bool matchCase, bool lookback = false)
         {
             try
@@ -75,7 +75,7 @@ namespace PadSharp
         /// <param name="matchCase">Use IgnoreCase flag?</param>
         /// <param name="lookback">Search back from this point?</param>
         /// <returns>true if found, false if regex is incorrect or if not found</returns>
-        public static bool replaceNext(this TextEditor textbox, string regex, string replacement,
+        public static bool ReplaceNext(this TextEditor textbox, string regex, string replacement,
             int start, bool matchCase, bool lookback = false)
         {
             try
@@ -85,7 +85,7 @@ namespace PadSharp
                     return false;
                 }
 
-                if (findNext(textbox, regex, start, matchCase, lookback))
+                if (FindNext(textbox, regex, start, matchCase, lookback))
                 {
                     int oldStart = textbox.SelectionStart;
 
@@ -124,7 +124,7 @@ namespace PadSharp
         /// <returns>
         /// true if found, false if regex is incorrect or if not found or if predicate returns false
         /// </returns>
-        public static bool replaceAll(this TextEditor textbox, string regex, string replacement,
+        public static bool ReplaceAll(this TextEditor textbox, string regex, string replacement,
             bool matchCase, Predicate<int> predicate = null)
         {
             try
@@ -166,7 +166,7 @@ namespace PadSharp
         /// <param name="textbox"><see cref="TextEditor"/> to replace text in</param>
         /// <param name="originalText">Text to replace</param>
         /// <param name="newText">Text to replace originalText with</param>
-        private static void replaceIfExists(this TextEditor textbox, string originalText, string newText)
+        private static void ReplaceIfExists(this TextEditor textbox, string originalText, string newText)
         {
             int index = textbox.Text.IndexOf(originalText);
 
@@ -187,7 +187,7 @@ namespace PadSharp
         /// </summary>
         /// <param name="textbox"><see cref="TextEditor"/> to replace selection in</param>
         /// <param name="replacement">Text to replace selection with</param>
-        public static void replaceSelectedText(this TextEditor textbox, string replacement)
+        public static void ReplaceSelectedText(this TextEditor textbox, string replacement)
         {
             if (textbox.SelectionLength > 0)
             {
@@ -208,7 +208,7 @@ namespace PadSharp
         /// </summary>
         /// <param name="textbox"><see cref="TextEditor"/> we're working with</param>
         /// <param name="windows">Use Windows line endings?</param>
-        public static void normalizeLineEndings(this TextEditor textbox, bool windows)
+        public static void NormalizeLineEndings(this TextEditor textbox, bool windows)
         {
             textbox.Document.Text = textbox.Document.Text.Replace("\r", "");
 

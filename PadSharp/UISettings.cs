@@ -8,59 +8,115 @@ using System.Windows.Media;
 namespace PadSharp
 {
     /// <summary>
-    /// Contains fields for user settings and json serialization methods
+    /// Contains properties for user settings and json serialization methods
     /// </summary>
     public class UISettings
     {
-        public const string FILE_NAME = "settings.json";
-
-        // c:/users/<user>/appdata/roaming/pad#/settings.json
-        public static readonly string FULL_PATH = Path.Combine(Global.DATA_PATH, FILE_NAME);
-
-        // colors and fonts
-        public Theme theme = Theme.light;
-        public FontFamily fontFamily = new FontFamily("Segoe UI");
-        public double fontSize = 16;
-
-        // window positioning
-        public double top = 300;
-        public double left = 300;
-        public double height = 350;
-        public double width = 525;
-        public WindowState windowState = WindowState.Normal;
-
-        // date and time format
-        public string dateFormat = "MMMM d yyyy";
-        public string timeFormat = "h:mm tt";
-
-        // toggles
-        public bool showLineNumbers = true;
-        public bool showStatusBar = true;
-        public bool wordWrap = true;
-        public bool topmost = false;
-
-        // status bar visibilities
-        public bool lineNumberVisible = true;
-        public bool columnNumberVisible = true;
-        public bool wordCountVisible = true;
-        public bool charCountVisible = false;
+        /// <summary>
+        /// Name of the settings file
+        /// </summary>
+        public const string FileName = "settings.json";
 
         /// <summary>
-        /// Creates a UISettings object based on the JSON file at FILE_PATH
+        /// Path to the settings file:
+        /// c:/users/<user>/appdata/roaming/pad#/<see cref="FileName"/>
+        /// </summary>
+        public static readonly string FilePath = Path.Combine(Global.DataPath, FileName);
+
+        #region JSON Properties
+
+        #region Colors and fonts
+
+        [JsonProperty("theme")]
+        public Theme Theme { get; set; } = Theme.light;
+
+        [JsonProperty("fontFamily")]
+        public FontFamily FontFamily { get; set; } = new FontFamily("Segoe UI");
+
+        [JsonProperty("fontSize")]
+        public double FontSize { get; set; } = 16;
+
+        #endregion
+
+        #region Window positioning
+
+        [JsonProperty("top")]
+        public double Top { get; set; } = 300;
+
+        [JsonProperty("left")]
+        public double Left { get; set; } = 300;
+
+        [JsonProperty("height")]
+        public double Height { get; set; } = 350;
+
+        [JsonProperty("width")]
+        public double Width { get; set; } = 525;
+
+        [JsonProperty("windowState")]
+        public WindowState WindowState { get; set; } = WindowState.Normal;
+
+        #endregion
+
+        #region Date and time format
+
+        [JsonProperty("dateFormat")]
+        public string DateFormat { get; set; } = "MMMM d yyyy";
+
+        [JsonProperty("timeFormat")]
+        public string TimeFormat { get; set; } = "h:mm tt";
+
+        #endregion
+
+        #region Toggles
+
+        [JsonProperty("showLineNumbers")]
+        public bool ShowLineNumbers { get; set; } = true;
+
+        [JsonProperty("showStatusBar")]
+        public bool ShowStatusBar { get; set; } = true;
+
+        [JsonProperty("wordWrap")]
+        public bool WordWrap { get; set; } = true;
+
+        [JsonProperty("topmost")]
+        public bool Topmost { get; set; } = false;
+
+        #region Status bar visibilities
+
+        [JsonProperty("lineNumberVisible")]
+        public bool LineNumberVisible { get; set; } = true;
+
+        [JsonProperty("columnNumberVisible")]
+        public bool ColumnNumberVisible { get; set; } = true;
+
+        [JsonProperty("wordCountVisible")]
+        public bool WordCountVisible { get; set; } = true;
+
+        [JsonProperty("charCountVisible")]
+        public bool CharCountVisible { get; set; } = false;
+
+        #endregion
+
+        #endregion
+
+        #endregion
+
+        /// <summary>
+        /// Creates a UISettings object based on the JSON file at <see cref="FilePath"/>
         /// </summary>
         /// <returns>null if an exception was thrown</returns>
-        public static UISettings load()
+        public static UISettings Load()
         {
             try
             {
                 // if our file isn't there, make it
-                if (!File.Exists(FULL_PATH))
+                if (!File.Exists(FilePath))
                 {
-                    Global.createDirectoryAndFile(FULL_PATH);
+                    Global.CreateDirectoryAndFile(FilePath);
                 }
 
                 // load json object in from FILE_PATH
-                string json = File.ReadAllText(FULL_PATH);
+                string json = File.ReadAllText(FilePath);
 
                 if (json != "")
                 {
@@ -73,41 +129,41 @@ namespace PadSharp
             }
             catch (Exception ex)
             {
-                Logger.log(typeof(UISettings), ex, "loading");
+                Logger.Log(typeof(UISettings), ex, "loading");
             }
 
             return null;
         }
 
         /// <summary>
-        /// Serialize UISettings object to JSON and write it to FILE_PATH
+        /// Serialize UISettings object to JSON and write it to <see cref="FilePath"/>
         /// </summary>
         /// <returns>false if an exception was thrown</returns>
-        public bool save()
+        public bool Save()
         {
             // don't save in the minimized state
-            if (windowState == WindowState.Minimized)
+            if (WindowState == WindowState.Minimized)
             {
-                windowState = WindowState.Normal;
+                WindowState = WindowState.Normal;
             }
 
             try
             {
                 // if our file isn't there, make it
-                if (!File.Exists(FULL_PATH))
+                if (!File.Exists(FilePath))
                 {
-                    Global.createDirectoryAndFile(FULL_PATH);
+                    Global.CreateDirectoryAndFile(FilePath);
                 }
 
                 // serialize to JSON, write to FULL_PATH
-                using (var writer = File.CreateText(FULL_PATH))
+                using (var writer = File.CreateText(FilePath))
                 {
                     writer.Write(JsonConvert.SerializeObject(this));
                 }
             }
             catch (Exception ex)
             {
-                Logger.log(typeof(UISettings), ex, "saving");
+                Logger.Log(typeof(UISettings), ex, "saving");
                 return false;
             }
 

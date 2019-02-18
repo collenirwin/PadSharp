@@ -1,9 +1,7 @@
 ﻿<Window x:Class="PadSharp.MainView"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:ae="http://icsharpcode.net/sharpdevelop/avalonedit"
-        xmlns:ps="clr-namespace:PadSharp"
         Name="window"
         Height="350" Width="525"
         MinHeight="200" MinWidth="350"
@@ -14,7 +12,7 @@
         PreviewMouseWheel="window_MouseWheel"
         ResizeMode="CanResizeWithGrip"
         DataContext="{Binding RelativeSource={RelativeSource Self}}"
-        Title="{Binding title}">
+        Title="{Binding FullTitle}">
 
     <Window.Resources>
         <Style TargetType="TextBox">
@@ -37,46 +35,46 @@
 
     <Window.InputBindings>
         <!-- File -->
-        <KeyBinding Modifiers="Ctrl" Key="N" Command="{Binding newCommand}"/>
-        <KeyBinding Modifiers="Ctrl+Shift" Key="N" Command="{Binding newWindowCommand}"/>
-        <KeyBinding Modifiers="Ctrl" Key="O" Command="{Binding openCommand}"/>
-        <KeyBinding Modifiers="Ctrl+Shift" Key="O" Command="{Binding openInExplorerCommand}"/>
-        <KeyBinding Modifiers="Ctrl" Key="S" Command="{Binding saveCommand}"/>
-        <KeyBinding Modifiers="Ctrl+Shift" Key="S" Command="{Binding saveAsCommand}"/>
-        <KeyBinding Modifiers="Ctrl" Key="P" Command="{Binding printCommand}"/>
+        <KeyBinding Modifiers="Ctrl" Key="N" Command="{Binding NewCommand}"/>
+        <KeyBinding Modifiers="Ctrl+Shift" Key="N" Command="{Binding NewWindowCommand}"/>
+        <KeyBinding Modifiers="Ctrl" Key="O" Command="{Binding OpenCommand}"/>
+        <KeyBinding Modifiers="Ctrl+Shift" Key="O" Command="{Binding OpenInExplorerCommand}"/>
+        <KeyBinding Modifiers="Ctrl" Key="S" Command="{Binding SaveCommand}"/>
+        <KeyBinding Modifiers="Ctrl+Shift" Key="S" Command="{Binding SaveAsCommand}"/>
+        <KeyBinding Modifiers="Ctrl" Key="P" Command="{Binding PrintCommand}"/>
 
         <!-- Edit -->
-        <KeyBinding Modifiers="Ctrl" Key="Z" Command="{Binding undoCommand}"/>
-        <KeyBinding Modifiers="Ctrl" Key="Y" Command="{Binding redoCommand}"/>
-        <KeyBinding Modifiers="Ctrl" Key="C" Command="{Binding copyCommand}"/>
-        <KeyBinding Modifiers="Ctrl" Key="X" Command="{Binding cutCommand}"/>
-        <KeyBinding Modifiers="Ctrl" Key="V" Command="{Binding pasteCommand}"/>
-        <KeyBinding Modifiers="Ctrl" Key="F" Command="{Binding findCommand}"/>
-        <KeyBinding Modifiers="Ctrl" Key="H" Command="{Binding findAndReplaceCommand}"/>
-        <KeyBinding Modifiers="Ctrl" Key="G" Command="{Binding gotoCommand}"/>
-        <KeyBinding Key="F7" Command="{Binding checkSpellingCommand}"/>
-        <KeyBinding Modifiers="Ctrl" Key="A" Command="{Binding selectAllCommand}"/>
+        <KeyBinding Modifiers="Ctrl" Key="Z" Command="{Binding UndoCommand}"/>
+        <KeyBinding Modifiers="Ctrl" Key="Y" Command="{Binding RedoCommand}"/>
+        <KeyBinding Modifiers="Ctrl" Key="C" Command="{Binding CopyCommand}"/>
+        <KeyBinding Modifiers="Ctrl" Key="X" Command="{Binding CutCommand}"/>
+        <KeyBinding Modifiers="Ctrl" Key="V" Command="{Binding PasteCommand}"/>
+        <KeyBinding Modifiers="Ctrl" Key="F" Command="{Binding FindCommand}"/>
+        <KeyBinding Modifiers="Ctrl" Key="H" Command="{Binding FindAndReplaceCommand}"/>
+        <KeyBinding Modifiers="Ctrl" Key="G" Command="{Binding GotoCommand}"/>
+        <KeyBinding Key="F7" Command="{Binding CheckSpellingCommand}"/>
+        <KeyBinding Modifiers="Ctrl" Key="A" Command="{Binding SelectAllCommand}"/>
 
         <!-- Insert -->
-        <KeyBinding Modifiers="Alt" Key="C" Command="{Binding checkMarkCommand}"/>
-        <KeyBinding Modifiers="Ctrl+Alt" Key="C" Command="{Binding addCheckMarkCommand}"/>
-        <KeyBinding Modifiers="Ctrl" Key="M" Command="{Binding todaysDateCommand}"/>
-        <KeyBinding Modifiers="Ctrl" Key="T" Command="{Binding currentTimeCommand}"/>
+        <KeyBinding Modifiers="Alt" Key="C" Command="{Binding CheckMarkCommand}"/>
+        <KeyBinding Modifiers="Ctrl+Alt" Key="C" Command="{Binding AddCheckMarkCommand}"/>
+        <KeyBinding Modifiers="Ctrl" Key="M" Command="{Binding TodaysDateCommand}"/>
+        <KeyBinding Modifiers="Ctrl" Key="T" Command="{Binding CurrentTimeCommand}"/>
 
         <!-- Selection -->
-        <KeyBinding Modifiers="Ctrl" Key="B" Command="{Binding boldCommand}"/>
-        <KeyBinding Modifiers="Ctrl" Key="I" Command="{Binding italicCommand}"/>
-        <KeyBinding Modifiers="Ctrl" Key="U" Command="{Binding underlineCommand}"/>
-        <KeyBinding Modifiers="Alt" Key="D" Command="{Binding defineCommand}"/>
-        <KeyBinding Modifiers="Alt" Key="R" Command="{Binding reverseCommand}"/>
-        <KeyBinding Modifiers="Alt" Key="S" Command="{Binding sortCommand}" CommandParameter="{StaticResource false}"/>
-        <KeyBinding Modifiers="Ctrl+Alt" Key="S" Command="{Binding sortCommand}" CommandParameter="{StaticResource true}"/>
+        <KeyBinding Modifiers="Ctrl" Key="B" Command="{Binding BoldCommand}"/>
+        <KeyBinding Modifiers="Ctrl" Key="I" Command="{Binding ItalicCommand}"/>
+        <KeyBinding Modifiers="Ctrl" Key="U" Command="{Binding UnderlineCommand}"/>
+        <KeyBinding Modifiers="Alt" Key="D" Command="{Binding DefineCommand}"/>
+        <KeyBinding Modifiers="Alt" Key="R" Command="{Binding ReverseCommand}"/>
+        <KeyBinding Modifiers="Alt" Key="S" Command="{Binding SortCommand}" CommandParameter="{StaticResource false}"/>
+        <KeyBinding Modifiers="Ctrl+Alt" Key="S" Command="{Binding SortCommand}" CommandParameter="{StaticResource true}"/>
         
         <!-- Settings -->
-        <KeyBinding Modifiers="Alt" Key="L" Command="{Binding toggleLineNumbersCommand}"/>
-        <KeyBinding Modifiers="Alt" Key="B" Command="{Binding toggleStatusBarCommand}"/>
-        <KeyBinding Modifiers="Alt" Key="W" Command="{Binding toggleWordWrapCommand}"/>
-        <KeyBinding Modifiers="Alt" Key="T" Command="{Binding toggleTopmostCommand}"/>
+        <KeyBinding Modifiers="Alt" Key="L" Command="{Binding ToggleLineNumbersCommand}"/>
+        <KeyBinding Modifiers="Alt" Key="B" Command="{Binding ToggleStatusBarCommand}"/>
+        <KeyBinding Modifiers="Alt" Key="W" Command="{Binding ToggleWordWrapCommand}"/>
+        <KeyBinding Modifiers="Alt" Key="T" Command="{Binding ToggleTopmostCommand}"/>
     </Window.InputBindings>
 
     <DockPanel FocusManager.FocusedElement="{Binding ElementName=textbox}" Background="{DynamicResource backColorDark}">
@@ -90,14 +88,14 @@
                         <MenuItem.Header>
                             <TextBlock Text="File" VerticalAlignment="Center"/>
                         </MenuItem.Header>
-                        <MenuItem Header="New" InputGestureText="Ctrl+N" Command="{Binding newCommand}"/>
-                        <MenuItem Header="New Window" InputGestureText="Ctrl+Shift+N" Command="{Binding newWindowCommand}"/>
-                        <MenuItem Header="Open" InputGestureText="Ctrl+O" Command="{Binding openCommand}"/>
-                        <MenuItem Header="Open in Explorer" InputGestureText="Ctrl+Shift+O" Command="{Binding openInExplorerCommand}"/>
-                        <MenuItem Header="Save" InputGestureText="Ctrl+S" Command="{Binding saveCommand}"/>
-                        <MenuItem Header="Save As" InputGestureText="Ctrl+Shift+S" Command="{Binding saveAsCommand}"/>
-                        <MenuItem Header="Print" InputGestureText="Ctrl+P" Command="{Binding printCommand}"/>
-                        <MenuItem Header="Exit" InputGestureText="Alt+F4" Command="{Binding exitCommand}"/>
+                        <MenuItem Header="New" InputGestureText="Ctrl+N" Command="{Binding NewCommand}"/>
+                        <MenuItem Header="New Window" InputGestureText="Ctrl+Shift+N" Command="{Binding NewWindowCommand}"/>
+                        <MenuItem Header="Open" InputGestureText="Ctrl+O" Command="{Binding OpenCommand}"/>
+                        <MenuItem Header="Open in Explorer" InputGestureText="Ctrl+Shift+O" Command="{Binding OpenInExplorerCommand}"/>
+                        <MenuItem Header="Save" InputGestureText="Ctrl+S" Command="{Binding SaveCommand}"/>
+                        <MenuItem Header="Save As" InputGestureText="Ctrl+Shift+S" Command="{Binding SaveAsCommand}"/>
+                        <MenuItem Header="Print" InputGestureText="Ctrl+P" Command="{Binding PrintCommand}"/>
+                        <MenuItem Header="Exit" InputGestureText="Alt+F4" Command="{Binding ExitCommand}"/>
                     </MenuItem>
 
                     <MenuItem Height="{Binding Height, ElementName=menu}"
@@ -105,17 +103,17 @@
                         <MenuItem.Header>
                             <TextBlock Text="Edit" VerticalAlignment="Center"/>
                         </MenuItem.Header>
-                        <MenuItem Header="Undo" InputGestureText="Ctrl+Z" Command="{Binding undoCommand}"/>
-                        <MenuItem Header="Redo" InputGestureText="Ctrl+Y" Command="{Binding redoCommand}"/>
-                        <MenuItem Header="Cut" InputGestureText="Ctrl+X" Command="{Binding cutCommand}"/>
-                        <MenuItem Header="Copy" InputGestureText="Ctrl+C" Command="{Binding copyCommand}"/>
-                        <MenuItem Header="Paste" InputGestureText="Ctrl+V" Command="{Binding pasteCommand}"/>
-                        <MenuItem Header="Find" InputGestureText="Ctrl+F" Command="{Binding findCommand}"/>
-                        <MenuItem Header="Find + Replace" InputGestureText="Ctrl+H" Command="{Binding findAndReplaceCommand}"/>
-                        <MenuItem Header="Goto" InputGestureText="Ctrl+G" Command="{Binding gotoCommand}"/>
-                        <MenuItem Header="Check Spelling" InputGestureText="F7" Command="{Binding checkSpellingCommand}"/>
-                        <MenuItem Header="Normalize Line Endings" Command="{Binding normalizeLineEndingdCommand}"/>
-                        <MenuItem Header="Select All" InputGestureText="Ctrl+A" Command="{Binding selectAllCommand}"/>
+                        <MenuItem Header="Undo" InputGestureText="Ctrl+Z" Command="{Binding UndoCommand}"/>
+                        <MenuItem Header="Redo" InputGestureText="Ctrl+Y" Command="{Binding RedoCommand}"/>
+                        <MenuItem Header="Cut" InputGestureText="Ctrl+X" Command="{Binding CutCommand}"/>
+                        <MenuItem Header="Copy" InputGestureText="Ctrl+C" Command="{Binding CopyCommand}"/>
+                        <MenuItem Header="Paste" InputGestureText="Ctrl+V" Command="{Binding PasteCommand}"/>
+                        <MenuItem Header="Find" InputGestureText="Ctrl+F" Command="{Binding FindCommand}"/>
+                        <MenuItem Header="Find + Replace" InputGestureText="Ctrl+H" Command="{Binding FindAndReplaceCommand}"/>
+                        <MenuItem Header="Goto" InputGestureText="Ctrl+G" Command="{Binding GotoCommand}"/>
+                        <MenuItem Header="Check Spelling" InputGestureText="F7" Command="{Binding CheckSpellingCommand}"/>
+                        <MenuItem Header="Normalize Line Endings" Command="{Binding NormalizeLineEndingdCommand}"/>
+                        <MenuItem Header="Select All" InputGestureText="Ctrl+A" Command="{Binding SelectAllCommand}"/>
                     </MenuItem>
 
                     <MenuItem Height="{Binding Height, ElementName=menu}"
@@ -123,38 +121,38 @@
                         <MenuItem.Header>
                             <TextBlock Text="Insert" VerticalAlignment="Center"/>
                         </MenuItem.Header>
-                        <MenuItem Header="Checkmark" InputGestureText="Ctrl+Alt+C" Command="{Binding addCheckMarkCommand}"/>
-                        <MenuItem Header="Today's Date" InputGestureText="Ctrl+M" Command="{Binding todaysDateCommand}"/>
-                        <MenuItem Header="Current Time" InputGestureText="Ctrl+T" Command="{Binding currentTimeCommand}"/>
-                        <MenuItem Header="Date and Time" Command="{Binding dateAndTimeCommand}"/>
+                        <MenuItem Header="Checkmark" InputGestureText="Ctrl+Alt+C" Command="{Binding AddCheckMarkCommand}"/>
+                        <MenuItem Header="Today's Date" InputGestureText="Ctrl+M" Command="{Binding TodaysDateCommand}"/>
+                        <MenuItem Header="Current Time" InputGestureText="Ctrl+T" Command="{Binding CurrentTimeCommand}"/>
+                        <MenuItem Header="Date and Time" Command="{Binding DateAndTimeCommand}"/>
                     </MenuItem>
 
                     <MenuItem Height="{Binding Height, ElementName=menu}"
                               Template="{DynamicResource MenuItemTemplate}" ItemsPanel="{StaticResource hideCheck}"
-                              Visibility="{Binding selectionMenuVisibility}">
+                              Visibility="{Binding SelectionMenuVisibility}">
                         <MenuItem.Header>
                             <TextBlock Text="Selection" VerticalAlignment="Center"/>
                         </MenuItem.Header>
-                        <MenuItem Header="Bold" InputGestureText="Ctrl+B" Command="{Binding boldCommand}"/>
-                        <MenuItem Header="Italic" InputGestureText="Ctrl+I" Command="{Binding italicCommand}"/>
-                        <MenuItem Header="Underline" InputGestureText="Ctrl+U" Command="{Binding underlineCommand}"/>
+                        <MenuItem Header="Bold" InputGestureText="Ctrl+B" Command="{Binding BoldCommand}"/>
+                        <MenuItem Header="Italic" InputGestureText="Ctrl+I" Command="{Binding ItalicCommand}"/>
+                        <MenuItem Header="Underline" InputGestureText="Ctrl+U" Command="{Binding UnderlineCommand}"/>
                         <Separator/>
                         <MenuItem Header="Convert Case">
-                            <MenuItem Header="lower case" Command="{Binding lowerCaseCommand}" Style="{StaticResource checkMenu}"/>
-                            <MenuItem Header="UPPER CASE" Command="{Binding upperCaseCommand}" Style="{StaticResource checkMenu}"/>
-                            <MenuItem Header="Title Case" Command="{Binding titleCaseCommand}" Style="{StaticResource checkMenu}"/>
-                            <MenuItem Header="tOGGLE cASE" Command="{Binding toggleCaseCommand}" Style="{StaticResource checkMenu}"/>
+                            <MenuItem Header="lower case" Command="{Binding LowerCaseCommand}" Style="{StaticResource checkMenu}"/>
+                            <MenuItem Header="UPPER CASE" Command="{Binding UpperCaseCommand}" Style="{StaticResource checkMenu}"/>
+                            <MenuItem Header="Title Case" Command="{Binding TitleCaseCommand}" Style="{StaticResource checkMenu}"/>
+                            <MenuItem Header="tOGGLE cASE" Command="{Binding ToggleCaseCommand}" Style="{StaticResource checkMenu}"/>
                         </MenuItem>
                         <MenuItem Header="Define Selection" InputGestureText="Alt+D"
-                                  Command="{Binding defineCommand}"/>
+                                  Command="{Binding DefineCommand}"/>
                         <MenuItem Header="Reverse Selected Lines" InputGestureText="Alt+R"
-                                  Command="{Binding reverseCommand}"/>
+                                  Command="{Binding ReverseCommand}"/>
                         <MenuItem Header="Sort Selected Lines">
                             <MenuItem Header="Ascending" InputGestureText="Alt+S"
-                                      Command="{Binding sortCommand}" CommandParameter="{StaticResource false}" 
+                                      Command="{Binding SortCommand}" CommandParameter="{StaticResource false}" 
                                       Style="{StaticResource checkMenu}"/>
                             <MenuItem Header="Descending" InputGestureText="Ctrl+Alt+S"
-                                      Command="{Binding sortCommand}" CommandParameter="{StaticResource true}" 
+                                      Command="{Binding SortCommand}" CommandParameter="{StaticResource true}" 
                                       Style="{StaticResource checkMenu}"/>
                         </MenuItem>
                     </MenuItem>
@@ -195,15 +193,15 @@
                         </MenuItem>
                         <MenuItem Header="Status Bar">
                             <MenuItem Header="Show Status Bar" Name="showStatusBarDropdown" InputGestureText="Alt+B"
-                                      IsCheckable="True" IsChecked="{Binding statusBarVisible, Mode=TwoWay}"/>
+                                      IsCheckable="True" IsChecked="{Binding StatusBarVisible, Mode=TwoWay}" Style="{StaticResource checkMenu}"/>
                             <MenuItem Header="Show Line Number"
-                                      IsCheckable="True" IsChecked="{Binding lineNumberVisible, Mode=TwoWay}"/>
+                                      IsCheckable="True" IsChecked="{Binding LineNumberVisible, Mode=TwoWay}" Style="{StaticResource checkMenu}"/>
                             <MenuItem Header="Show Column Number"
-                                      IsCheckable="True" IsChecked="{Binding columnNumberVisible, Mode=TwoWay}"/>
+                                      IsCheckable="True" IsChecked="{Binding ColumnNumberVisible, Mode=TwoWay}" Style="{StaticResource checkMenu}"/>
                             <MenuItem Header="Show Word Count"
-                                      IsCheckable="True" IsChecked="{Binding wordCountVisible, Mode=TwoWay}"/>
+                                      IsCheckable="True" IsChecked="{Binding WordCountVisible, Mode=TwoWay}" Style="{StaticResource checkMenu}"/>
                             <MenuItem Header="Show Character Count"
-                                      IsCheckable="True" IsChecked="{Binding charCountVisible, Mode=TwoWay}"/>
+                                      IsCheckable="True" IsChecked="{Binding CharCountVisible, Mode=TwoWay}" Style="{StaticResource checkMenu}"/>
                         </MenuItem>
                         <MenuItem Header="Show Line Numbers" Name="showLineNumbersDropdown" InputGestureText="Alt+L"
                                   IsCheckable="True" IsChecked="{Binding ElementName=textbox, Path=ShowLineNumbers, Mode=TwoWay}"/>
@@ -221,9 +219,9 @@
                         <MenuItem Header="Licenses">
                             <MenuItem Header="Pad# License" Click="help_Click" Tag="https://github.com/collenirwin/PadSharp/blob/master/LICENSE"
                                       Style="{StaticResource checkMenu}"/>
-                            <MenuItem Header="Inno Setup License" Click="help_Click" Tag="https://github.com/collenirwin/PadSharp/blob/master/PadSharp/bin/Release/inno_license.txt"
+                            <MenuItem Header="Inno Setup License" Click="help_Click" Tag="http://www.jrsoftware.org/files/is/license.txt"
                                       Style="{StaticResource checkMenu}"/>
-                            <MenuItem Header="Dictionary License" Click="help_Click" Tag="https://github.com/collenirwin/PadSharp/blob/master/PadSharp/bin/Release/dictionary_license.txt"
+                            <MenuItem Header="Dictionary License" Click="help_Click" Tag="https://github.com/adambom/dictionary/blob/master/LICENSE.md"
                                       Style="{StaticResource checkMenu}"/>
                         </MenuItem>
                         <MenuItem Header="Date/Time Format Guide" 
@@ -235,19 +233,19 @@
                 </Menu>
 
                 <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" HorizontalAlignment="Right">
-                    <TextBlock Name="lblFileName" ToolTip="{Binding file.FullName}" Foreground="{DynamicResource foreColorDark}">
+                    <TextBlock Name="lblFileName" ToolTip="{Binding OpenFile.FullName}" Foreground="{DynamicResource foreColorDark}">
                         <TextBlock.Style>
                             <Style TargetType="TextBlock">
                                 <Setter Property="VerticalAlignment" Value="Center"/>
                                 <Setter Property="Padding" Value="5,0,5,0"/>
                                 <Style.Triggers>
-                                    <DataTrigger Binding="{Binding fileSaved}" Value="True">
+                                    <DataTrigger Binding="{Binding FileSaved}" Value="True">
                                         <Setter Property="FontStyle" Value="Normal"/>
-                                        <Setter Property="Text" Value="{Binding file.Name, StringFormat={}{0}, FallbackValue='Not Saved'}"/>
+                                        <Setter Property="Text" Value="{Binding OpenFile.Name, StringFormat={}{0}, FallbackValue='Not Saved'}"/>
                                     </DataTrigger>
-                                    <DataTrigger Binding="{Binding fileSaved}" Value="False">
+                                    <DataTrigger Binding="{Binding FileSaved}" Value="False">
                                         <Setter Property="FontStyle" Value="Italic"/>
-                                        <Setter Property="Text" Value="{Binding file.Name, StringFormat={}*{0}, FallbackValue='Not Saved'}"/>
+                                        <Setter Property="Text" Value="{Binding OpenFile.Name, StringFormat={}*{0}, FallbackValue='Not Saved'}"/>
                                     </DataTrigger>
                                 </Style.Triggers>
                             </Style>
@@ -317,8 +315,8 @@
                                  Background="{DynamicResource backColorLight}"
                                  Foreground="{DynamicResource foreColorDark}">
                         <TextBox.InputBindings>
-                            <KeyBinding Key="Enter" Command="{Binding gotoGoCommand}"/>
-                            <KeyBinding Key="Return" Command="{Binding gotoGoCommand}"/>
+                            <KeyBinding Key="Enter" Command="{Binding GotoGoCommand}"/>
+                            <KeyBinding Key="Return" Command="{Binding GotoGoCommand}"/>
                         </TextBox.InputBindings>
                     </TextBox>
                 </Border>
@@ -334,13 +332,13 @@
             <DockPanel.ContextMenu>
                 <ContextMenu Background="{DynamicResource backColorLight}">
                     <MenuItem Header="Show Line Number"
-                              IsCheckable="True" IsChecked="{Binding lineNumberVisible, Mode=TwoWay}"/>
+                              IsCheckable="True" IsChecked="{Binding LineNumberVisible, Mode=TwoWay}"/>
                     <MenuItem Header="Show Column Number"
-                              IsCheckable="True" IsChecked="{Binding columnNumberVisible, Mode=TwoWay}"/>
+                              IsCheckable="True" IsChecked="{Binding ColumnNumberVisible, Mode=TwoWay}"/>
                     <MenuItem Header="Show Word Count"
-                              IsCheckable="True" IsChecked="{Binding wordCountVisible, Mode=TwoWay}"/>
+                              IsCheckable="True" IsChecked="{Binding WordCountVisible, Mode=TwoWay}"/>
                     <MenuItem Header="Show Character Count"
-                              IsCheckable="True" IsChecked="{Binding charCountVisible, Mode=TwoWay}"/>
+                              IsCheckable="True" IsChecked="{Binding CharCountVisible, Mode=TwoWay}"/>
                 </ContextMenu>
             </DockPanel.ContextMenu>
             <StackPanel DockPanel.Dock="Left" Orientation="Horizontal">
@@ -349,14 +347,14 @@
                         <Style TargetType="StackPanel">
                             <Setter Property="Visibility" Value="Collapsed"/>
                             <Style.Triggers>
-                                <DataTrigger Binding="{Binding lineNumberVisible}" Value="True">
+                                <DataTrigger Binding="{Binding LineNumberVisible}" Value="True">
                                     <Setter Property="Visibility" Value="Visible"/>
                                 </DataTrigger>
                             </Style.Triggers>
                         </Style>
                     </StackPanel.Style>
                     <TextBlock Text="Ln" Foreground="{DynamicResource foreColorDark}"/>
-                    <TextBlock Text="{Binding lineNumber}" Foreground="{DynamicResource foreColorLight}"/>
+                    <TextBlock Text="{Binding LineNumber}" Foreground="{DynamicResource foreColorLight}"/>
                 </StackPanel>
 
                 <StackPanel Orientation="Horizontal">
@@ -364,14 +362,14 @@
                         <Style TargetType="StackPanel">
                             <Setter Property="Visibility" Value="Collapsed"/>
                             <Style.Triggers>
-                                <DataTrigger Binding="{Binding columnNumberVisible}" Value="True">
+                                <DataTrigger Binding="{Binding ColumnNumberVisible}" Value="True">
                                     <Setter Property="Visibility" Value="Visible"/>
                                 </DataTrigger>
                             </Style.Triggers>
                         </Style>
                     </StackPanel.Style>
                     <TextBlock Text="Col" Foreground="{DynamicResource foreColorDark}"/>
-                    <TextBlock Text="{Binding columnNumber}" Foreground="{DynamicResource foreColorLight}"/>
+                    <TextBlock Text="{Binding ColumnNumber}" Foreground="{DynamicResource foreColorLight}"/>
                 </StackPanel>
 
                 <StackPanel Orientation="Horizontal">
@@ -379,14 +377,14 @@
                         <Style TargetType="StackPanel">
                             <Setter Property="Visibility" Value="Collapsed"/>
                             <Style.Triggers>
-                                <DataTrigger Binding="{Binding wordCountVisible}" Value="True">
+                                <DataTrigger Binding="{Binding WordCountVisible}" Value="True">
                                     <Setter Property="Visibility" Value="Visible"/>
                                 </DataTrigger>
                             </Style.Triggers>
                         </Style>
                     </StackPanel.Style>
                     <TextBlock Text="Words" Foreground="{DynamicResource foreColorDark}"/>
-                    <TextBlock Text="{Binding wordCount}" Foreground="{DynamicResource foreColorLight}"/>
+                    <TextBlock Text="{Binding WordCount}" Foreground="{DynamicResource foreColorLight}"/>
                 </StackPanel>
 
                 <StackPanel Orientation="Horizontal">
@@ -394,7 +392,7 @@
                         <Style TargetType="StackPanel">
                             <Setter Property="Visibility" Value="Collapsed"/>
                             <Style.Triggers>
-                                <DataTrigger Binding="{Binding charCountVisible}" Value="True">
+                                <DataTrigger Binding="{Binding CharCountVisible}" Value="True">
                                     <Setter Property="Visibility" Value="Visible"/>
                                 </DataTrigger>
                             </Style.Triggers>
@@ -446,21 +444,21 @@
                        Style="{DynamicResource TextEditorStyle}">
             <ae:TextEditor.ContextMenu>
                 <ContextMenu Background="{DynamicResource backColorLight}" Margin="-30,0,-25,0">
-                    <MenuItem Header="Toggle Check" InputGestureText="Alt+C" Command="{Binding checkMarkCommand}"/>
+                    <MenuItem Header="Toggle Check" InputGestureText="Alt+C" Command="{Binding CheckMarkCommand}"/>
                     <Separator/>
-                    <MenuItem Header="Cut" InputGestureText="Ctrl+X" Command="{Binding cutCommand}"/>
-                    <MenuItem Header="Copy" InputGestureText="Ctrl+C" Command="{Binding copyCommand}"/>
-                    <MenuItem Header="Paste" InputGestureText="Ctrl+V" Command="{Binding pasteCommand}"/>
+                    <MenuItem Header="Cut" InputGestureText="Ctrl+X" Command="{Binding CutCommand}"/>
+                    <MenuItem Header="Copy" InputGestureText="Ctrl+C" Command="{Binding CopyCommand}"/>
+                    <MenuItem Header="Paste" InputGestureText="Ctrl+V" Command="{Binding PasteCommand}"/>
                     <Separator/>
-                    <MenuItem Header="Find" InputGestureText="Ctrl+F" Command="{Binding findCommand}"/>
-                    <MenuItem Header="Find + Replace" InputGestureText="Ctrl+H" Command="{Binding findAndReplaceCommand}"/>
-                    <MenuItem Header="Define Selection" InputGestureText="Alt+D" Command="{Binding defineCommand}"/>
-                    <MenuItem Header="Sort Selected Lines" InputGestureText="Alt+S" Command="{Binding sortCommand}"/>
+                    <MenuItem Header="Find" InputGestureText="Ctrl+F" Command="{Binding FindCommand}"/>
+                    <MenuItem Header="Find + Replace" InputGestureText="Ctrl+H" Command="{Binding FindAndReplaceCommand}"/>
+                    <MenuItem Header="Define Selection" InputGestureText="Alt+D" Command="{Binding DefineCommand}"/>
+                    <MenuItem Header="Sort Selected Lines" InputGestureText="Alt+S" Command="{Binding SortCommand}"/>
                     <Separator/>
-                    <MenuItem Header="Insert Date" InputGestureText="Ctrl+M" Command="{Binding todaysDateCommand}"/>
-                    <MenuItem Header="Insert Time" InputGestureText="Ctrl+T" Command="{Binding currentTimeCommand}"/>
+                    <MenuItem Header="Insert Date" InputGestureText="Ctrl+M" Command="{Binding TodaysDateCommand}"/>
+                    <MenuItem Header="Insert Time" InputGestureText="Ctrl+T" Command="{Binding CurrentTimeCommand}"/>
                     <Separator/>
-                    <MenuItem Header="Select All" InputGestureText="Ctrl+A" Command="{Binding selectAllCommand}"/>
+                    <MenuItem Header="Select All" InputGestureText="Ctrl+A" Command="{Binding SelectAllCommand}"/>
                 </ContextMenu>
             </ae:TextEditor.ContextMenu>
         </ae:TextEditor>

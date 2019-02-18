@@ -2,7 +2,6 @@
 using System;
 using System.Diagnostics;
 using System.IO;
-using System.Reflection;
 
 namespace PadSharp
 {
@@ -14,19 +13,19 @@ namespace PadSharp
         /// <summary>
         /// Name of the app
         /// </summary>
-        public const string APP_NAME = "Pad#";
+        public const string AppName = "Pad#";
 
         /// <summary>
         /// Current version
         /// </summary>
-        public const string VERSION = VersionChecker.VERSION;
+        public const string Version = VersionChecker.Version;
 
         /// <summary>
-        /// c:/users/[user]/appdata/roaming/<see cref="APP_NAME"/>
+        /// c:/users/[user]/appdata/roaming/<see cref="AppName"/>
         /// </summary>
-        public static readonly string DATA_PATH = Path.Combine(
+        public static readonly string DataPath = Path.Combine(
             Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-            APP_NAME);
+            AppName);
 
         /// <summary>
         /// Show an Alert dialog with the following format:
@@ -34,16 +33,16 @@ namespace PadSharp
         /// </summary>
         /// <param name="action">What happened?</param>
         /// <param name="details">What more is there to say about this?</param>
-        public static void actionMessage(string action, string details)
+        public static void ActionMessage(string action, string details)
         {
-            Alert.showMoreInfoDialog(action, details, APP_NAME);
+            Alert.showMoreInfoDialog(action, details, AppName);
         }
 
         /// <summary>
         /// Attempts to run the specified path/url
         /// </summary>
         /// <param name="path">Path to file to run</param>
-        public static void launch(string path)
+        public static void Launch(string path)
         {
             try
             {
@@ -52,8 +51,8 @@ namespace PadSharp
             catch (Exception ex)
             {
                 string message = "Failed to launch '" + path + "'";
-                Global.actionMessage(message, ex.Message);
-                Logger.log(typeof(Global), ex, message);
+                ActionMessage(message, ex.Message);
+                Logger.Log(typeof(Global), ex, message);
             }
         }
 
@@ -62,7 +61,7 @@ namespace PadSharp
         /// then creates the specified (empty) file within it if it hasn't been created
         /// </summary>
         /// <param name="path">Full path to file</param>
-        public static void createDirectoryAndFile(string path)
+        public static void CreateDirectoryAndFile(string path)
         {
             string dirPath = Path.Combine(path, "../");
             if (!Directory.Exists(dirPath))

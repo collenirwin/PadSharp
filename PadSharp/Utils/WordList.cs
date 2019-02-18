@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Reflection;
 
 namespace PadSharp
@@ -11,13 +10,13 @@ namespace PadSharp
     /// </summary>
     public static class WordList
     {
-        static HashSet<string> _words = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        private static HashSet<string> _words = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
         /// <summary>
         /// Case insensitive HashSet of all (most) English words.
         /// If not in memory, it is read in from the compiled resource file.
         /// </summary>
-        public static HashSet<string> words
+        public static HashSet<string> Words
         {
             get
             {
@@ -40,13 +39,13 @@ namespace PadSharp
         }
 
         /// <summary>
-        /// Searches for the given word in <see cref="words"/> (case insensitive)
+        /// Searches for the given word in <see cref="Words"/> (case insensitive)
         /// </summary>
         /// <param name="word">word to look for</param>
         /// <returns>true if found</returns>
-        public static bool containsWord(string word)
+        public static bool ContainsWord(string word)
         {
-            return words.Contains(word);
+            return Words.Contains(word);
         }
     }
 }
