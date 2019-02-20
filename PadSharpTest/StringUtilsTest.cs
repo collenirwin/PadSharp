@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using PadSharp;
 
@@ -92,6 +93,24 @@ namespace PadSharpTest
             string input = "1\r\n  2  \n3";
 
             Assert.AreEqual(expected, input.ToggleStartAndEnd("Hello ", " World"));
+        }
+
+        [TestMethod]
+        public async Task TestTryCountMatchesAsync()
+        {
+            string text = "82634728sfbdgysyHelloeg b6fTD^&FSDGHGStsfWorldbbacs &%^%$A^*7)G";
+
+            // test invalid regex
+            Assert.IsNull(await text.TryCountMatchesAsync(@"\", true));
+            Assert.IsNull(await text.TryCountMatchesAsync(@"\", false));
+
+            // should be 10 digits
+            Assert.AreEqual(10, await text.TryCountMatchesAsync(@"\d", true));
+            Assert.AreEqual(10, await text.TryCountMatchesAsync(@"\d", false));
+
+            // test match case
+            Assert.AreEqual(0, await text.TryCountMatchesAsync("hello", true));
+            Assert.AreEqual(1, await text.TryCountMatchesAsync("hello", false));
         }
     }
 }
