@@ -50,60 +50,48 @@ namespace PadSharp
         /// <summary>
         /// Attempts to load <see cref="FilePath"/> into <see cref="Dictionary"/>
         /// </summary>
-        /// <param name="success">Action to run when finished (successful)</param>
-        /// <param name="error">Action to run if an error was encountered</param>
-        public static async void Load(Action success = null, Action<Exception> error = null)
+        /// <returns>false if already loading, or if an error occured; true if successful</returns>
+        public static async Task<bool> TryLoadAsync()
         {
             try
             {
                 // avoid collisions
                 if (Loading)
                 {
-                    return;
+                    return false;
                 }
 
                 Loading = true;
 
-                // read from FULL_PATH
+                // read from local file
                 string json = File.ReadAllText(FilePath);
 
                 // deserialize json into dictionary
-                Dictionary = await Task<Dictionary<string, string>>.Run(() => 
+                Dictionary = await Task.Run(() => 
                     JsonConvert.DeserializeObject<Dictionary<string, string>>(json));
 
                 Loading = false;
-
-                // run success callback
-                if (success != null)
-                {
-                    success();
-                }
+                return true;
             }
             catch (Exception ex)
             {
                 Loading = false;
-
-                // failed - run error callback
-                if (error != null)
-                {
-                    error(ex);
-                }
+                Logger.Log(typeof(LocalDictionary), ex, "Loading dictionary");
+                return false;
             }
         }
 
         /// <summary>
         /// Attempts to download dictionary.json from <see cref="FileUrl"/>
         /// </summary>
-        /// <param name="success">Action to run when finished (successful)</param>
-        /// <param name="error">Action to run if an error was encountered</param>
-        public static async void Download(Action success = null, Action<Exception> error = null)
+        public static async Task<bool> TryDownloadAsync()
         {
             try
             {
                 // avoid collisions
                 if (Downloading)
                 {
-                    return;
+                    return false;
                 }
 
                 Downloading = true;
@@ -117,26 +105,17 @@ namespace PadSharp
                 using (var client = new WebClient())
                 {
                     // fetch file from url
-                    await Task.Run(() => client.DownloadFile(new Uri(FileUrl), FilePath));
+                    await client.DownloadFileTaskAsync(FileUrl, FilePath);
                 }
 
                 Downloading = false;
-
-                // run success callback
-                if (success != null)
-                {
-                    success();
-                }
+                return true;
             }
             catch (Exception ex)
             {
                 Downloading = false;
-
-                // failed - run error callback
-                if (error != null)
-                {
-                    error(ex);
-                }
+                Logger.Log(typeof(LocalDictionary), ex, "Downloading dictionary");
+                return false;
             }
         }
 

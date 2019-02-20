@@ -140,27 +140,23 @@ namespace PadSharp
         /// <param name="text">Text to search in</param>
         /// <param name="regex">Regular Expression to apply to text</param>
         /// <param name="matchCase">Use IgnoreCase flag?</param>
-        /// <param name="action">Action to call when count is complete (takes count as only parameter)</param>
-        /// <param name="error">Action to call when an Exception is thrown</param>
-        public static async void CountMatchesAsync(this string text, string regex, bool matchCase,
-            Action<int> action, Action<Exception> error = null)
+        /// <returns>The number of matches, or null if an Exception was thrown</returns>
+        public static async Task<int?> TryCountMatchesAsync(this string text, string regex, bool matchCase)
         {
             try
             {
-                int result = await Task<int>.Run(() =>
-                    Regex.Matches(text, regex, RegexOptions.Multiline | (matchCase ? RegexOptions.IgnoreCase : 0)).Count);
+                var options = RegexOptions.Multiline;
 
-                if (action != null)
+                if (!matchCase)
                 {
-                    action(result);
+                    options |= RegexOptions.IgnoreCase;
                 }
+
+                return await Task.Run(() => Regex.Matches(text, regex, options).Count);
             }
-            catch (Exception ex)
+            catch
             {
-                if (error != null)
-                {
-                    error(ex);
-                }
+                return null;
             }
         }
     }

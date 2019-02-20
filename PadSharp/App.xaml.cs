@@ -1,6 +1,4 @@
-﻿using BoinWPF;
-using System;
-using System.Diagnostics;
+﻿using System;
 using System.IO;
 using System.Windows;
 using System.Windows.Threading;
@@ -13,31 +11,6 @@ namespace PadSharp
         {
             // register uncaught exception handler
             DispatcherUnhandledException += App_DispatcherUnhandledException;
-
-            // only check for new version if we're not debugging
-            if (!Debugger.IsAttached)
-            {
-                Current.Dispatcher.Invoke(() =>
-                {
-                    // check for a new version
-                    VersionChecker.CheckVersion((version) =>
-                    {
-                        var result = Alert
-                            .showDialog($"A new version of {Global.AppName} is available (version {version}). Would you like to download it?",
-                            title: "Pad#", button1Text: "Yes", button2Text: "No");
-
-                        // go to the link to the setup file in the repo
-                        if (result == AlertResult.button1Clicked)
-                        {
-                            Global.Launch("https://github.com/collenirwin/PadSharp/blob/master/setup/pad_sharp_setup.exe");
-                        }
-                    },
-                    (ex) =>
-                    {
-                        Logger.Log(typeof(App), ex, "Checking Version");
-                    });
-                });
-            }
         }
 
         private void App_DispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)

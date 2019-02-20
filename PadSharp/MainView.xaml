@@ -8,6 +8,7 @@
         WindowStartupLocation="Manual"
         Icon="./favicon.ico"
         Activated="window_Activated"
+        Loaded="Window_Loaded"
         Closing="window_Closing"
         PreviewMouseWheel="window_MouseWheel"
         ResizeMode="CanResizeWithGrip"

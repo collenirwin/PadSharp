@@ -1002,34 +1002,68 @@ namespace PadSharp
             textbox.ReplaceSelectedText(textbox.SelectedText.ToggleCase());
         }
 
-        private void Define_Command()
+        private async void Define_Command()
         {
+            // if we're downloading or reading the file currently, don't do anything
+            if (LocalDictionary.Downloading || LocalDictionary.Loading)
+            {
+                return;
+            }
+
             string text = textbox.SelectedText.Trim();
 
-            if (text != "")
-            {
-                // we have a file
-                if (LocalDictionary.Downloaded)
-                {
-                    // it's in memory
-                    if (LocalDictionary.Loaded)
-                    {
-                        ShowDefinition(text);
-                    }
-                    else // load file, showDefinition
-                    {
-                        LoadDictionary(() => ShowDefinition(text));
-                    }
-                }
-                else // no file
-                {
-                    // download, load, showDefinition
-                    DownloadDictionary(() => ShowDefinition(text));
-                }
-            }
-            else
+            // no text selected
+            if (text == "")
             {
                 Alert.showDialog("Please select a word to define.", Global.AppName);
+                return;
+            }
+
+            // don't have a local copy and we aren't currently downloading one
+            if (!LocalDictionary.Downloaded && !LocalDictionary.Downloading)
+            {
+                // download dictionary file from repo
+                bool successful = await LocalDictionary.TryDownloadAsync();
+
+                if (!successful)
+                {
+                    Alert.showDialog("Couldn't download the dictionary. Please ensure that you are connected to the internet and try again.",
+                        Global.AppName);
+                    return;
+                }
+            }
+
+            // have a local copy and aren't currently reading it, but it isn't yet in memory
+            if (!LocalDictionary.Loaded && !LocalDictionary.Loading)
+            {
+                // load file into memory
+                bool successful = await LocalDictionary.TryLoadAsync();
+
+                if (!successful)
+                {
+                    var result = Alert.showDialog($"Couldn't load the local dictionary. Would you like to view the log?",
+                        title: Global.AppName, button1Text: "Yes", button2Text: "No");
+
+                    if (result == AlertResult.button1Clicked)
+                    {
+                        try
+                        {
+                            Process.Start(Logger.FilePath);
+                        }
+                        catch (Exception ex)
+                        {
+                            Logger.Log(GetType(), ex, "Attempting to view log");
+                        }
+                    }
+
+                    return;
+                }
+            }
+
+            // have a local copy in memory
+            if (LocalDictionary.Loaded)
+            {
+                ShowDefinition(text);
             }
         }
 
@@ -1212,42 +1246,6 @@ namespace PadSharp
         }
 
         /// <summary>
-        /// Calls <see cref="LocalDictionary.Load"/> with a default error callback
-        /// </summary>
-        /// <param name="callback">Success callback</param>
-        private void LoadDictionary(Action callback)
-        {
-            LocalDictionary.Load(callback, (ex) =>
-            {
-                Global.ActionMessage("Failed to read from the dictionary", ex.Message);
-            });
-        }
-
-        /// <summary>
-        /// Calls <see cref="LocalDictionary.Download"/>,
-        /// then <see cref="LoadDictionary"/> with default error callbacks
-        /// </summary>
-        /// <param name="callback">Success callback</param>
-        private void DownloadDictionary(Action callback)
-        {
-            // download, load, call callback
-            LocalDictionary.Download(() =>
-            {
-                LoadDictionary(() =>
-                {
-                    callback();
-                });
-            }, (ex) => // failed
-            {
-                Global.ActionMessage("Failed to download the dictionary", ex.Message);
-            });
-
-            Alert.showDialog(
-                "The dictionary is now downloading for the first time. This may take a moment.",
-                Global.AppName);
-        }
-
-        /// <summary>
         /// Insert the specified text into <see cref="textbox"/>,
         /// then move the caret to the end of the inserted text
         /// </summary>
@@ -1360,7 +1358,7 @@ namespace PadSharp
         /// </summary>
         /// <param name="start">Where to start searching</param>
         /// <param name="lookback">Look back from this point?</param>
-        private void FindHelper(int start, bool lookback = false)
+        private async void FindHelper(int start, bool lookback = false)
         {
             bool _matchCase = matchCase.IsChecked == true;
 
@@ -1376,15 +1374,8 @@ namespace PadSharp
                 return;
             }
 
-            // update lblMatches with the number of matches (async)
-            textbox.Document.Text.CountMatchesAsync(txtFind.Text, _matchCase, (count) =>
-            {
-                lblMatches.Text = count.ToString();
-            },
-            (ex) =>
-            {
-                lblMatches.Text = "-";
-            });
+            // update lblMatches with the number of matches, or '-' if there is an invalid regex string
+            lblMatches.Text = (await textbox.Document.Text.TryCountMatchesAsync(txtFind.Text, _matchCase))?.ToString() ?? "-";
         }
 
         private void txtFind_TextChanged(object sender, RoutedEventArgs e)
@@ -1507,6 +1498,32 @@ namespace PadSharp
                 catch (Exception ex)
                 {
                     Logger.Log(typeof(MainView), ex, "window_Activated");
+                }
+            }
+        }
+
+        private async void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            // we don't need to check for a new verson if we're debugging
+            if (Debugger.IsAttached)
+            {
+                return;
+            }
+
+            // grab the newest version from the repo
+            string newVersion = await VersionChecker.TryGetNewVersionAsync();
+
+            if (newVersion != null && newVersion != Global.Version)
+            {
+                // new version available: download it?
+                var result = Alert
+                    .showDialog($"A new version of {Global.AppName} is available (version {newVersion}). Would you like to download it?",
+                        title: "Pad#", button1Text: "Yes", button2Text: "No");
+
+                // go to the link to the setup file in the repo if the user clicked Yes
+                if (result == AlertResult.button1Clicked)
+                {
+                    Global.Launch("https://github.com/collenirwin/PadSharp/blob/master/setup/pad_sharp_setup.exe");
                 }
             }
         }
