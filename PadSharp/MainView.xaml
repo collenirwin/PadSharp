@@ -57,12 +57,12 @@
         <KeyBinding Modifiers="Ctrl" Key="A" Command="{Binding SelectAllCommand}"/>
 
         <!-- Insert -->
-        <KeyBinding Modifiers="Alt" Key="C" Command="{Binding CheckMarkCommand}"/>
         <KeyBinding Modifiers="Ctrl+Alt" Key="C" Command="{Binding AddCheckMarkCommand}"/>
         <KeyBinding Modifiers="Ctrl" Key="M" Command="{Binding TodaysDateCommand}"/>
         <KeyBinding Modifiers="Ctrl" Key="T" Command="{Binding CurrentTimeCommand}"/>
 
         <!-- Selection -->
+        <KeyBinding Modifiers="Alt" Key="C" Command="{Binding CheckMarkCommand}"/>
         <KeyBinding Modifiers="Ctrl" Key="B" Command="{Binding BoldCommand}"/>
         <KeyBinding Modifiers="Ctrl" Key="I" Command="{Binding ItalicCommand}"/>
         <KeyBinding Modifiers="Ctrl" Key="U" Command="{Binding UnderlineCommand}"/>
@@ -134,6 +134,7 @@
                         <MenuItem.Header>
                             <TextBlock Text="Selection" VerticalAlignment="Center"/>
                         </MenuItem.Header>
+                        <MenuItem Header="Toggle Checkmark" InputGestureText="Alt+C" Command="{Binding CheckMarkCommand}"/>
                         <MenuItem Header="Bold" InputGestureText="Ctrl+B" Command="{Binding BoldCommand}"/>
                         <MenuItem Header="Italic" InputGestureText="Ctrl+I" Command="{Binding ItalicCommand}"/>
                         <MenuItem Header="Underline" InputGestureText="Ctrl+U" Command="{Binding UnderlineCommand}"/>

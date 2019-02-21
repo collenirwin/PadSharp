@@ -1,5 +1,6 @@
 ﻿using ICSharpCode.AvalonEdit;
 using System;
+using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace PadSharp
@@ -201,6 +202,25 @@ namespace PadSharp
                 // select the new text
                 textbox.Select(start, replacement.Length);
             }
+        }
+
+        /// <summary>
+        /// Toggles the given lineStart at the start of each select selected line (regardless of start/caret position).
+        /// Selects the line the caret is on if there is no current selection.
+        /// </summary>
+        /// <param name="textbox"><see cref="TextEditor"/> we're working with</param>
+        /// <param name="lineStart">Text to toggle at the start of each selected line</param>
+        public static void ToggleSelectionLineStart(this TextEditor textbox, string lineStart)
+        {
+            var startLine = textbox.Document.GetLineByOffset(textbox.SelectionStart);
+            textbox.SelectionStart = startLine.Offset;
+
+            if (!textbox.SelectedText.Contains('\n'))
+            {
+                textbox.SelectionLength = startLine.Length;
+            }
+
+            textbox.ReplaceSelectedText(textbox.SelectedText.ToggleLineStart(lineStart));
         }
 
         /// <summary>

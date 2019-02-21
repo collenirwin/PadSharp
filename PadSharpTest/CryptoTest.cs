@@ -37,13 +37,12 @@ namespace PadSharpTest
         [TestMethod]
         public void TestDecryptRandom()
         {
-            // takes around 3 minutes on average on my machine
-            for (int x = 0; x < 1000; x++)
+            for (int x = 0; x < 50; x++)
             {
                 var data = new StringBuilder();
                 var password = new StringBuilder();
 
-                for (int y = 0; y < ran.Next(1, 10000); y++)
+                for (int y = 0; y < ran.Next(1, 1000); y++)
                 {
                     data.Append(Convert.ToChar(ran.Next(32, 127)));
                 }

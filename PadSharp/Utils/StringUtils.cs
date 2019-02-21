@@ -1,4 +1,4 @@
-﻿using System;
+﻿using RegularExtensions;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -11,13 +11,13 @@ namespace PadSharp
     public static class StringUtils
     {
         /// <summary>
-        /// Removes \r before splitting at \n
+        /// Splits a string into lines, regardless of line ending style
         /// </summary>
         /// <param name="lines">lines to split</param>
         /// <returns>lines separated into an array</returns>
-        public static string[] SplitLines(this string lines)
+        public static string[] SplitIntoLines(this string lines)
         {
-            return lines.Replace("\r", "").Split('\n');
+            return lines.RegexSplit(@"\r?\n");
         }
 
         /// <summary>
@@ -27,11 +27,11 @@ namespace PadSharp
         /// <returns>linesToReverse in reverse order</returns>
         public static string ReverseLines(this string linesToReverse)
         {
-            return string.Join("\r\n", linesToReverse.SplitLines().Reverse());
+            return string.Join("\r\n", linesToReverse.SplitIntoLines().Reverse());
         }
 
         /// <summary>
-        /// Sorts the specified lines provided
+        /// Sorts the specified lines alphabetically
         /// </summary>
         /// <param name="linesToSort">Lines to sort</param>
         /// <param name="descending">Sort in descending order?</param>
@@ -39,7 +39,7 @@ namespace PadSharp
         public static string SortLines(this string linesToSort, bool descending = false)
         {
             // get a collection of the lines
-            var lines = linesToSort.SplitLines();
+            var lines = linesToSort.SplitIntoLines();
 
             // sort 'em (ascending or descending based on passed param)
             var sortedlines = descending ? lines.OrderByDescending(x => x) : lines.OrderBy(x => x);
@@ -48,14 +48,14 @@ namespace PadSharp
         }
 
         /// <summary>
-        /// Converts text specified text to Titlecase
+        /// Converts the specified text to Titlecase
         /// </summary>
         /// <param name="textToConvert">Text you want to convert to Titlecase</param>
         /// <returns>textToConvert in title case</returns>
         public static string ToTitleCase(this string textToConvert)
         {
             string newText = textToConvert;
-            var matches = Regex.Matches(textToConvert, @"\w+");
+            var matches = textToConvert.Matches(@"\w+");
 
             foreach (Match match in matches)
             {
@@ -71,7 +71,7 @@ namespace PadSharp
         }
 
         /// <summary>
-        /// Converts text specified text to tOGGLECASE
+        /// Converts the specified text to tOGGLECASE
         /// </summary>
         /// <param name="textToConvert">Text you feel needs a case toggle</param>
         /// <returns>textToConvert in with each letter's case toggled</returns>
@@ -96,7 +96,7 @@ namespace PadSharp
         public static string PrependLines(this string linesToPrepend, string textToPrepend)
         {
             return string.Join("\r\n", linesToPrepend
-                .SplitLines()
+                .SplitIntoLines()
                 .Select(x => textToPrepend + x));
         }
 
@@ -105,13 +105,13 @@ namespace PadSharp
         /// If the start exists, remove it. If not, add it.
         /// </summary>
         /// <param name="lines">Lines to toggle</param>
-        /// <param name="start">Start of the lines to toggle</param>
+        /// <param name="lineStart">Start of the lines to toggle</param>
         /// <returns></returns>
-        public static string ToggleLineStart(this string lines, string start)
+        public static string ToggleLineStart(this string lines, string lineStart)
         {
             return string.Join("\r\n", lines
-                .SplitLines()
-                .Select(x => x.StartsWith(start) ? x.Substring(start.Length) : start + x));
+                .SplitIntoLines()
+                .Select(x => x.StartsWith(lineStart) ? x.Substring(lineStart.Length) : lineStart + x));
         }
 
         /// <summary>
@@ -119,19 +119,19 @@ namespace PadSharp
         /// If the start and end exist, remove them. If not, add them.
         /// </summary>
         /// <param name="text">Text to toggle</param>
-        /// <param name="start">Start of the string to toggle</param>
-        /// <param name="end">End of the string to toggle</param>
+        /// <param name="lineStart">Start of the string to toggle</param>
+        /// <param name="lineEnd">End of the string to toggle</param>
         /// <returns>text with start and end added or removed</returns>
-        public static string ToggleStartAndEnd(this string text, string start, string end)
+        public static string ToggleStartAndEnd(this string text, string lineStart, string lineEnd)
         {
             // start and end aalready there
-            if (text.StartsWith(start) && text.EndsWith(end))
+            if (text.StartsWith(lineStart) && text.EndsWith(lineEnd))
             {
                 // return the string without the start and end
-                return text.Substring(start.Length, text.Length - end.Length - start.Length);
+                return text.Substring(lineStart.Length, text.Length - lineEnd.Length - lineStart.Length);
             }
 
-            return start + text + end;
+            return lineStart + text + lineEnd;
         }
 
         /// <summary>
@@ -152,7 +152,7 @@ namespace PadSharp
                     options |= RegexOptions.IgnoreCase;
                 }
 
-                return await Task.Run(() => Regex.Matches(text, regex, options).Count);
+                return await Task.Run(() => text.Matches(regex, options).Count);
             }
             catch
             {

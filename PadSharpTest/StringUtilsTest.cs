@@ -1,7 +1,6 @@
-﻿using System;
-using System.Threading.Tasks;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using PadSharp;
+using System.Threading.Tasks;
 
 namespace PadSharpTest
 {
@@ -14,7 +13,7 @@ namespace PadSharpTest
             string[] expected = { "hello,", "world ", "How are you?" };
             string input = "hello,\r\nworld \nHow are you?";
 
-            CollectionAssert.AreEqual(expected, input.SplitLines());
+            CollectionAssert.AreEqual(expected, input.SplitIntoLines());
         }
 
         [TestMethod]
@@ -84,6 +83,21 @@ namespace PadSharpTest
             input = " *Hello\r\n**World\r\n_***2748";
 
             Assert.AreEqual(expected, input.ToggleLineStart("*"));
+
+            expected = "";
+            input = "*";
+
+            Assert.AreEqual(expected, input.ToggleLineStart("*"));
+
+            expected = "*";
+            input = "";
+
+            Assert.AreEqual(expected, input.ToggleLineStart("*"));
+
+            expected = "";
+            input = "";
+
+            Assert.AreEqual(expected, input.ToggleLineStart(""));
         }
 
         [TestMethod]

@@ -915,34 +915,6 @@ namespace PadSharp
 
         #region Insert
 
-        private void CheckMark_Command()
-        {
-            // split the textbox text into lines
-            var lines = textbox.Text.Replace("\r", "").Split('\n');
-
-            // get the line we're currently on
-            int lineIndex = textbox.TextArea.Caret.Line - 1;
-            string line = lines[lineIndex];
-
-            bool hasCheck = line.Length > 0 && line.Substring(0, 1) == _checkMark;
-
-            if (!hasCheck)
-            {
-                // throw a CHECK_MARK and a space at the beginning of the line we're on
-                lines[lineIndex] = _checkMark + " " + line;
-            }
-            else
-            {
-                // remove the CHECK_MARK (and the space if it's there) from beginning of the line we're on
-                lines[lineIndex] = line.Remove(0, line.Length > 1 && line.Substring(1, 1) == " " ? 2 : 1);
-            }
-
-            // throw our edited lines back into the textbox
-            textbox.Document.Text = string.Join("\r\n", lines);
-            textbox.TextArea.Caret.Line = lineIndex + 1;
-            textbox.TextArea.Caret.Column = 0;
-        }
-
         private void AddCheckMark_Command()
         {
             Insert(_checkMark);
@@ -969,17 +941,22 @@ namespace PadSharp
 
         private void Bold_Command()
         {
-            toggleFontStyle("**");
+            ToggleFontStyle("**");
         }
 
         private void Italic_Command()
         {
-            toggleFontStyle("*");
+            ToggleFontStyle("*");
+        }
+
+        private void CheckMark_Command()
+        {
+            textbox.ToggleSelectionLineStart(_checkMark + " ");
         }
 
         private void Underline_Command()
         {
-            toggleFontStyle("__");
+            ToggleFontStyle("__");
         }
 
         private void LowerCase_Command()
@@ -1079,7 +1056,7 @@ namespace PadSharp
 
         #region Helpers
 
-        private void toggleFontStyle(string marker)
+        private void ToggleFontStyle(string marker)
         {
             string text = textbox.SelectedText;
 
@@ -1589,7 +1566,7 @@ namespace PadSharp
         private void textbox_TextChanged(object sender, EventArgs e)
         {
             // count the words on textchanged
-            WordCount = Regex.Matches(textbox.Text, @"\b\S+\b").Count;
+            WordCount = textbox.Text.Matches(@"\b\S+\b").Count;
 
             // force UI to acknowledge fileSaved
             FileSaved = false;
