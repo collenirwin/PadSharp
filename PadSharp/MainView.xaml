@@ -203,7 +203,7 @@
                             <MenuItem Header="Dictionary License" Click="help_Click" Tag="https://github.com/adambom/dictionary/blob/master/LICENSE.md"
                                       Style="{StaticResource checkMenu}"/>
                         </MenuItem>
-                        <MenuItem Header="Date/Time Format Guide" 
+                        <MenuItem Header="Date &amp; Time Format Guide" 
                                   Tag="https://docs.microsoft.com/en-us/dotnet/standard/base-types/custom-date-and-time-format-strings"
                                   Click="help_Click"/>
                         <MenuItem Header="Font Styling Guide" Click="fontStyleGuide_Click"/>
