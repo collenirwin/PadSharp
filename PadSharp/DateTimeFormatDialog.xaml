@@ -1,0 +1,68 @@
+﻿<Window x:Class="PadSharp.DateTimeFormatDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Title="Date &amp; Time Format" Height="243" Width="438"
+        ResizeMode="NoResize"
+        WindowStartupLocation="CenterOwner"
+        WindowStyle="ToolWindow"
+        Closing="Window_Closing">
+    <Window.Resources>
+        <Style TargetType="TextBox">
+            <Setter Property="BorderThickness" Value="0"/>
+        </Style>
+    </Window.Resources>
+    <StackPanel Background="{DynamicResource backColorDark}">
+        <TextBlock Name="DateDisplay" FontSize="28" TextAlignment="Center"
+                   Margin="0,10,0,0"
+                   Tag="Invalid date format"
+                   Foreground="{DynamicResource foreColorDark}"/>
+        <TextBlock Name="TimeDisplay" FontSize="28" TextAlignment="Center"
+                   Margin="0,10,0,0"
+                   Tag="Invalid time format"
+                   Foreground="{DynamicResource foreColorDark}"/>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <Label Grid.Row="0" Grid.Column="0" Foreground="{DynamicResource foreColorDark}">Date format</Label>
+            <Border BorderBrush="{DynamicResource backColorLight}" Grid.Row="0" Grid.Column="1"
+                    BorderThickness="1" CornerRadius="2" Margin="0,5,5,5">
+                <TextBox Name="DateFormatTextbox" FontSize="16" FontFamily="Consolas" TextAlignment="Left" MaxHeight="22"
+                         Background="{DynamicResource backColorLight}"
+                         Foreground="{DynamicResource foreColorDark}"
+                         Text="{Binding DateFormat, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+            </Border>
+
+            <Label Grid.Row="1" Grid.Column="0" Foreground="{DynamicResource foreColorDark}">Time format</Label>
+            <Border BorderBrush="{DynamicResource backColorLight}" Grid.Row="1" Grid.Column="1"
+                    BorderThickness="1" CornerRadius="2" Margin="0,5,5,5">
+                <TextBox Name="TimeFormatTextbox" FontSize="16" FontFamily="Consolas" TextAlignment="Left" MaxHeight="22"
+                         Background="{DynamicResource backColorLight}"
+                         Foreground="{DynamicResource foreColorDark}"
+                         Text="{Binding TimeFormat, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+            </Border>
+
+            <StackPanel Orientation="Horizontal" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Left">
+                <Button Margin="0,5,5,0" Padding="15,8,15,8" FontSize="12" Style="{DynamicResource ButtonStyle}" Click="Done_Click">
+                    Done
+                </Button>
+                <Button Margin="0,5,5,0" Padding="15,8,15,8" FontSize="12" Style="{DynamicResource ButtonStyle}" Click="Defaults_Click">
+                    Defaults
+                </Button>
+                <Button Margin="0,5,5,0" Padding="15,8,15,8" FontSize="12" Style="{DynamicResource ButtonStyle}" Click="Guide_Click">
+                    Date &amp; Time Format Guide
+                </Button>
+            </StackPanel>
+        </Grid>
+    </StackPanel>
+</Window>

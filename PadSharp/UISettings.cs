@@ -23,6 +23,16 @@ namespace PadSharp
         /// </summary>
         public static readonly string FilePath = Path.Combine(Global.DataPath, FileName);
 
+        /// <summary>
+        /// Default date format string
+        /// </summary>
+        public const string DefaultDateFormat = "MMMM d yyyy";
+
+        /// <summary>
+        /// Default time format string
+        /// </summary>
+        public const string DefaultTimeFormat = "h:mm tt";
+
         #region JSON Properties
 
         #region Colors and fonts
@@ -60,10 +70,10 @@ namespace PadSharp
         #region Date and time format
 
         [JsonProperty("dateFormat")]
-        public string DateFormat { get; set; } = "MMMM d yyyy";
+        public string DateFormat { get; set; } = DefaultDateFormat;
 
         [JsonProperty("timeFormat")]
-        public string TimeFormat { get; set; } = "h:mm tt";
+        public string TimeFormat { get; set; } = DefaultTimeFormat;
 
         #endregion
 

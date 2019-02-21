@@ -31,31 +31,49 @@ namespace PadSharp
 
         #region Fields
 
-        // required to implement INotifyPropertyChanged
+        /// <summary>
+        /// Required to implement INotifyPropertyChanged
+        /// </summary>
         public event PropertyChangedEventHandler PropertyChanged = (sender, e) => { };
 
-        // 5m file size max
-        private const int _fileSizeLimit = 5_000_000;
-
-        // 500px font size max
-        private const double _maxFontSize = 500;
-
-        // our marker for highlighting a checked line
-        private const string _checkMark = "✔";
-
-        // title: Pad# <version #>
-        private const string _title = Global.AppName + " " + Global.Version;
-
-        // settings object (contains all user settings)
+        /// <summary>
+        /// Settings object (contains all user settings)
+        /// </summary>
         private readonly UISettings _settings;
 
-        // Theme we're using
+        /// <summary>
+        /// 5m file size max
+        /// </summary>
+        private const int _fileSizeLimit = 5_000_000;
+
+        /// <summary>
+        /// 500px font size max
+        /// </summary>
+        private const double _maxFontSize = 500;
+
+        /// <summary>
+        /// Our marker for highlighting a checked line
+        /// </summary>
+        private const string _checkMark = "✔";
+
+        /// <summary>
+        /// Pad# (version #)
+        /// </summary>
+        private const string _title = Global.AppName + " " + Global.Version;
+
+        /// <summary>
+        /// Currently applied theme
+        /// </summary>
         private Theme _theme;
 
-        // text from currently open file
+        /// <summary>
+        /// Text from currently open file
+        /// </summary>
         private string _savedText = "";
 
-        // should we prompt the user to reload the file if it has been modified
+        /// <summary>
+        /// Should we prompt the user to reload the file if it has been modified?
+        /// </summary>
         private bool _promptForReload = false;
 
         #endregion
@@ -121,6 +139,8 @@ namespace PadSharp
 
         #region Settings
 
+        public UICommand FontCommand { get; private set; }
+        public UICommand DateTimeFormatCommand { get; private set; }
         public UICommand ToggleLineNumbersCommand { get; private set; }
         public UICommand ToggleStatusBarCommand { get; private set; }
         public UICommand ToggleWordWrapCommand { get; private set; }
@@ -137,10 +157,7 @@ namespace PadSharp
         /// </summary>
         public string FullTitle
         {
-            get
-            {
-                return OpenFile != null ? OpenFile.Name + " - " + _title : _title;
-            }
+            get => OpenFile != null ? OpenFile.Name + " - " + _title : _title;
             set
             {
                 // just force the UI to update
@@ -155,7 +172,7 @@ namespace PadSharp
         /// </summary>
         public FileInfo OpenFile
         {
-            get { return _openFile; }
+            get => _openFile;
             set
             {
                 if (_openFile != value)
@@ -173,10 +190,7 @@ namespace PadSharp
         /// </summary>
         public bool FileSaved
         {
-            get
-            {
-                return OpenFile != null && textbox.Text == _savedText;
-            }
+            get => OpenFile != null && textbox.Text == _savedText;
             set
             {
                 // hack? update the UI while keeping this essentially readonly
@@ -185,16 +199,43 @@ namespace PadSharp
         }
 
         /// <summary>
+        /// Date format string we use when inserting dates
+        /// </summary>
+        public string DateFormat
+        {
+            get => _settings.DateFormat;
+            set
+            {
+                if (_settings.DateFormat != value)
+                {
+                    _settings.DateFormat = value;
+                    PropertyChanged(this, new PropertyChangedEventArgs(nameof(DateFormat)));
+                }
+            }
+        }
+
+        /// <summary>
+        /// Time format string we use when inserting times
+        /// </summary>
+        public string TimeFormat
+        {
+            get => _settings.TimeFormat;
+            set
+            {
+                if (_settings.TimeFormat != value)
+                {
+                    _settings.TimeFormat = value;
+                    PropertyChanged(this, new PropertyChangedEventArgs(nameof(TimeFormat)));
+                }
+            }
+        }
+
+        /// <summary>
         /// Hides or shows statusBar
         /// </summary>
         public bool StatusBarVisible
         {
-            get
-            {
-                return statusBar != null
-                    ? statusBar.Visibility == Visibility.Visible 
-                    : false;
-            }
+            get => statusBar?.Visibility == Visibility.Visible;
             set
             {
                 if (statusBar == null)
@@ -214,7 +255,7 @@ namespace PadSharp
         /// </summary>
         public int LineNumber
         {
-            get { return _lineNumber; }
+            get => _lineNumber;
             set
             {
                 if (_lineNumber != value)
@@ -232,7 +273,7 @@ namespace PadSharp
         /// </summary>
         public bool LineNumberVisible
         {
-            get { return _lineNumberVisible; }
+            get => _lineNumberVisible;
             set
             {
                 if (_lineNumberVisible != value)
@@ -250,7 +291,7 @@ namespace PadSharp
         /// </summary>
         public int ColumnNumber
         {
-            get { return _columnNumber; }
+            get => _columnNumber;
             set
             {
                 if (_columnNumber != value)
@@ -268,7 +309,7 @@ namespace PadSharp
         /// </summary>
         public bool ColumnNumberVisible
         {
-            get { return _columnNumberVisible; }
+            get => _columnNumberVisible;
             set
             {
                 if (_columnNumberVisible != value)
@@ -286,7 +327,7 @@ namespace PadSharp
         /// </summary>
         public int WordCount
         {
-            get { return _wordCount; }
+            get => _wordCount;
             set
             {
                 if (_wordCount != value)
@@ -304,7 +345,7 @@ namespace PadSharp
         /// </summary>
         public bool WordCountVisible
         {
-            get { return _wordCountVisible; }
+            get => _wordCountVisible;
             set
             {
                 if (_wordCountVisible != value)
@@ -322,7 +363,7 @@ namespace PadSharp
         /// </summary>
         public bool CharCountVisible
         {
-            get { return _charCountVisible; }
+            get => _charCountVisible;
             set
             {
                 if (_charCountVisible != value)
@@ -338,7 +379,7 @@ namespace PadSharp
         /// </summary>
         public new double FontSize
         {
-            get { return textbox.FontSize; }
+            get => textbox.FontSize;
             set
             {
                 // make sure fontSize is within acceptable range
@@ -362,17 +403,13 @@ namespace PadSharp
         /// </summary>
         public Visibility SelectionMenuVisibility
         {
-            get
-            {
-                return textbox != null && textbox.SelectionLength > 0
-                    ? Visibility.Visible
-                    : Visibility.Collapsed;
-            }
+            get => (textbox?.SelectionLength ?? 0) > 0
+                ? Visibility.Visible
+                : Visibility.Collapsed;
             set
             {
                 // just force the UI to update
-                PropertyChanged(this,
-                    new PropertyChangedEventArgs(nameof(SelectionMenuVisibility)));
+                PropertyChanged(this, new PropertyChangedEventArgs(nameof(SelectionMenuVisibility)));
             }
         }
 
@@ -434,6 +471,8 @@ namespace PadSharp
             SortCommand = new UICommandWithParam(Sort_Command);
 
             // settings
+            FontCommand = new UICommand(Font_Command);
+            DateTimeFormatCommand = new UICommand(DateTimeFormat_Command);
             ToggleLineNumbersCommand = new UICommand(ToggleLineNumbers_Command);
             ToggleStatusBarCommand = new UICommand(ToggleStatusBar_Command);
             ToggleWordWrapCommand = new UICommand(ToggleWordWrap_Command);
@@ -510,7 +549,7 @@ namespace PadSharp
             // set theme
             _theme = settings.Theme;
             Application.Current.Resources.
-                MergedDictionaries[0].Source = ThemeManager.themeUri(this._theme);
+                MergedDictionaries[0].Source = ThemeManager.themeUri(_theme);
 
             CheckIfSameValue(themeMenu, _theme == Theme.light ? "Light" : "Dark");
 
@@ -537,11 +576,6 @@ namespace PadSharp
                 Top = settings.Top;
                 Left = settings.Left;
             }
-            
-
-            // check the selected date/time formats
-            CheckIfSameValue(dateFormatMenu, settings.DateFormat);
-            CheckIfSameValue(timeFormatMenu, settings.TimeFormat);
 
             // set toggles
             showStatusBarDropdown.IsChecked = settings.ShowStatusBar;
@@ -1103,40 +1137,17 @@ namespace PadSharp
             }
         }
 
-        private void date_Checked(object sender, RoutedEventArgs e)
+        private void Font_Command()
         {
-            var item = sender as MenuItem;
-            _settings.DateFormat = item.Header.ToString();
-            UncheckSiblings(item);
+            // select and show the font dropdown
+            fontDropdown.Focus();
+            fontDropdown.IsDropDownOpen = true;
         }
 
-        private void date_Unchecked(object sender, RoutedEventArgs e)
+        private void DateTimeFormat_Command()
         {
-            var item = sender as MenuItem;
-
-            // if this setting is selected
-            if (_settings.DateFormat == item.Header.ToString())
-            {
-                KeepMenuItemChecked(item, date_Checked);
-            }
-        }
-
-        private void time_Checked(object sender, RoutedEventArgs e)
-        {
-            var item = sender as MenuItem;
-            _settings.TimeFormat = item.Header.ToString();
-            UncheckSiblings(item);
-        }
-
-        private void time_Unchecked(object sender, RoutedEventArgs e)
-        {
-            var item = sender as MenuItem;
-
-            // if this setting is selected
-            if (_settings.TimeFormat == item.Header.ToString())
-            {
-                KeepMenuItemChecked(item, time_Checked);
-            }
+            var dtfd = new DateTimeFormatDialog(this);
+            dtfd.ShowDialog();
         }
 
         private void ToggleLineNumbers_Command()
@@ -1413,8 +1424,7 @@ namespace PadSharp
 
         private void GotoGo_Command()
         {
-            int line;
-            if (int.TryParse(txtGoto.Text, out line))
+            if (int.TryParse(txtGoto.Text, out int line))
             {
                 textbox.ScrollTo(line, 0);
             }
