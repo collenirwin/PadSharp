@@ -789,7 +789,7 @@ namespace PadSharp
         {
             if (OpenFile == null)
             {
-                saveAs();
+                SaveAs();
             } 
             else
             {
@@ -799,7 +799,7 @@ namespace PadSharp
 
         private void SaveAs_Command()
         {
-            saveAs();
+            SaveAs();
         }
 
         private void Print_Command()
@@ -1666,11 +1666,32 @@ namespace PadSharp
         /// Opens a <see cref="SaveFileDialog"/> prompting the user to select a place to save,
         /// then calls save with the selected path.
         /// </summary>
-        private void saveAs()
+        private void SaveAs()
         {
+            string fileName = OpenFile?.Name;
+
+            // file hasn't been saved yet
+            if (fileName == null)
+            {
+                // grab the first 20 characters of the first line,
+                // after all illegal characters and leading whitespace have been removed
+                fileName = textbox.Text
+                    .RegexReplace(@"[\r*\\/<>:\|\?]", "")
+                    .TrimStart()
+                    .Match(@"^[^\n]{1,20}")
+                    .Value
+                    .Trim() + ".txt";
+
+                // nothing to grab; default to document.txt
+                if (fileName == ".txt")
+                {
+                    fileName = "document.txt";
+                }
+            }
+
             var saveDialog = new SaveFileDialog
             {
-                FileName = FileSaved ? OpenFile.Name : "document.txt",
+                FileName = fileName,
                 Title = "Save As",
                 DefaultExt = ".txt",
                 Filter = "Text Files|*.txt|All Files|*.*",
@@ -1682,7 +1703,7 @@ namespace PadSharp
             string path = saveDialog.FileName;
 
             // if a file was selected, save it
-            if (result == true && path != null && path != "")
+            if (result == true && !string.IsNullOrEmpty(path))
             {
                 Save(path);
             }
