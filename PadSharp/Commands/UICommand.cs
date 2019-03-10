@@ -1,13 +1,16 @@
 ﻿using System;
 
-namespace PadSharp
+namespace PadSharp.Commands
 {
     /// <summary>
     /// Barebones implementation of ICommand
     /// </summary>
     public class UICommand : UICommandBase
     {
-        public Action Action { get; private set; }
+        /// <summary>
+        /// The method this command runs when <see cref="Execute"/> is called
+        /// </summary>
+        public Action Action { get; }
 
         /// <summary>
         /// Constructor for UICommand
@@ -19,7 +22,7 @@ namespace PadSharp
         }
 
         /// <summary>
-        /// Runs this.action
+        /// Runs <see cref="Action"/>
         /// </summary>
         /// <param name="parameter">Not used</param>
         public override void Execute(object parameter)

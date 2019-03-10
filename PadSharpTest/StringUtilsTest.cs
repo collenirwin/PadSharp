@@ -1,5 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using PadSharp;
+using PadSharp.Utils;
 using System.Threading.Tasks;
 
 namespace PadSharpTest

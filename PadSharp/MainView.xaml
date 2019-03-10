@@ -58,6 +58,7 @@
 
         <!-- Insert -->
         <KeyBinding Modifiers="Ctrl+Alt" Key="C" Command="{Binding AddCheckMarkCommand}"/>
+        <KeyBinding Modifiers="Ctrl+Alt" Key="M" Command="{Binding DateInsertDialogCommand}"/>
         <KeyBinding Modifiers="Ctrl" Key="M" Command="{Binding TodaysDateCommand}"/>
         <KeyBinding Modifiers="Ctrl" Key="T" Command="{Binding CurrentTimeCommand}"/>
 
@@ -123,6 +124,7 @@
                             <TextBlock Text="Insert" VerticalAlignment="Center"/>
                         </MenuItem.Header>
                         <MenuItem Header="Checkmark" InputGestureText="Ctrl+Alt+C" Command="{Binding AddCheckMarkCommand}"/>
+                        <MenuItem Header="Date from Calendar" InputGestureText="Ctrl+Alt+M" Command="{Binding DateInsertDialogCommand}"/>
                         <MenuItem Header="Today's Date" InputGestureText="Ctrl+M" Command="{Binding TodaysDateCommand}"/>
                         <MenuItem Header="Current Time" InputGestureText="Ctrl+T" Command="{Binding CurrentTimeCommand}"/>
                         <MenuItem Header="Date and Time" Command="{Binding DateAndTimeCommand}"/>
@@ -208,6 +210,7 @@
                                   Click="help_Click"/>
                         <MenuItem Header="Font Styling Guide" Click="fontStyleGuide_Click"/>
                         <MenuItem Header="GitHub" Tag="https://github.com/collenirwin/PadSharp" Click="help_Click"/>
+                        <MenuItem Header="About Pad#" Command="{Binding AboutCommand}"/>
                     </MenuItem>
                 </Menu>
 
@@ -386,10 +389,18 @@
             <StackPanel DockPanel.Dock="right" Orientation="Horizontal" HorizontalAlignment="Right">
                 <TextBlock Text="Font" Foreground="{DynamicResource foreColorDark}"/>
                 <ComboBox Name="fontDropdown" IsEditable="True" Margin="0,2,5,2"
-                          FlowDirection="RightToLeft" SelectionChanged="fontDropdown_SelectionChanged"/>
-                <ComboBox Name="fontSizeDropdown" IsEditable="True" 
+                          ItemsSource="{Binding FontFamilies}"
+                          SelectedItem="{Binding TextBoxFontFamily, Mode=TwoWay}">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Source}" FontFamily="{Binding}"/>
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+                <ComboBox Name="fontSizeDropdown" IsEditable="True"
+                          Text="{Binding TextBoxFontSize, Mode=TwoWay, UpdateSourceTrigger=Default}"
                           LostFocus="fontSizeDropdown_Changed" DropDownClosed="fontSizeDropdown_Changed"
-                          FlowDirection="RightToLeft" Margin="0,2,25,2">
+                          Margin="0,2,25,2">
                     <ComboBoxItem>8</ComboBoxItem>
                     <ComboBoxItem>9</ComboBoxItem>
                     <ComboBoxItem>10</ComboBoxItem>

@@ -1,5 +1,6 @@
 ﻿using BoinWPF.Themes;
 using Newtonsoft.Json;
+using PadSharp.Utils;
 using System;
 using System.IO;
 using System.Windows;
@@ -26,7 +27,7 @@ namespace PadSharp
         /// <summary>
         /// Default date format string
         /// </summary>
-        public const string DefaultDateFormat = "MMMM d yyyy";
+        public const string DefaultDateFormat = "MMMM d, yyyy";
 
         /// <summary>
         /// Default time format string

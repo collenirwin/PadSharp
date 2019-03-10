@@ -5,8 +5,11 @@ using ICSharpCode.AvalonEdit.Highlighting;
 using ICSharpCode.AvalonEdit.Highlighting.Xshd;
 using ICSharpCode.AvalonEdit.Utils;
 using Microsoft.Win32;
+using PadSharp.Commands;
+using PadSharp.Utils;
 using RegularExtensions;
 using System;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
@@ -23,7 +26,7 @@ using System.Xml;
 namespace PadSharp
 {
     /// <summary>
-    /// Interaction logic for MainView.xaml
+    /// Main window - all text editing is done here
     /// </summary>
     public partial class MainView : Window, INotifyPropertyChanged
     {
@@ -84,67 +87,74 @@ namespace PadSharp
 
         #region File
 
-        public UICommand NewCommand { get; private set; }
-        public UICommand NewWindowCommand { get; private set; }
-        public UICommand OpenCommand { get; private set; }
-        public UICommand OpenInExplorerCommand { get; private set; }
-        public UICommand SaveCommand { get; private set; }
-        public UICommand SaveAsCommand { get; private set; }
-        public UICommand PrintCommand { get; private set; }
-        public UICommand ExitCommand { get; private set; }
+        public UICommand NewCommand { get; }
+        public UICommand NewWindowCommand { get; }
+        public UICommand OpenCommand { get; }
+        public UICommand OpenInExplorerCommand { get; }
+        public UICommand SaveCommand { get; }
+        public UICommand SaveAsCommand { get; }
+        public UICommand PrintCommand { get; }
+        public UICommand ExitCommand { get; }
 
         #endregion
 
         #region Edit
 
-        public UICommand UndoCommand { get; private set; }
-        public UICommand RedoCommand { get; private set; }
-        public UICommand CutCommand { get; private set; }
-        public UICommand CopyCommand { get; private set; }
-        public UICommand PasteCommand { get; private set; }
-        public UICommand FindCommand { get; private set; }
-        public UICommand FindAndReplaceCommand { get; private set; }
-        public UICommand GotoCommand { get; private set; }
-        public UICommand GotoGoCommand { get; private set; }
-        public UICommand CheckSpellingCommand { get; private set; }
-        public UICommand NormalizeLineEndingdCommand { get; private set; }
-        public UICommand SelectAllCommand { get; private set; }
+        public UICommand UndoCommand { get; }
+        public UICommand RedoCommand { get; }
+        public UICommand CutCommand { get; }
+        public UICommand CopyCommand { get; }
+        public UICommand PasteCommand { get; }
+        public UICommand FindCommand { get; }
+        public UICommand FindAndReplaceCommand { get; }
+        public UICommand GotoCommand { get; }
+        public UICommand GotoGoCommand { get; }
+        public UICommand CheckSpellingCommand { get; }
+        public UICommand NormalizeLineEndingdCommand { get; }
+        public UICommand SelectAllCommand { get; }
 
         #endregion
 
         #region Insert
 
-        public UICommand CheckMarkCommand { get; private set; }
-        public UICommand AddCheckMarkCommand { get; private set; }
-        public UICommand TodaysDateCommand { get; private set; }
-        public UICommand CurrentTimeCommand { get; private set; }
-        public UICommand DateAndTimeCommand { get; private set; }
+        public UICommand CheckMarkCommand { get; }
+        public UICommand AddCheckMarkCommand { get; }
+        public UICommand DateInsertDialogCommand { get; }
+        public UICommand TodaysDateCommand { get;}
+        public UICommand CurrentTimeCommand { get; }
+        public UICommand DateAndTimeCommand { get; }
 
         #endregion
 
         #region Selection
 
-        public UICommand BoldCommand { get; private set; }
-        public UICommand ItalicCommand { get; private set; }
-        public UICommand UnderlineCommand { get; private set; }
-        public UICommand LowerCaseCommand { get; private set; }
-        public UICommand UpperCaseCommand { get; private set; }
-        public UICommand TitleCaseCommand { get; private set; }
-        public UICommand ToggleCaseCommand { get; private set; }
-        public UICommand DefineCommand { get; private set; }
-        public UICommand ReverseCommand { get; private set; }
-        public UICommandWithParam SortCommand { get; private set; }
+        public UICommand BoldCommand { get; }
+        public UICommand ItalicCommand { get; }
+        public UICommand UnderlineCommand { get; }
+        public UICommand LowerCaseCommand { get; }
+        public UICommand UpperCaseCommand { get; }
+        public UICommand TitleCaseCommand { get; }
+        public UICommand ToggleCaseCommand { get; }
+        public UICommand DefineCommand { get; }
+        public UICommand ReverseCommand { get; }
+        public UICommandWithParam SortCommand { get; }
 
         #endregion
 
         #region Settings
 
-        public UICommand FontCommand { get; private set; }
-        public UICommand DateTimeFormatCommand { get; private set; }
-        public UICommand ToggleLineNumbersCommand { get; private set; }
-        public UICommand ToggleStatusBarCommand { get; private set; }
-        public UICommand ToggleWordWrapCommand { get; private set; }
-        public UICommand ToggleTopmostCommand { get; private set; }
+        public UICommand FontCommand { get; }
+        public UICommand DateTimeFormatCommand { get; }
+        public UICommand ToggleLineNumbersCommand { get; }
+        public UICommand ToggleStatusBarCommand { get; }
+        public UICommand ToggleWordWrapCommand { get; }
+        public UICommand ToggleTopmostCommand { get; }
+
+        #endregion
+
+        #region Help
+
+        public UICommand AboutCommand { get; }
 
         #endregion
 
@@ -157,7 +167,7 @@ namespace PadSharp
         /// </summary>
         public string FullTitle
         {
-            get => OpenFile != null ? OpenFile.Name + " - " + _title : _title;
+            get => OpenFile != null ? $"{OpenFile.Name} - {_title}" : _title;
             set
             {
                 // just force the UI to update
@@ -203,7 +213,7 @@ namespace PadSharp
         /// </summary>
         public string DateFormat
         {
-            get => _settings.DateFormat;
+            get => _settings?.DateFormat;
             set
             {
                 if (_settings.DateFormat != value)
@@ -219,7 +229,7 @@ namespace PadSharp
         /// </summary>
         public string TimeFormat
         {
-            get => _settings.TimeFormat;
+            get => _settings?.TimeFormat;
             set
             {
                 if (_settings.TimeFormat != value)
@@ -266,21 +276,16 @@ namespace PadSharp
             }
         }
 
-        private bool _lineNumberVisible;
-
         /// <summary>
         /// Show the line number in the status bar?
         /// </summary>
         public bool LineNumberVisible
         {
-            get => _lineNumberVisible;
+            get => _settings?.LineNumberVisible ?? false;
             set
             {
-                if (_lineNumberVisible != value)
-                {
-                    _lineNumberVisible = value;
-                    PropertyChanged(this, new PropertyChangedEventArgs(nameof(LineNumberVisible)));
-                }
+                _settings.LineNumberVisible = value;
+                PropertyChanged(this, new PropertyChangedEventArgs(nameof(LineNumberVisible)));
             }
         }
 
@@ -302,21 +307,16 @@ namespace PadSharp
             }
         }
 
-        private bool _columnNumberVisible;
-
         /// <summary>
         /// Show the column number in the status bar?
         /// </summary>
         public bool ColumnNumberVisible
         {
-            get => _columnNumberVisible;
+            get => _settings?.ColumnNumberVisible ?? false;
             set
             {
-                if (_columnNumberVisible != value)
-                {
-                    _columnNumberVisible = value;
-                    PropertyChanged(this, new PropertyChangedEventArgs(nameof(ColumnNumberVisible)));
-                }
+                _settings.ColumnNumberVisible = value;
+                PropertyChanged(this, new PropertyChangedEventArgs(nameof(ColumnNumberVisible)));
             }
         }
 
@@ -338,50 +338,61 @@ namespace PadSharp
             }
         }
 
-        private bool _wordCountVisible;
-
         /// <summary>
         /// Show the word count in the status bar?
         /// </summary>
         public bool WordCountVisible
         {
-            get => _wordCountVisible;
+            get => _settings?.WordCountVisible ?? true;
             set
             {
-                if (_wordCountVisible != value)
-                {
-                    _wordCountVisible = value;
-                    PropertyChanged(this, new PropertyChangedEventArgs(nameof(WordCountVisible)));
-                }
+                _settings.WordCountVisible = value;
+                PropertyChanged(this, new PropertyChangedEventArgs(nameof(WordCountVisible)));
             }
         }
-
-        private bool _charCountVisible;
 
         /// <summary>
         /// Show the char count in the status bar?
         /// </summary>
         public bool CharCountVisible
         {
-            get => _charCountVisible;
+            get => _settings?.CharCountVisible ?? true;
             set
             {
-                if (_charCountVisible != value)
+                _settings.CharCountVisible = value;
+                PropertyChanged(this, new PropertyChangedEventArgs(nameof(CharCountVisible)));
+            }
+        }
+
+        /// <summary>
+        /// Font family of <see cref="textbox"/>
+        /// </summary>
+        public FontFamily TextBoxFontFamily
+        {
+            get => textbox.FontFamily;
+            set
+            {
+                if (textbox.FontFamily != value)
                 {
-                    _charCountVisible = value;
-                    PropertyChanged(this, new PropertyChangedEventArgs(nameof(CharCountVisible)));
+                    textbox.FontFamily = value;
+                    PropertyChanged(this, new PropertyChangedEventArgs(nameof(TextBoxFontFamily)));
                 }
             }
         }
 
         /// <summary>
-        /// Font size of the textbox
+        /// Font size of <see cref="textbox"/>
         /// </summary>
-        public new double FontSize
+        public double TextBoxFontSize
         {
             get => textbox.FontSize;
             set
             {
+                if (textbox.FontSize == value)
+                {
+                    return;
+                }
+
                 // make sure fontSize is within acceptable range
                 if (value > _maxFontSize)
                 {
@@ -395,8 +406,15 @@ namespace PadSharp
                 {
                     textbox.FontSize = value;
                 }
+
+                PropertyChanged(this, new PropertyChangedEventArgs(nameof(TextBoxFontSize)));
             }
         }
+
+        /// <summary>
+        /// All font families available for selection
+        /// </summary>
+        public ObservableCollection<FontFamily> FontFamilies { get; } = new ObservableCollection<FontFamily>();
 
         /// <summary>
         /// Show the Selection Menu whenever text is selected
@@ -454,6 +472,7 @@ namespace PadSharp
             // insert
             CheckMarkCommand = new UICommand(CheckMark_Command);
             AddCheckMarkCommand = new UICommand(AddCheckMark_Command);
+            DateInsertDialogCommand = new UICommand(DateInsertDialog_Command);
             TodaysDateCommand = new UICommand(TodaysDate_Command);
             CurrentTimeCommand = new UICommand(CurrentTime_Command);
             DateAndTimeCommand = new UICommand(DateAndTime_Command);
@@ -477,6 +496,9 @@ namespace PadSharp
             ToggleStatusBarCommand = new UICommand(ToggleStatusBar_Command);
             ToggleWordWrapCommand = new UICommand(ToggleWordWrap_Command);
             ToggleTopmostCommand = new UICommand(ToggleTopmost_Command);
+
+            // help
+            AboutCommand = new UICommand(About_Command);
 
             #endregion
 
@@ -532,9 +554,8 @@ namespace PadSharp
             // apply settings to UI
             ApplySettings(_settings);
 
-            // set font, size
-            PopulateFontDropdown(fontDropdown);
-            SelectFont(fontDropdown, textbox.FontFamily);
+            // grab the system fonts, populating FontFamilies
+            FontUtils.PopulateFontCollection(FontFamilies);
         }
 
         #endregion
@@ -542,7 +563,7 @@ namespace PadSharp
         #region Settings
 
         /// <summary>
-        /// Set all window properties to match settings fields
+        /// Set all window properties to match the given settings
         /// </summary>
         private void ApplySettings(UISettings settings)
         {
@@ -555,8 +576,8 @@ namespace PadSharp
 
             // font
             textbox.FontFamily = settings.FontFamily;
-            FontSize = settings.FontSize;
-            fontSizeDropdown.Text = FontSize.ToString();
+            TextBoxFontSize = settings.FontSize;
+            fontSizeDropdown.Text = TextBoxFontSize.ToString();
 
             WindowState = settings.WindowState;
 
@@ -583,21 +604,20 @@ namespace PadSharp
             textbox.ShowLineNumbers = settings.ShowLineNumbers;
             Topmost = settings.Topmost;
 
-            // set status bar visibilities
-            LineNumberVisible = settings.LineNumberVisible;
-            ColumnNumberVisible = settings.ColumnNumberVisible;
-            WordCountVisible = settings.WordCountVisible;
-            CharCountVisible = settings.CharCountVisible;
+            LineNumberVisible = LineNumberVisible;
+            ColumnNumberVisible = ColumnNumberVisible;
+            WordCountVisible = WordCountVisible;
+            CharCountVisible = CharCountVisible;
         }
 
         /// <summary>
-        /// Set all fields in settings object to match window properties
+        /// Set all JSON properties in a settings object to match window properties
         /// </summary>
         private void SetSettings(UISettings settings)
         {
             settings.Theme = _theme;
             settings.FontFamily = textbox.FontFamily;
-            settings.FontSize = FontSize;
+            settings.FontSize = TextBoxFontSize;
             settings.WindowState = WindowState;
 
             settings.Top = Top;
@@ -609,76 +629,11 @@ namespace PadSharp
             settings.ShowStatusBar = statusBar.Visibility == Visibility.Visible;
             settings.WordWrap = textbox.WordWrap;
             settings.Topmost = Topmost;
-
-            settings.LineNumberVisible = LineNumberVisible;
-            settings.ColumnNumberVisible = ColumnNumberVisible;
-            settings.WordCountVisible = WordCountVisible;
-            settings.CharCountVisible = CharCountVisible;
         }
 
         #endregion
 
         #region Font
-
-        /// <summary>
-        /// Grab all of the system fonts, sort them by name, and add them to a <see cref="ComboBox"/>
-        /// </summary>
-        /// <param name="dropdown"><see cref="ComboBox"/> to add the font family names to</param>
-        private void PopulateFontDropdown(ComboBox dropdown)
-        {
-            // sort system fonts
-            var fonts = Fonts.SystemFontFamilies.OrderBy(x => x.Source);
-
-            // add 'em all to the dropdown
-            foreach (var font in fonts)
-            {
-                var item = new ComboBoxItem
-                {
-                    FontFamily = font,
-                    Content = font.Source
-                };
-
-                dropdown.Items.Add(item);
-            }
-        }
-
-        /// <summary>
-        /// Selects the given font in the given <see cref="ComboBox"/>. Defaults to the first item.
-        /// </summary>
-        /// <param name="dropdown"><see cref="ComboBox"/> to select the font within</param>
-        /// <param name="font">font to select</param>
-        private void SelectFont(ComboBox dropdown, FontFamily font)
-        {
-            foreach (ComboBoxItem item in dropdown.Items)
-            {
-                if (item.Content.ToString() == font.Source)
-                {
-                    dropdown.SelectedItem = item;
-                    return;
-                }
-            }
-
-            // default to the first font if we can't find given font
-            if (dropdown.Items.Count != 0)
-            {
-                dropdown.SelectedIndex = 0;
-            }
-        }
-
-        /// <summary>
-        /// handles changing the textbox font via the dropdown
-        /// </summary>
-        private void fontDropdown_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            try
-            {
-                // set textbox and dropdown font to the new selected font
-                var font = new FontFamily((fontDropdown.SelectedItem as ComboBoxItem).Content.ToString());
-                textbox.FontFamily = font;
-                fontDropdown.FontFamily = font;
-            }
-            catch { /* go with the last best matched font */ }
-        }
 
         /// <summary>
         /// Handles changing the textbox font size via the dropdown
@@ -687,12 +642,11 @@ namespace PadSharp
         {
             if (double.TryParse(fontSizeDropdown.Text, out double size))
             {
-                FontSize = size;
-                fontSizeDropdown.Text = FontSize.ToString();
+                TextBoxFontSize = size;
             }
             else
             {
-                fontSizeDropdown.Text = FontSize.ToString();
+                fontSizeDropdown.SelectedItem = TextBoxFontSize.ToString();
             }
         }
 
@@ -951,22 +905,28 @@ namespace PadSharp
 
         private void AddCheckMark_Command()
         {
-            Insert(_checkMark);
+            textbox.Insert(_checkMark);
+        }
+
+        private void DateInsertDialog_Command()
+        {
+            var dateInsertDialog = new DateInsertDialog(this);
+            dateInsertDialog.ShowDialog();
         }
 
         private void TodaysDate_Command()
         {
-            Insert(DateTime.Now.ToString(_settings.DateFormat));
+            textbox.Insert(DateTime.Now.ToString(DateFormat));
         }
 
         private void CurrentTime_Command()
         {
-            Insert(DateTime.Now.ToString(_settings.TimeFormat));
+            textbox.Insert(DateTime.Now.ToString(TimeFormat));
         }
 
         private void DateAndTime_Command()
         {
-            Insert(DateTime.Now.ToString(_settings.DateFormat + " " + _settings.TimeFormat));
+            textbox.Insert(DateTime.Now.ToString($"{DateFormat} {TimeFormat}"));
         }
 
         #endregion
@@ -1139,15 +1099,14 @@ namespace PadSharp
 
         private void Font_Command()
         {
-            // select and show the font dropdown
-            fontDropdown.Focus();
-            fontDropdown.IsDropDownOpen = true;
+            var fontDialog = new FontDialog(this);
+            fontDialog.ShowDialog();
         }
 
         private void DateTimeFormat_Command()
         {
-            var dtfd = new DateTimeFormatDialog(this);
-            dtfd.ShowDialog();
+            var dateTimeFormatDialog = new DateTimeFormatDialog(this);
+            dateTimeFormatDialog.ShowDialog();
         }
 
         private void ToggleLineNumbers_Command()
@@ -1210,8 +1169,14 @@ namespace PadSharp
             Global.Launch((sender as MenuItem).Tag.ToString());
         }
 
+        private void About_Command()
+        {
+            AboutWindow.Instance.Show();
+            AboutWindow.Instance.Focus();
+        }
+
         #endregion
-        
+
         #region Helpers
 
         /// <summary>
@@ -1231,23 +1196,6 @@ namespace PadSharp
             {
                 Alert.showDialog("Couldn't find a definition for '" + word + "'", Global.AppName);
             }
-        }
-
-        /// <summary>
-        /// Insert the specified text into <see cref="textbox"/>,
-        /// then move the caret to the end of the inserted text
-        /// </summary>
-        /// <param name="text">Text to insert</param>
-        private void Insert(string text)
-        {
-            // grab position we're going to before we reset textbox.Text
-            int position = textbox.CaretOffset + text.Length;
-
-            // insert the text
-            textbox.Document.Text = textbox.Document.Text.Insert(textbox.CaretOffset, text);
-
-            // go to the previously calculated position
-            textbox.CaretOffset = position;
         }
 
         /// <summary>
@@ -1286,7 +1234,7 @@ namespace PadSharp
         }
 
         /// <summary>
-        /// put selected text into find box, select it
+        /// Put selected text into find box, select it
         /// </summary>
         private void OpenFindHelper()
         {
@@ -1527,8 +1475,8 @@ namespace PadSharp
                 }
                 
                 // increase/decrease the font size based on whether we're scrolling up or down
-                FontSize += delta;
-                fontSizeDropdown.Text = FontSize.ToString();
+                TextBoxFontSize += delta;
+                fontSizeDropdown.Text = TextBoxFontSize.ToString();
             }
         }
 

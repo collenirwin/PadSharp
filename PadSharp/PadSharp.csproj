@@ -86,7 +86,6 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
-    <Reference Include="System.Drawing" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -103,14 +102,36 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="AboutWindow.xaml.cs">
+      <DependentUpon>AboutWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="DateInsertDialog.xaml.cs">
+      <DependentUpon>DateInsertDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="DateTimeFormatDialog.xaml.cs">
       <DependentUpon>DateTimeFormatDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="FontDialog.xaml.cs">
+      <DependentUpon>FontDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Utils\Crypto.cs" />
+    <Compile Include="Utils\FontUtils.cs" />
     <Compile Include="Utils\StringUtils.cs" />
     <Compile Include="Utils\VersionChecker.cs" />
     <Compile Include="Utils\WordList.cs" />
+    <Page Include="AboutWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="DateInsertDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="DateTimeFormatDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="FontDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

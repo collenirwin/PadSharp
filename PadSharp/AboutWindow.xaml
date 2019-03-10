@@ -1,0 +1,39 @@
+﻿<Window x:Class="PadSharp.AboutWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Title="About Pad#" Height="235" Width="405" ResizeMode="NoResize" Icon="favicon.ico" WindowStartupLocation="CenterScreen"
+        Closing="Window_Closing">
+    <Grid Background="{DynamicResource backColorDark}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+        <Image Grid.Column="0" Grid.Row="0" Source="favicon.ico" Height="64" Width="64" VerticalAlignment="Top"/>
+        <StackPanel Grid.Column="1" Grid.Row="0">
+            <TextBlock FontSize="30" FontWeight="Bold" Foreground="{DynamicResource foreColorLight}">Pad#</TextBlock>
+            <TextBlock FontSize="20" Foreground="{DynamicResource foreColorDark}">A simple and lightweight text editor</TextBlock>
+            <TextBlock Name="VersionDisplay" FontSize="20" Foreground="{DynamicResource foreColorDark}">
+                Version 2.0.0
+            </TextBlock>
+            <TextBlock FontSize="20" Foreground="{DynamicResource foreColorDark}">
+                © 2019 <Hyperlink Foreground="#FF0078D7" NavigateUri="https://github.com/collenirwin" Click="Hyperlink_Click">Collen Irwin</Hyperlink>
+            </TextBlock>
+            <TextBlock FontSize="20" Foreground="{DynamicResource foreColorDark}">
+                MIT License
+            </TextBlock>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <Button Name="NewVersionButton" Margin="0,5,5,5" Padding="15,8,15,8" FontSize="12"
+                        Style="{DynamicResource ButtonStyle}" Visibility="Collapsed" Click="NewVersionButton_Click">
+                    New Version Available
+                </Button>
+                <Button Margin="0,5,5,5" Padding="15,8,15,8" FontSize="12" Style="{DynamicResource ButtonStyle}" Click="Close_Click">Close</Button>
+            </StackPanel>
+        </StackPanel>
+    </Grid>
+</Window>

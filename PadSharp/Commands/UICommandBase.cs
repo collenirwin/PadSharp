@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Input;
 
-namespace PadSharp
+namespace PadSharp.Commands
 {
     /// <summary>
     /// Barebones implementation of ICommand (base class)

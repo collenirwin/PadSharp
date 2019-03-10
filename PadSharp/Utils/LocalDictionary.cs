@@ -5,7 +5,7 @@ using System.IO;
 using System.Net;
 using System.Threading.Tasks;
 
-namespace PadSharp
+namespace PadSharp.Utils
 {
     /// <summary>
     /// Contains logic for loading and searching dictionary.json.

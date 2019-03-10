@@ -1,0 +1,84 @@
+﻿<Window x:Class="PadSharp.FontDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Title="Font" Height="305" Width="600"
+        ResizeMode="NoResize"
+        WindowStartupLocation="CenterOwner"
+        WindowStyle="ToolWindow" Icon="favicon.ico">
+    <Window.Resources>
+        <Style TargetType="TextBox">
+            <Setter Property="BorderThickness" Value="0"/>
+        </Style>
+    </Window.Resources>
+    <StackPanel Background="{DynamicResource backColorLight}">
+        <Border Background="{DynamicResource backColorDark}" BorderBrush="{x:Null}" Height="180" BorderThickness="0" Padding="0">
+            <TextBlock Name="FontDisplay" Text="The quick brown fox jumps over the lazy dog."
+                       TextAlignment="Center" TextWrapping="Wrap" VerticalAlignment="Center"
+                       Tag="Invalid date format"
+                       FontFamily="{Binding TextBoxFontFamily}"
+                       FontSize="{Binding TextBoxFontSize}"
+                       Foreground="{DynamicResource foreColorDark}"/>
+        </Border>
+
+        <Grid Margin="0,10,10,10" HorizontalAlignment="Center">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <Label Grid.Row="0" Grid.Column="0" Foreground="{DynamicResource foreColorDark}"
+                   VerticalAlignment="Center" HorizontalAlignment="Right" Margin="5,0,0,0">
+                Font family
+            </Label>
+            <Border BorderBrush="{DynamicResource backColorLight}" Grid.Row="0" Grid.Column="1"
+                    BorderThickness="0" Margin="0,5,5,5">
+                <ComboBox Name="fontDropdown" Foreground="{DynamicResource foreColorLight}" IsEditable="True"
+                          Margin="0,2,0,2" Width="250" HorizontalAlignment="Left"
+                          ItemsSource="{Binding FontFamilies}"
+                          SelectedItem="{Binding TextBoxFontFamily, Mode=TwoWay}">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Source}" FontFamily="{Binding}"/>
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+            </Border>
+
+            <Label Grid.Row="1" Grid.Column="0" Foreground="{DynamicResource foreColorDark}"
+                   VerticalAlignment="Center" HorizontalAlignment="Right" Margin="5,0,0,0">
+                Size
+            </Label>
+            <Border BorderBrush="{DynamicResource backColorLight}" Grid.Row="1" Grid.Column="1"
+                    BorderThickness="0" Margin="0,5,5,5">
+                <ComboBox Name="fontSizeDropdown" IsEditable="True" Foreground="{DynamicResource foreColorLight}"
+                          Text="{Binding TextBoxFontSize, Mode=TwoWay, UpdateSourceTrigger=Default}"
+                          Margin="0,2,0,2" Width="250" HorizontalAlignment="Left">
+                    <ComboBoxItem>8</ComboBoxItem>
+                    <ComboBoxItem>9</ComboBoxItem>
+                    <ComboBoxItem>10</ComboBoxItem>
+                    <ComboBoxItem>11</ComboBoxItem>
+                    <ComboBoxItem>12</ComboBoxItem>
+                    <ComboBoxItem>14</ComboBoxItem>
+                    <ComboBoxItem>16</ComboBoxItem>
+                    <ComboBoxItem>18</ComboBoxItem>
+                    <ComboBoxItem>20</ComboBoxItem>
+                    <ComboBoxItem>22</ComboBoxItem>
+                    <ComboBoxItem>24</ComboBoxItem>
+                    <ComboBoxItem>26</ComboBoxItem>
+                    <ComboBoxItem>28</ComboBoxItem>
+                    <ComboBoxItem>36</ComboBoxItem>
+                    <ComboBoxItem>48</ComboBoxItem>
+                    <ComboBoxItem>72</ComboBoxItem>
+                </ComboBox>
+            </Border>
+        </Grid>
+    </StackPanel>
+</Window>

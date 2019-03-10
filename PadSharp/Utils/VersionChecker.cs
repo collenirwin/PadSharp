@@ -2,15 +2,27 @@
 using System.Net;
 using System.Threading.Tasks;
 
-namespace PadSharp
+namespace PadSharp.Utils
 {
     /// <summary>
     /// Provides the version number, and a method for checking that the current version is the latest
     /// </summary>
     public static class VersionChecker
     {
-        public const string Version = "1.5.1";
+        /// <summary>
+        /// Version of the currently running application
+        /// </summary>
+        public const string Version = "2.0.0";
+
+        /// <summary>
+        /// URL to the version file on GitHub
+        /// </summary>
         public const string VersionUrl = "https://raw.githubusercontent.com/collenirwin/PadSharp/master/setup/version.txt";
+
+        /// <summary>
+        /// Version grabbed from <see cref="VersionUrl"/>
+        /// </summary>
+        public static string NewVersion { get; private set; }
 
         private static Random _random = new Random();
 
@@ -24,9 +36,12 @@ namespace PadSharp
             {
                 using (var client = new WebClient())
                 {
-                    // fetch version from repo
+                    // fetch new version from the repo
                     // add a random number to the end to avoid caching
-                    return await client.DownloadStringTaskAsync($"{VersionUrl}?r={_random.Next(100000)}");
+                    var newVersion = await client.DownloadStringTaskAsync($"{VersionUrl}?r={_random.Next(100000)}");
+                    NewVersion = newVersion;
+
+                    return newVersion;
                 }
             }
             catch (Exception ex)

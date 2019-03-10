@@ -8,7 +8,7 @@
         ResizeMode="NoResize"
         WindowStartupLocation="CenterOwner"
         WindowStyle="ToolWindow"
-        Closing="Window_Closing">
+        Closing="Window_Closing" Icon="favicon.ico">
     <Window.Resources>
         <Style TargetType="TextBox">
             <Setter Property="BorderThickness" Value="0"/>

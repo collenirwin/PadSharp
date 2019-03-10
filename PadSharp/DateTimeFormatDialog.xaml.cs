@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PadSharp.Utils;
+using System;
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Threading;
@@ -8,26 +9,18 @@ namespace PadSharp
     /// <summary>
     /// Provides an interface for experimenting with date and time format strings
     /// </summary>
-    public partial class DateTimeFormatDialog : Window, INotifyPropertyChanged
+    public partial class DateTimeFormatDialog : Window
     {
-        /// <summary>
-        /// Required to implement INotifyPropertyChanged
-        /// </summary>
-        public event PropertyChangedEventHandler PropertyChanged = (sender, e) => { };
-
         /// <summary>
         /// Timer that updates the date and time displays
         /// </summary>
-        private DispatcherTimer _timer;
+        private readonly DispatcherTimer _timer;
 
         /// <summary>
         /// The owner of this window
         /// </summary>
-        private MainView _mainView;
+        private readonly MainView _mainView;
 
-        /// <summary>
-        /// Provides an interface for experimenting with date and time format strings
-        /// </summary>
         public DateTimeFormatDialog(MainView owner)
         {
             InitializeComponent();

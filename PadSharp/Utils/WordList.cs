@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 
-namespace PadSharp
+namespace PadSharp.Utils
 {
     /// <summary>
     /// Provides functionality for loading and searching the compiled resource 'words.txt' (ENABLE word list)

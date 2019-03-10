@@ -3,7 +3,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-namespace PadSharp
+namespace PadSharp.Utils
 {
     /// <summary>
     /// Contains extension methods for manipulating string

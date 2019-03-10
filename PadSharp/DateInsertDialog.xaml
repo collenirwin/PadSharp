@@ -1,0 +1,21 @@
+﻿<Window x:Class="PadSharp.DateInsertDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Title="Date" Width="200" Height="300" ResizeMode="NoResize" WindowStartupLocation="CenterOwner" Icon="favicon.ico">
+    <StackPanel Background="{DynamicResource backColorDark}">
+        <Calendar Name="DatePicker" SelectionMode="SingleDate" SelectedDatesChanged="DatePicker_SelectedDatesChanged" />
+        <TextBlock Name="DateDisplay" FontSize="12" TextAlignment="Center" Foreground="{DynamicResource foreColorLight}"
+                   ToolTip="This is the date that will be inserted.">
+            1/1/2000
+        </TextBlock>
+        <Button Margin="5,5,5,0" Padding="15,8,15,8" FontSize="12" Style="{DynamicResource ButtonStyle}" Click="DateFormat_Click">
+            Date Format Options
+        </Button>
+        <Button Margin="5,5,5,0" Padding="15,8,15,8" FontSize="12" Style="{DynamicResource ButtonStyle}" Click="InsertDate_Click">
+            Insert Date
+        </Button>
+    </StackPanel>
+</Window>

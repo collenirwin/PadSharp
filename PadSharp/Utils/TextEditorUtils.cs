@@ -3,7 +3,7 @@ using System;
 using System.Linq;
 using System.Text.RegularExpressions;
 
-namespace PadSharp
+namespace PadSharp.Utils
 {
     /// <summary>
     /// Contains various extension methods for working with text within an AvalonEdit TextEditor
@@ -181,6 +181,27 @@ namespace PadSharp
         }
 
         #endregion
+
+        /// <summary>
+        /// Inserts the specified text into the <see cref="TextEditor"/> provided,
+        /// then moves the caret to the end of the inserted text
+        /// </summary>
+        /// <param name="textbox"><see cref="TextEditor"/> to insert text into</param>
+        /// <param name="text">Text to insert</param>
+        public static void Insert(this TextEditor textbox, string text)
+        {
+            // grab position we're going to before we reset textbox.Text
+            int position = textbox.CaretOffset + text.Length;
+
+            // insert the text
+            textbox.Document.Text = textbox.Document.Text.Insert(textbox.CaretOffset, text);
+
+            // go to the previously calculated position
+            textbox.CaretOffset = position;
+
+            // we should not have a selection at this point
+            textbox.SelectionLength = 0;
+        }
 
         /// <summary>
         /// Replaces the selected text within the <see cref="TextEditor"/> provided.

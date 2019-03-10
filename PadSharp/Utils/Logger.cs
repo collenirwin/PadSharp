@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 
-namespace PadSharp
+namespace PadSharp.Utils
 {
     /// <summary>
     /// Contains methods for logging information to a file

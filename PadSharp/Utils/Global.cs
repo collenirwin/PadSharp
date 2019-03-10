@@ -3,7 +3,7 @@ using System;
 using System.Diagnostics;
 using System.IO;
 
-namespace PadSharp
+namespace PadSharp.Utils
 {
     /// <summary>
     /// Container for common constants and methods
