@@ -12,7 +12,7 @@ namespace PadSharp.Utils
         /// <summary>
         /// Version of the currently running application
         /// </summary>
-        public const string Version = "2.0.0";
+        public const string Version = "2.0.1";
 
         /// <summary>
         /// URL to the version file on GitHub

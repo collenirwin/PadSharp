@@ -10,7 +10,7 @@ Automated install?
 ✔ Don't stay open if we can't open the file in the command line args
 ✔ Add ability to customize status bar (maybe more status bar 'stats' too)
 ✔ Space after checkmark?
-Multiline checking? (if so, add to Selection menu)
+✔ Multiline checking? (if so, add to Selection menu)
 ✔ Add keybinds for some settings (word-wrap, topmost, more?)
 Add more tests
 Organize MainView.xaml.cs (maybe move to MVVM?)

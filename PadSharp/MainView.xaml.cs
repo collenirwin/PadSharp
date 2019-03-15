@@ -20,6 +20,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Input;
+using System.Windows.Interop;
 using System.Windows.Media;
 using System.Xml;
 
@@ -281,7 +282,7 @@ namespace PadSharp
         /// </summary>
         public bool LineNumberVisible
         {
-            get => _settings?.LineNumberVisible ?? false;
+            get => _settings?.LineNumberVisible ?? true;
             set
             {
                 _settings.LineNumberVisible = value;
@@ -312,7 +313,7 @@ namespace PadSharp
         /// </summary>
         public bool ColumnNumberVisible
         {
-            get => _settings?.ColumnNumberVisible ?? false;
+            get => _settings?.ColumnNumberVisible ?? true;
             set
             {
                 _settings.ColumnNumberVisible = value;
@@ -551,11 +552,12 @@ namespace PadSharp
                 _settings = new UISettings();
             }
 
-            // apply settings to UI
-            ApplySettings(_settings);
-
             // grab the system fonts, populating FontFamilies
             FontUtils.PopulateFontCollection(FontFamilies);
+
+            // minimize the window so that we can adjust the size/position in the loaded event
+            // without showing the window in its initial state
+            WindowState = WindowState.Minimized;
         }
 
         #endregion
@@ -579,15 +581,6 @@ namespace PadSharp
             TextBoxFontSize = settings.FontSize;
             fontSizeDropdown.Text = TextBoxFontSize.ToString();
 
-            WindowState = settings.WindowState;
-
-            // only apply size settings if not maximized
-            if (WindowState == WindowState.Normal)
-            {
-                Height = settings.Height;
-                Width = settings.Width;
-            }
-
             // only set our location if it's within the bounds of the user's screen(s)
             if (settings.Top >= SystemParameters.VirtualScreenTop && 
                 settings.Left >= SystemParameters.VirtualScreenLeft &&
@@ -596,6 +589,21 @@ namespace PadSharp
             {
                 Top = settings.Top;
                 Left = settings.Left;
+            }
+
+            WindowState = settings.WindowState;
+
+            // make sure we don't start minimized
+            if (WindowState == WindowState.Minimized)
+            {
+                WindowState = WindowState.Normal;
+            }
+
+            // only apply size settings if not maximized
+            if (WindowState == WindowState.Normal)
+            {
+                Height = settings.Height;
+                Width = settings.Width;
             }
 
             // set toggles
@@ -1439,26 +1447,27 @@ namespace PadSharp
 
         private async void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            // we don't need to check for a new verson if we're debugging
-            if (Debugger.IsAttached)
-            {
-                return;
-            }
+            // apply settings to UI
+            ApplySettings(_settings);
 
-            // grab the newest version from the repo
-            string newVersion = await VersionChecker.TryGetNewVersionAsync();
-
-            if (newVersion != null && newVersion != Global.Version)
+            // check for a new version if we're not debugging
+            if (!Debugger.IsAttached)
             {
-                // new version available: download it?
-                var result = Alert
-                    .showDialog($"A new version of {Global.AppName} is available (version {newVersion}). Would you like to download it?",
+                // grab the newest version from the repo
+                string newVersion = await VersionChecker.TryGetNewVersionAsync();
+
+                if (newVersion != null && newVersion != Global.Version)
+                {
+                    // new version available: download it?
+                    var result = Alert.showDialog(
+                        $"A new version of {Global.AppName} is available (version {newVersion}). Would you like to download it?",
                         title: "Pad#", button1Text: "Yes", button2Text: "No");
 
-                // go to the link to the setup file in the repo if the user clicked Yes
-                if (result == AlertResult.button1Clicked)
-                {
-                    Global.Launch("https://github.com/collenirwin/PadSharp/blob/master/setup/pad_sharp_setup.exe");
+                    // go to the link to the setup file in the repo if the user clicked Yes
+                    if (result == AlertResult.button1Clicked)
+                    {
+                        Global.Launch("https://github.com/collenirwin/PadSharp/blob/master/setup/pad_sharp_setup.exe");
+                    }
                 }
             }
         }
