@@ -20,7 +20,6 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Interop;
 using System.Windows.Media;
 using System.Xml;
 
@@ -166,15 +165,7 @@ namespace PadSharp
         /// <summary>
         /// Goes in the title bar of the app. Format: [filename?] - TITLE
         /// </summary>
-        public string FullTitle
-        {
-            get => OpenFile != null ? $"{OpenFile.Name} - {_title}" : _title;
-            set
-            {
-                // just force the UI to update
-                PropertyChanged(this, new PropertyChangedEventArgs(nameof(FullTitle)));
-            }
-        }
+        public string FullTitle => OpenFile != null ? $"{OpenFile.Name} - {_title}" : _title;
 
         private FileInfo _openFile;
 
@@ -190,8 +181,8 @@ namespace PadSharp
                 {
                     _openFile = value;
                     PropertyChanged(this, new PropertyChangedEventArgs(nameof(OpenFile)));
-                    FileSaved = true;
-                    FullTitle = FullTitle; // force title to update
+                    PropertyChanged(this, new PropertyChangedEventArgs(nameof(FileSaved)));
+                    PropertyChanged(this, new PropertyChangedEventArgs(nameof(FullTitle)));
                 }
             }
         }
@@ -199,15 +190,7 @@ namespace PadSharp
         /// <summary>
         /// Is the file saved?
         /// </summary>
-        public bool FileSaved
-        {
-            get => OpenFile != null && textbox.Text == _savedText;
-            set
-            {
-                // hack? update the UI while keeping this essentially readonly
-                PropertyChanged(this, new PropertyChangedEventArgs(nameof(FileSaved)));
-            }
-        }
+        public bool FileSaved => OpenFile != null && textbox.Text == _savedText;
 
         /// <summary>
         /// Date format string we use when inserting dates
@@ -370,7 +353,7 @@ namespace PadSharp
         /// </summary>
         public FontFamily TextBoxFontFamily
         {
-            get => textbox.FontFamily;
+            get => textbox?.FontFamily;
             set
             {
                 if (textbox.FontFamily != value)
@@ -386,7 +369,7 @@ namespace PadSharp
         /// </summary>
         public double TextBoxFontSize
         {
-            get => textbox.FontSize;
+            get => textbox?.FontSize ?? 14;
             set
             {
                 if (textbox.FontSize == value)
@@ -420,17 +403,9 @@ namespace PadSharp
         /// <summary>
         /// Show the Selection Menu whenever text is selected
         /// </summary>
-        public Visibility SelectionMenuVisibility
-        {
-            get => (textbox?.SelectionLength ?? 0) > 0
-                ? Visibility.Visible
-                : Visibility.Collapsed;
-            set
-            {
-                // just force the UI to update
-                PropertyChanged(this, new PropertyChangedEventArgs(nameof(SelectionMenuVisibility)));
-            }
-        }
+        public Visibility SelectionMenuVisibility => (textbox?.SelectionLength ?? 0) > 0
+            ? Visibility.Visible
+            : Visibility.Collapsed;
 
         #endregion
 
@@ -1424,7 +1399,6 @@ namespace PadSharp
 
                         // set savedText to the new text from the file
                         _savedText = fileText;
-                        FileSaved = FileSaved;
 
                         // want to reload it?
                         var result = Alert
@@ -1534,15 +1508,12 @@ namespace PadSharp
         {
             // count the words on textchanged
             WordCount = textbox.Text.Matches(@"\b\S+\b").Count;
-
-            // force UI to acknowledge fileSaved
-            FileSaved = false;
+            PropertyChanged(this, new PropertyChangedEventArgs(nameof(FileSaved)));
         }
 
         private void textArea_SelectionChanged(object sender, EventArgs e)
         {
-            // force UI to acknowledge selectionMenuVisibility (we're not actually affecting it)
-            SelectionMenuVisibility = Visibility.Visible;
+            PropertyChanged(this, new PropertyChangedEventArgs(nameof(SelectionMenuVisibility)));
         }
 
         #endregion

@@ -183,7 +183,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Syntax.xshd" />
     <None Include="packages.config" />
-    <None Include="PadSharp_TemporaryKey.pfx" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
