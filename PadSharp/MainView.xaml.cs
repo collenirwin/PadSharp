@@ -538,10 +538,10 @@ namespace PadSharp
             textbox.ShowLineNumbers = settings.ShowLineNumbers;
             Topmost = settings.Topmost;
 
-            LineNumberVisible = LineNumberVisible;
-            ColumnNumberVisible = ColumnNumberVisible;
-            WordCountVisible = WordCountVisible;
-            CharCountVisible = CharCountVisible;
+            RaiseChange(nameof(LineNumberVisible));
+            RaiseChange(nameof(ColumnNumberVisible));
+            RaiseChange(nameof(WordCountVisible));
+            RaiseChange(nameof(CharCountVisible));
         }
 
         /// <summary>
