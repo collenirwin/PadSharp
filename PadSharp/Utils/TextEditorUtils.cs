@@ -151,26 +151,6 @@ namespace PadSharp.Utils
             return false;
         }
 
-        /// <summary>
-        /// Replaces the first instance of originalText with newText if it exists within the <see cref="TextEditor"/> provided.
-        /// Does nothing otherwise.
-        /// </summary>
-        /// <param name="textbox"><see cref="TextEditor"/> to replace text in</param>
-        /// <param name="originalText">Text to replace</param>
-        /// <param name="newText">Text to replace originalText with</param>
-        private static void ReplaceIfExists(this TextEditor textbox, string originalText, string newText)
-        {
-            int index = textbox.Text.IndexOf(originalText);
-
-            if (index != -1)
-            {
-                // use textbox.Document.Text so that the undo stack is updated
-                textbox.Document.Text = textbox.Document.Text
-                    .Remove(index, originalText.Length)
-                    .Insert(index, newText);
-            }
-        }
-
         #endregion
 
         /// <summary>
