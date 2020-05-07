@@ -197,7 +197,7 @@ namespace PadSharp
         /// </summary>
         public string DateFormat
         {
-            get => _settings?.DateFormat;
+            get => _settings?.DateFormat ?? UISettings.Default.DateFormat;
             set
             {
                 if (_settings.DateFormat != value)
@@ -213,7 +213,7 @@ namespace PadSharp
         /// </summary>
         public string TimeFormat
         {
-            get => _settings?.TimeFormat;
+            get => _settings?.TimeFormat ?? UISettings.Default.TimeFormat;
             set
             {
                 if (_settings.TimeFormat != value)
@@ -265,7 +265,7 @@ namespace PadSharp
         /// </summary>
         public bool LineNumberVisible
         {
-            get => _settings?.LineNumberVisible ?? true;
+            get => _settings?.LineNumberVisible ?? UISettings.Default.LineNumberVisible;
             set
             {
                 _settings.LineNumberVisible = value;
@@ -296,7 +296,7 @@ namespace PadSharp
         /// </summary>
         public bool ColumnNumberVisible
         {
-            get => _settings?.ColumnNumberVisible ?? true;
+            get => _settings?.ColumnNumberVisible ?? UISettings.Default.ColumnNumberVisible;
             set
             {
                 _settings.ColumnNumberVisible = value;
@@ -327,7 +327,7 @@ namespace PadSharp
         /// </summary>
         public bool WordCountVisible
         {
-            get => _settings?.WordCountVisible ?? true;
+            get => _settings?.WordCountVisible ?? UISettings.Default.WordCountVisible;
             set
             {
                 _settings.WordCountVisible = value;
@@ -340,7 +340,7 @@ namespace PadSharp
         /// </summary>
         public bool CharCountVisible
         {
-            get => _settings?.CharCountVisible ?? true;
+            get => _settings?.CharCountVisible ?? UISettings.Default.CharCountVisible;
             set
             {
                 _settings.CharCountVisible = value;
@@ -353,7 +353,7 @@ namespace PadSharp
         /// </summary>
         public FontFamily TextBoxFontFamily
         {
-            get => textbox?.FontFamily;
+            get => textbox?.FontFamily ?? UISettings.Default.FontFamily;
             set
             {
                 if (textbox.FontFamily != value)
@@ -369,7 +369,7 @@ namespace PadSharp
         /// </summary>
         public double TextBoxFontSize
         {
-            get => textbox?.FontSize ?? 14;
+            get => textbox?.FontSize ?? UISettings.Default.FontSize;
             set
             {
                 if (textbox.FontSize == value)

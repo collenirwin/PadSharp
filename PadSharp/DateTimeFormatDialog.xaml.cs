@@ -76,12 +76,12 @@ namespace PadSharp
             // if there was invalid input, reset to the defaults
             if (DateDisplay.Text == DateDisplay.Tag.ToString())
             {
-                _mainView.DateFormat = UISettings.DefaultDateFormat;
+                _mainView.DateFormat = UISettings.Default.DateFormat;
             }
 
             if (TimeDisplay.Text == TimeDisplay.Tag.ToString())
             {
-                _mainView.TimeFormat = UISettings.DefaultTimeFormat;
+                _mainView.TimeFormat = UISettings.Default.TimeFormat;
             }
 
             _timer.Stop();
@@ -94,8 +94,8 @@ namespace PadSharp
 
         private void Defaults_Click(object sender, EventArgs e)
         {
-            _mainView.DateFormat = UISettings.DefaultDateFormat;
-            _mainView.TimeFormat = UISettings.DefaultTimeFormat;
+            _mainView.DateFormat = UISettings.Default.DateFormat;
+            _mainView.TimeFormat = UISettings.Default.TimeFormat;
         }
 
         private void Guide_Click(object sender, EventArgs e)
