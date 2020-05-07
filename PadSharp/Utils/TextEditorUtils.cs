@@ -197,7 +197,8 @@ namespace PadSharp.Utils
         }
 
         /// <summary>
-        /// Toggles the given lineStart at the start of each select selected line (regardless of start/caret position).
+        /// Toggles the given lineStart at the start of each select selected line
+        /// (regardless of start/caret position).
         /// Selects the line the caret is on if there is no current selection.
         /// </summary>
         /// <param name="textbox"><see cref="TextEditor"/> we're working with</param>

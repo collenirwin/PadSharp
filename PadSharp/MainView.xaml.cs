@@ -951,9 +951,9 @@ namespace PadSharp
             string text = textbox.SelectedText;
 
             // toggle marker for all lines
-            if (text.Contains('\n'))
+            if (text == "" || text.Contains('\n'))
             {
-                textbox.ReplaceSelectedText(text.ToggleLineStart(marker + " "));
+                textbox.ToggleSelectionLineStart(marker + " ");
             }
             else // toggle bold within line
             {

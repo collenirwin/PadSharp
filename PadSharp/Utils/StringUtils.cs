@@ -124,11 +124,22 @@ namespace PadSharp.Utils
         /// <returns>text with start and end added or removed</returns>
         public static string ToggleStartAndEnd(this string text, string lineStart, string lineEnd)
         {
-            // start and end aalready there
-            if (text.StartsWith(lineStart) && text.EndsWith(lineEnd))
+            bool haveStart = text.StartsWith(lineStart);
+            bool haveEnd = text.EndsWith(lineEnd);
+
+            // start and end already there
+            if (haveStart && haveEnd)
             {
                 // return the string without the start and end
                 return text.Substring(lineStart.Length, text.Length - lineEnd.Length - lineStart.Length);
+            }
+            else if (haveStart)
+            {
+                return text + lineEnd;
+            }
+            else if (haveEnd)
+            {
+                return lineStart + text;
             }
 
             return lineStart + text + lineEnd;
