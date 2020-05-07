@@ -15,10 +15,7 @@ namespace PadSharp
         /// <summary>
         /// Singleton instance of <see cref="AboutWindow"/>
         /// </summary>
-        public static AboutWindow Instance
-        {
-            get => _instance ?? (_instance = new AboutWindow());
-        }
+        public static AboutWindow Instance => _instance ?? (_instance = new AboutWindow());
 
         private AboutWindow()
         {

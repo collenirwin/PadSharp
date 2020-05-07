@@ -114,9 +114,6 @@
     <Compile Include="FontDialog.xaml.cs">
       <DependentUpon>FontDialog.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ThemeEditor.xaml.cs">
-      <DependentUpon>ThemeEditor.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Utils\Crypto.cs" />
     <Compile Include="Utils\FontUtils.cs" />
     <Compile Include="Utils\StringUtils.cs" />
@@ -158,10 +155,6 @@
       <DependentUpon>MainView.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="ThemeEditor.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
