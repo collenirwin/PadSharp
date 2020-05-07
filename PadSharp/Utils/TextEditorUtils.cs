@@ -135,10 +135,7 @@ namespace PadSharp.Utils
                     return false;
                 }
 
-                var options = matchCase
-                    ? RegexOptions.None
-                    : RegexOptions.IgnoreCase;
-
+                var options = matchCase ? RegexOptions.None : RegexOptions.IgnoreCase;
                 options |= RegexOptions.Multiline;
 
                 var _regex = new Regex(regex, options);
@@ -149,15 +146,9 @@ namespace PadSharp.Utils
                     textbox.Document.Text = _regex.Replace(textbox.Document.Text, replacement);
                     return true;
                 }
-
-                // nothing to replace
-                return false;
             }
-            catch
-            {
-                // invalid regular expression
-                return false;
-            }
+            catch { /* invalid regex - continue */ }
+            return false;
         }
 
         /// <summary>

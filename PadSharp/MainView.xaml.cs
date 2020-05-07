@@ -89,68 +89,68 @@ namespace PadSharp
 
         #region File
 
-        public UICommand NewCommand { get; }
-        public UICommand NewWindowCommand { get; }
-        public UICommand OpenCommand { get; }
-        public UICommand OpenInExplorerCommand { get; }
-        public UICommand SaveCommand { get; }
-        public UICommand SaveAsCommand { get; }
-        public UICommand PrintCommand { get; }
-        public UICommand ExitCommand { get; }
+        public ICommand NewCommand { get; }
+        public ICommand NewWindowCommand { get; }
+        public ICommand OpenCommand { get; }
+        public ICommand OpenInExplorerCommand { get; }
+        public ICommand SaveCommand { get; }
+        public ICommand SaveAsCommand { get; }
+        public ICommand PrintCommand { get; }
+        public ICommand ExitCommand { get; }
 
         #endregion
 
         #region Edit
 
-        public UICommand UndoCommand { get; }
-        public UICommand RedoCommand { get; }
-        public UICommand CutCommand { get; }
-        public UICommand CopyCommand { get; }
-        public UICommand PasteCommand { get; }
-        public UICommand FindCommand { get; }
-        public UICommand FindAndReplaceCommand { get; }
-        public UICommand GotoCommand { get; }
-        public UICommand GotoGoCommand { get; }
-        public UICommand CheckSpellingCommand { get; }
-        public UICommand NormalizeLineEndingdCommand { get; }
-        public UICommand SelectAllCommand { get; }
+        public ICommand UndoCommand { get; }
+        public ICommand RedoCommand { get; }
+        public ICommand CutCommand { get; }
+        public ICommand CopyCommand { get; }
+        public ICommand PasteCommand { get; }
+        public ICommand FindCommand { get; }
+        public ICommand FindAndReplaceCommand { get; }
+        public ICommand GotoCommand { get; }
+        public ICommand GotoGoCommand { get; }
+        public ICommand CheckSpellingCommand { get; }
+        public ICommand NormalizeLineEndingdCommand { get; }
+        public ICommand SelectAllCommand { get; }
 
         #endregion
 
         #region Insert
 
-        public UICommand CheckMarkCommand { get; }
-        public UICommand AddCheckMarkCommand { get; }
-        public UICommand DateInsertDialogCommand { get; }
-        public UICommand TodaysDateCommand { get;}
-        public UICommand CurrentTimeCommand { get; }
-        public UICommand DateAndTimeCommand { get; }
+        public ICommand CheckMarkCommand { get; }
+        public ICommand AddCheckMarkCommand { get; }
+        public ICommand DateInsertDialogCommand { get; }
+        public ICommand TodaysDateCommand { get;}
+        public ICommand CurrentTimeCommand { get; }
+        public ICommand DateAndTimeCommand { get; }
 
         #endregion
 
         #region Selection
 
-        public UICommand BoldCommand { get; }
-        public UICommand ItalicCommand { get; }
-        public UICommand UnderlineCommand { get; }
-        public UICommand LowerCaseCommand { get; }
-        public UICommand UpperCaseCommand { get; }
-        public UICommand TitleCaseCommand { get; }
-        public UICommand ToggleCaseCommand { get; }
-        public UICommand DefineCommand { get; }
-        public UICommand ReverseCommand { get; }
-        public UICommandWithParam SortCommand { get; }
+        public ICommand BoldCommand { get; }
+        public ICommand ItalicCommand { get; }
+        public ICommand UnderlineCommand { get; }
+        public ICommand LowerCaseCommand { get; }
+        public ICommand UpperCaseCommand { get; }
+        public ICommand TitleCaseCommand { get; }
+        public ICommand ToggleCaseCommand { get; }
+        public ICommand DefineCommand { get; }
+        public ICommand ReverseCommand { get; }
+        public ICommand SortCommand { get; }
 
         #endregion
 
         #region Settings
 
-        public UICommand FontCommand { get; }
-        public UICommand DateTimeFormatCommand { get; }
-        public UICommand ToggleLineNumbersCommand { get; }
-        public UICommand ToggleStatusBarCommand { get; }
-        public UICommand ToggleWordWrapCommand { get; }
-        public UICommand ToggleTopmostCommand { get; }
+        public ICommand FontCommand { get; }
+        public ICommand DateTimeFormatCommand { get; }
+        public ICommand ToggleLineNumbersCommand { get; }
+        public ICommand ToggleStatusBarCommand { get; }
+        public ICommand ToggleWordWrapCommand { get; }
+        public ICommand ToggleTopmostCommand { get; }
 
         #endregion
 
@@ -378,23 +378,23 @@ namespace PadSharp
             OpenCommand = new UICommand(Open_Command);
             OpenInExplorerCommand = new UICommand(OpenInExplorer_Command);
             SaveCommand = new UICommand(Save_Command);
-            SaveAsCommand = new UICommand(SaveAs_Command);
+            SaveAsCommand = new UICommand(SaveAs);
             PrintCommand = new UICommand(Print_Command);
-            ExitCommand = new UICommand(Exit_Command);
+            ExitCommand = new UICommand(Close);
 
             // edit
-            UndoCommand = new UICommand(Undo_Command);
-            RedoCommand = new UICommand(Redo_Command);
-            CutCommand = new UICommand(Cut_Command);
-            CopyCommand = new UICommand(Copy_Command);
-            PasteCommand = new UICommand(Paste_Command);
+            UndoCommand = new UICommand(() => textbox.Undo());
+            RedoCommand = new UICommand(() => textbox.Redo());
+            CutCommand = new UICommand(() => textbox.Cut());
+            CopyCommand = new UICommand(() => textbox.Copy());
+            PasteCommand = new UICommand(() => textbox.Paste());
             FindCommand = new UICommand(Find_Command);
             FindAndReplaceCommand = new UICommand(FindReplace_Command);
             GotoCommand = new UICommand(Goto_Command);
             GotoGoCommand = new UICommand(GotoGo_Command);
             CheckSpellingCommand = new UICommand(CheckSpelling_Command);
             NormalizeLineEndingdCommand = new UICommand(NormalizeLineEndings_Command);
-            SelectAllCommand = new UICommand(SelectAll_Command);
+            SelectAllCommand = new UICommand(() => textbox.SelectAll());
 
             // insert
             CheckMarkCommand = new UICommand(CheckMark_Command);
@@ -687,11 +687,6 @@ namespace PadSharp
             }
         }
 
-        private void SaveAs_Command()
-        {
-            SaveAs();
-        }
-
         private void Print_Command()
         {
             var printDialog = new PrintDialog();
@@ -708,39 +703,9 @@ namespace PadSharp
             }
         }
 
-        private void Exit_Command()
-        {
-            Close();
-        }
-
         #endregion
 
         #region Edit
-
-        private void Undo_Command()
-        {
-            textbox.Undo();
-        }
-
-        private void Redo_Command()
-        {
-            textbox.Redo();
-        }
-
-        private void Cut_Command()
-        {
-            textbox.Cut();
-        }
-
-        private void Copy_Command()
-        {
-            textbox.Copy();
-        }
-
-        private void Paste_Command()
-        {
-            textbox.Paste();
-        }
 
         private void Find_Command()
         {
@@ -826,11 +791,6 @@ namespace PadSharp
             // give the user some feedback - this change won't be obvious
             Alert.showDialog("Done. All line endings have been converted to the Windows format (CRLF).",
                 Global.AppName);
-        }
-
-        private void SelectAll_Command()
-        {
-            textbox.SelectAll();
         }
 
         #endregion
