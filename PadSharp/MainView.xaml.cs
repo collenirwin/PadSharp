@@ -507,11 +507,14 @@ namespace PadSharp
             TextBoxFontSize = settings.FontSize;
             fontSizeDropdown.Text = TextBoxFontSize.ToString();
 
+            var topBound = SystemParameters.VirtualScreenHeight - Math.Abs(SystemParameters.VirtualScreenTop) - Height;
+            var leftBound = SystemParameters.VirtualScreenWidth - Math.Abs(SystemParameters.VirtualScreenLeft) - Width;
+
             // only set our location if it's within the bounds of the user's screen(s)
             if (settings.Top >= SystemParameters.VirtualScreenTop && 
                 settings.Left >= SystemParameters.VirtualScreenLeft &&
-                settings.Top <= (SystemParameters.VirtualScreenHeight - Math.Abs(SystemParameters.VirtualScreenTop) - Height) &&
-                settings.Left <= (SystemParameters.VirtualScreenWidth - Math.Abs(SystemParameters.VirtualScreenLeft) - Width))
+                settings.Top <= topBound &&
+                settings.Left <= leftBound)
             {
                 Top = settings.Top;
                 Left = settings.Left;
@@ -643,11 +646,10 @@ namespace PadSharp
             };
 
             var result = openDialog.ShowDialog();
-
             string path = openDialog.FileName;
 
             // if a file was selected, save it
-            if (result == true && path != null && path != "")
+            if (result.GetValueOrDefault() && !string.IsNullOrEmpty(path))
             {
                 Open(path);
             }
@@ -695,17 +697,14 @@ namespace PadSharp
             var printDialog = new PrintDialog();
 
             // user pressed 'ok' to print
-            if (printDialog.ShowDialog() == true)
+            if (printDialog.ShowDialog().GetValueOrDefault())
             {
                 // get a FlowDocument from our editor
                 var flowDoc = DocumentPrinter.CreateFlowDocumentForEditor(textbox);
 
                 printDialog.PrintDocument(
-                    // get document paginator from flowdoc
                     ((IDocumentPaginatorSource)flowDoc).DocumentPaginator,
-
-                    // description
-                    "Pad#: " + lblFileName.Text);
+                    $"Pad#: {lblFileName.Text}");
             }
         }
 
@@ -822,10 +821,11 @@ namespace PadSharp
         private void NormalizeLineEndings_Command()
         {
             // set all line endings to \r\n
-            textbox.NormalizeLineEndings(true);
+            textbox.NormalizeLineEndings(windows: true);
 
             // give the user some feedback - this change won't be obvious
-            Alert.showDialog("Done. All line endings have been converted to the Windows format (CRLF).", Global.AppName);
+            Alert.showDialog("Done. All line endings have been converted to the Windows format (CRLF).",
+                Global.AppName);
         }
 
         private void SelectAll_Command()
@@ -844,7 +844,7 @@ namespace PadSharp
 
         private void DateInsertDialog_Command()
         {
-            var dateInsertDialog = new DateInsertDialog(this);
+            var dateInsertDialog = new DateInsertDialog(owner: this);
             dateInsertDialog.ShowDialog();
         }
 
@@ -932,7 +932,8 @@ namespace PadSharp
 
                 if (!successful)
                 {
-                    Alert.showDialog("Couldn't download the dictionary. Please ensure that you are connected to the internet and try again.",
+                    Alert.showDialog("Couldn't download the dictionary. " +
+                        "Please ensure that you are connected to the internet and try again.",
                         Global.AppName);
                     return;
                 }
@@ -946,7 +947,8 @@ namespace PadSharp
 
                 if (!successful)
                 {
-                    var result = Alert.showDialog($"Couldn't load the local dictionary. Would you like to view the log?",
+                    var result = Alert.showDialog($"Couldn't load the local dictionary. " +
+                        "Would you like to view the log?",
                         title: Global.AppName, button1Text: "Yes", button2Text: "No");
 
                     if (result == AlertResult.button1Clicked)
@@ -1016,8 +1018,7 @@ namespace PadSharp
             UncheckSiblings(item);
 
             // set theme for app
-            Application.Current.Resources.
-                MergedDictionaries[0].Source = ThemeManager.themeUri(_theme);
+            Application.Current.Resources.MergedDictionaries[0].Source = ThemeManager.themeUri(_theme);
         }
 
         private void theme_Unchecked(object sender, RoutedEventArgs e)
@@ -1033,13 +1034,13 @@ namespace PadSharp
 
         private void Font_Command()
         {
-            var fontDialog = new FontDialog(this);
+            var fontDialog = new FontDialog(owner: this);
             fontDialog.ShowDialog();
         }
 
         private void DateTimeFormat_Command()
         {
-            var dateTimeFormatDialog = new DateTimeFormatDialog(this);
+            var dateTimeFormatDialog = new DateTimeFormatDialog(owner: this);
             dateTimeFormatDialog.ShowDialog();
         }
 
@@ -1089,7 +1090,8 @@ namespace PadSharp
                 catch (Exception ex)
                 {
                     Global.ActionMessage(
-                        "Cannot access your APPDATA folder, which is where the font style guide is located.", ex.Message);
+                        "Cannot access your APPDATA folder, which is where the font style guide is located.",
+                        ex.Message);
                     return;
                 }
             }
@@ -1124,11 +1126,11 @@ namespace PadSharp
 
             if (definition != null)
             {
-                Alert.showDialog(word + ": " + definition, Global.AppName);
+                Alert.showDialog($"{word}: {definition}", Global.AppName);
             }
             else
             {
-                Alert.showDialog("Couldn't find a definition for '" + word + "'", Global.AppName);
+                Alert.showDialog($"Couldn't find a definition for '{word}'", Global.AppName);
             }
         }
 
@@ -1230,10 +1232,8 @@ namespace PadSharp
         /// <param name="lookback">Look back from this point?</param>
         private async void FindHelper(int start, bool lookback = false)
         {
-            bool _matchCase = matchCase.IsChecked == true;
-
-            bool found = textbox.FindNext(txtFind.Text, 
-                start, _matchCase, lookback);
+            bool _matchCase = matchCase.IsChecked.GetValueOrDefault();
+            bool found = textbox.FindNext(txtFind.Text, start, _matchCase, lookback);
 
             SetFoundForeground(found);
 
@@ -1245,25 +1245,26 @@ namespace PadSharp
             }
 
             // update lblMatches with the number of matches, or '-' if there is an invalid regex string
-            lblMatches.Text = (await textbox.Document.Text.TryCountMatchesAsync(txtFind.Text, _matchCase))?.ToString() ?? "-";
+            lblMatches.Text = (await textbox.Document.Text
+                .TryCountMatchesAsync(txtFind.Text, _matchCase))?.ToString() ?? "-";
         }
 
         private void txtFind_TextChanged(object sender, RoutedEventArgs e)
         {
             // find first instance of text entered
-            FindHelper(0);
+            FindHelper(start: 0);
         }
 
         private void findUp_Click(object sender, RoutedEventArgs e)
         {
             // look back from selection
-            FindHelper(textbox.SelectionStart, true);
+            FindHelper(start: textbox.SelectionStart, lookback: true);
         }
 
         private void findDown_Click(object sender, RoutedEventArgs e)
         {
             // look forward from selection
-            FindHelper(textbox.SelectionStart + textbox.SelectionLength);
+            FindHelper(start: textbox.SelectionStart + textbox.SelectionLength);
         }
 
         private void closeFindReplace_Click(object sender, RoutedEventArgs e)
@@ -1279,25 +1280,23 @@ namespace PadSharp
 
         private void replaceNext_Click(object sender, RoutedEventArgs e)
         {
-            bool replaced = textbox.ReplaceNext(txtFind.Text, txtReplace.Text,
-                textbox.SelectionStart + textbox.SelectionLength, matchCase.IsChecked == true);
+            textbox.ReplaceNext(txtFind.Text, txtReplace.Text,
+                textbox.SelectionStart + textbox.SelectionLength, matchCase.IsChecked.GetValueOrDefault());
 
             // run find again to update the ui
-            FindHelper(0);
+            FindHelper(start: 0);
         }
 
         private void replaceAll_Click(object sender, RoutedEventArgs e)
         {
             textbox.ReplaceAll(txtFind.Text, txtReplace.Text, 
-                matchCase.IsChecked == true, (count) =>
-            {
+                matchCase.IsChecked.GetValueOrDefault(), count =>
                 // this determines whether or not to run the replace
-                return count > 0 && Alert.showDialog($"Replace {count} instances of {txtFind.Text} with {txtReplace.Text}?",
-                    title: Global.AppName, button1Text: "OK", button2Text: "Cancel") == AlertResult.button1Clicked;
-            });
+                count > 0 && Alert.showDialog($"Replace {count} instances of {txtFind.Text} with {txtReplace.Text}?",
+                    title: Global.AppName, button1Text: "OK", button2Text: "Cancel") == AlertResult.button1Clicked);
 
             // run find again to update the ui
-            FindHelper(0);
+            FindHelper(start: 0);
         }
 
         #endregion
@@ -1308,7 +1307,7 @@ namespace PadSharp
         {
             if (int.TryParse(txtGoto.Text, out int line))
             {
-                textbox.ScrollTo(line, 0);
+                textbox.ScrollTo(line, column: 0);
             }
             else
             {
@@ -1352,9 +1351,9 @@ namespace PadSharp
                         _savedText = fileText;
 
                         // want to reload it?
-                        var result = Alert
-                            .showDialog($"'{OpenFile.Name}' has been modified by another program. Would you like to reload it?",
-                                title: Global.AppName, button1Text: "Reload from file", button2Text: "Keep my changes");
+                        var result = Alert.showDialog($"'{OpenFile.Name}' has been modified by another program. " +
+                            "Would you like to reload it?",
+                            title: Global.AppName, button1Text: "Reload from file", button2Text: "Keep my changes");
 
                         // yes i do
                         if (result == AlertResult.button1Clicked)
@@ -1385,13 +1384,15 @@ namespace PadSharp
                 {
                     // new version available: download it?
                     var result = Alert.showDialog(
-                        $"A new version of {Global.AppName} is available (version {newVersion}). Would you like to download it?",
+                        $"A new version of {Global.AppName} is available (version {newVersion}). " +
+                        "Would you like to download it?",
                         title: "Pad#", button1Text: "Yes", button2Text: "No");
 
                     // go to the link to the setup file in the repo if the user clicked Yes
                     if (result == AlertResult.button1Clicked)
                     {
-                        Global.Launch("https://github.com/collenirwin/PadSharp/blob/master/setup/pad_sharp_setup.exe");
+                        Global.Launch(
+                            "https://github.com/collenirwin/PadSharp/blob/master/setup/pad_sharp_setup.exe");
                     }
                 }
             }
