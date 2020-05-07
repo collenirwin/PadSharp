@@ -71,7 +71,9 @@
         <KeyBinding Modifiers="Alt" Key="R" Command="{Binding ReverseCommand}"/>
         <KeyBinding Modifiers="Alt" Key="S" Command="{Binding SortCommand}" CommandParameter="{StaticResource false}"/>
         <KeyBinding Modifiers="Ctrl+Alt" Key="S" Command="{Binding SortCommand}" CommandParameter="{StaticResource true}"/>
-        
+        <KeyBinding Modifiers="Alt" Key="Up" Command="{Binding UpperCaseCommand}"/>
+        <KeyBinding Modifiers="Alt" Key="Down" Command="{Binding LowerCaseCommand}"/>
+
         <!-- Settings -->
         <KeyBinding Modifiers="Alt" Key="L" Command="{Binding ToggleLineNumbersCommand}"/>
         <KeyBinding Modifiers="Alt" Key="B" Command="{Binding ToggleStatusBarCommand}"/>
@@ -142,8 +144,10 @@
                         <MenuItem Header="Underline" InputGestureText="Ctrl+U" Command="{Binding UnderlineCommand}"/>
                         <Separator/>
                         <MenuItem Header="Convert Case">
-                            <MenuItem Header="lower case" Command="{Binding LowerCaseCommand}" Style="{StaticResource checkMenu}"/>
-                            <MenuItem Header="UPPER CASE" Command="{Binding UpperCaseCommand}" Style="{StaticResource checkMenu}"/>
+                            <MenuItem Header="UPPER CASE" InputGestureText="Alt+Up"
+                                      Command="{Binding UpperCaseCommand}" Style="{StaticResource checkMenu}"/>
+                            <MenuItem Header="lower case" InputGestureText="Alt+Down"
+                                      Command="{Binding LowerCaseCommand}" Style="{StaticResource checkMenu}"/>
                             <MenuItem Header="Title Case" Command="{Binding TitleCaseCommand}" Style="{StaticResource checkMenu}"/>
                             <MenuItem Header="tOGGLE cASE" Command="{Binding ToggleCaseCommand}" Style="{StaticResource checkMenu}"/>
                         </MenuItem>
