@@ -9,12 +9,14 @@ using PadSharp.Commands;
 using PadSharp.Utils;
 using RegularExtensions;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
@@ -180,9 +182,9 @@ namespace PadSharp
                 if (_openFile != value)
                 {
                     _openFile = value;
-                    PropertyChanged(this, new PropertyChangedEventArgs(nameof(OpenFile)));
-                    PropertyChanged(this, new PropertyChangedEventArgs(nameof(FileSaved)));
-                    PropertyChanged(this, new PropertyChangedEventArgs(nameof(FullTitle)));
+                    RaiseChange(nameof(OpenFile));
+                    RaiseChange(nameof(FileSaved));
+                    RaiseChange(nameof(FullTitle));
                 }
             }
         }
@@ -198,14 +200,8 @@ namespace PadSharp
         public string DateFormat
         {
             get => _settings?.DateFormat ?? UISettings.Default.DateFormat;
-            set
-            {
-                if (_settings.DateFormat != value)
-                {
-                    _settings.DateFormat = value;
-                    PropertyChanged(this, new PropertyChangedEventArgs(nameof(DateFormat)));
-                }
-            }
+            set => SetAndRaiseIfChanged(oldValue: _settings.DateFormat, newValue: value,
+                () => _settings.DateFormat = value);
         }
 
         /// <summary>
@@ -214,14 +210,8 @@ namespace PadSharp
         public string TimeFormat
         {
             get => _settings?.TimeFormat ?? UISettings.Default.TimeFormat;
-            set
-            {
-                if (_settings.TimeFormat != value)
-                {
-                    _settings.TimeFormat = value;
-                    PropertyChanged(this, new PropertyChangedEventArgs(nameof(TimeFormat)));
-                }
-            }
+            set => SetAndRaiseIfChanged(oldValue: _settings.TimeFormat, newValue: value,
+                () => _settings.TimeFormat = value);
         }
 
         /// <summary>
@@ -238,7 +228,7 @@ namespace PadSharp
                 }
 
                 statusBar.Visibility = value ? Visibility.Visible : Visibility.Collapsed;
-                PropertyChanged(this, new PropertyChangedEventArgs(nameof(StatusBarVisible)));
+                RaiseChange(nameof(StatusBarVisible));
             }
         }
 
@@ -250,14 +240,7 @@ namespace PadSharp
         public int LineNumber
         {
             get => _lineNumber;
-            set
-            {
-                if (_lineNumber != value)
-                {
-                    _lineNumber = value;
-                    PropertyChanged(this, new PropertyChangedEventArgs(nameof(LineNumber)));
-                }
-            }
+            set => SetAndRaiseIfChanged(ref _lineNumber, value);
         }
 
         /// <summary>
@@ -266,11 +249,8 @@ namespace PadSharp
         public bool LineNumberVisible
         {
             get => _settings?.LineNumberVisible ?? UISettings.Default.LineNumberVisible;
-            set
-            {
-                _settings.LineNumberVisible = value;
-                PropertyChanged(this, new PropertyChangedEventArgs(nameof(LineNumberVisible)));
-            }
+            set => SetAndRaiseIfChanged(oldValue: _settings.LineNumberVisible, newValue: value,
+                () => _settings.LineNumberVisible = value);
         }
 
         private int _columnNumber = 1;
@@ -281,14 +261,7 @@ namespace PadSharp
         public int ColumnNumber
         {
             get => _columnNumber;
-            set
-            {
-                if (_columnNumber != value)
-                {
-                    _columnNumber = value;
-                    PropertyChanged(this, new PropertyChangedEventArgs(nameof(ColumnNumber)));
-                }
-            }
+            set => SetAndRaiseIfChanged(ref _columnNumber, value);
         }
 
         /// <summary>
@@ -297,11 +270,8 @@ namespace PadSharp
         public bool ColumnNumberVisible
         {
             get => _settings?.ColumnNumberVisible ?? UISettings.Default.ColumnNumberVisible;
-            set
-            {
-                _settings.ColumnNumberVisible = value;
-                PropertyChanged(this, new PropertyChangedEventArgs(nameof(ColumnNumberVisible)));
-            }
+            set => SetAndRaiseIfChanged(oldValue: _settings.ColumnNumberVisible, newValue: value,
+                () => _settings.ColumnNumberVisible = value);
         }
 
         private int _wordCount = 0;
@@ -312,14 +282,7 @@ namespace PadSharp
         public int WordCount
         {
             get => _wordCount;
-            set
-            {
-                if (_wordCount != value)
-                {
-                    _wordCount = value;
-                    PropertyChanged(this, new PropertyChangedEventArgs(nameof(WordCount)));
-                }
-            }
+            set => SetAndRaiseIfChanged(ref _wordCount, value);
         }
 
         /// <summary>
@@ -328,11 +291,8 @@ namespace PadSharp
         public bool WordCountVisible
         {
             get => _settings?.WordCountVisible ?? UISettings.Default.WordCountVisible;
-            set
-            {
-                _settings.WordCountVisible = value;
-                PropertyChanged(this, new PropertyChangedEventArgs(nameof(WordCountVisible)));
-            }
+            set => SetAndRaiseIfChanged(oldValue: _settings.WordCountVisible, newValue: value,
+                () => _settings.WordCountVisible = value);
         }
 
         /// <summary>
@@ -341,11 +301,8 @@ namespace PadSharp
         public bool CharCountVisible
         {
             get => _settings?.CharCountVisible ?? UISettings.Default.CharCountVisible;
-            set
-            {
-                _settings.CharCountVisible = value;
-                PropertyChanged(this, new PropertyChangedEventArgs(nameof(CharCountVisible)));
-            }
+            set => SetAndRaiseIfChanged(oldValue: _settings.CharCountVisible, newValue: value,
+                () => _settings.CharCountVisible = value);
         }
 
         /// <summary>
@@ -354,14 +311,8 @@ namespace PadSharp
         public FontFamily TextBoxFontFamily
         {
             get => textbox?.FontFamily ?? UISettings.Default.FontFamily;
-            set
-            {
-                if (textbox.FontFamily != value)
-                {
-                    textbox.FontFamily = value;
-                    PropertyChanged(this, new PropertyChangedEventArgs(nameof(TextBoxFontFamily)));
-                }
-            }
+            set => SetAndRaiseIfChanged(oldValue: textbox.FontFamily, newValue: value,
+                () => textbox.FontFamily = value);
         }
 
         /// <summary>
@@ -391,7 +342,7 @@ namespace PadSharp
                     textbox.FontSize = value;
                 }
 
-                PropertyChanged(this, new PropertyChangedEventArgs(nameof(TextBoxFontSize)));
+                RaiseChange(nameof(TextBoxFontSize));
             }
         }
 
@@ -1508,12 +1459,12 @@ namespace PadSharp
         {
             // count the words on textchanged
             WordCount = textbox.Text.Matches(@"\b\S+\b").Count;
-            PropertyChanged(this, new PropertyChangedEventArgs(nameof(FileSaved)));
+            RaiseChange(nameof(FileSaved));
         }
 
         private void textArea_SelectionChanged(object sender, EventArgs e)
         {
-            PropertyChanged(this, new PropertyChangedEventArgs(nameof(SelectionMenuVisibility)));
+            RaiseChange(nameof(SelectionMenuVisibility));
         }
 
         #endregion
@@ -1634,6 +1585,55 @@ namespace PadSharp
             if (result == true && !string.IsNullOrEmpty(path))
             {
                 Save(path);
+            }
+        }
+
+        #endregion
+
+        #region PropertyChanged Helpers
+
+        /// <summary>
+        /// Raises the <see cref="PropertyChanged"/> event with the given property name
+        /// </summary>
+        /// <param name="propName">Name of the property that changed</param>
+        private void RaiseChange(string propName)
+        {
+            PropertyChanged(this, new PropertyChangedEventArgs(propName));
+        }
+
+        /// <summary>
+        /// Assigns to the given property and calls <see cref="RaiseChange"/>,
+        /// but only if the new value differs from the old
+        /// </summary>
+        /// <typeparam name="T">Type of the property</typeparam>
+        /// <param name="prop">Reference to the property to set</param>
+        /// <param name="newValue">New value for the property</param>
+        /// <param name="propName">Automatically assigned property name</param>
+        private void SetAndRaiseIfChanged<T>(ref T prop, T newValue, [CallerMemberName] string propName = "")
+        {
+            if (!EqualityComparer<T>.Default.Equals(prop, newValue))
+            {
+                prop = newValue;
+                RaiseChange(propName);
+            }
+        }
+
+        /// <summary>
+        /// Calls the setter action and calls <see cref="RaiseChange"/>,
+        /// but only if the new value differs from the old
+        /// </summary>
+        /// <typeparam name="T">Type of the property</typeparam>
+        /// <param name="oldValue">Reference to the property to set</param>
+        /// <param name="newValue">New value for the property</param>
+        /// <param name="setter">Action to assign the new value</param>
+        /// <param name="propName">Automatically assigned property name</param>
+        private void SetAndRaiseIfChanged<T>(T oldValue, T newValue, Action setter,
+            [CallerMemberName] string propName = "")
+        {
+            if (!EqualityComparer<T>.Default.Equals(oldValue, newValue))
+            {
+                setter();
+                RaiseChange(propName);
             }
         }
 
