@@ -10,7 +10,7 @@ namespace PadSharp.Utils
     /// </summary>
     public static class WordList
     {
-        private static HashSet<string> _words = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        private static readonly HashSet<string> _words = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
         /// <summary>
         /// Case insensitive HashSet of all (most) English words.

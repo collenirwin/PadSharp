@@ -171,22 +171,31 @@
                             <TextBlock Text="Settings" VerticalAlignment="Center"/>
                         </MenuItem.Header>
                         <MenuItem Header="Theme" Name="themeMenu">
-                            <MenuItem Header="Light" IsCheckable="True" Checked="theme_Checked" Unchecked="theme_Unchecked" Style="{StaticResource checkMenu}"/>
-                            <MenuItem Header="Dark" IsCheckable="True" Checked="theme_Checked" Unchecked="theme_Unchecked" Style="{StaticResource checkMenu}"/>
+                            <MenuItem Header="Light" IsCheckable="True"
+                                      Checked="theme_Checked" Unchecked="theme_Unchecked"
+                                      Style="{StaticResource checkMenu}"/>
+                            <MenuItem Header="Dark" IsCheckable="True"
+                                      Checked="theme_Checked" Unchecked="theme_Unchecked"
+                                      Style="{StaticResource checkMenu}"/>
                         </MenuItem>
                         <MenuItem Header="Font" Command="{Binding FontCommand}"/>
                         <MenuItem Header="Date &amp; Time Format" Name="dateFormatMenu" Command="{Binding DateTimeFormatCommand}"/>
                         <MenuItem Header="Status Bar">
                             <MenuItem Header="Show Status Bar" Name="showStatusBarDropdown" InputGestureText="Alt+B"
-                                      IsCheckable="True" IsChecked="{Binding StatusBarVisible, Mode=TwoWay}" Style="{StaticResource checkMenu}"/>
+                                      IsCheckable="True" IsChecked="{Binding StatusBarVisible, Mode=TwoWay}"
+                                      Style="{StaticResource checkMenu}"/>
                             <MenuItem Header="Show Line Number"
-                                      IsCheckable="True" IsChecked="{Binding LineNumberVisible, Mode=TwoWay}" Style="{StaticResource checkMenu}"/>
+                                      IsCheckable="True" IsChecked="{Binding LineNumberVisible, Mode=TwoWay}"
+                                      Style="{StaticResource checkMenu}"/>
                             <MenuItem Header="Show Column Number"
-                                      IsCheckable="True" IsChecked="{Binding ColumnNumberVisible, Mode=TwoWay}" Style="{StaticResource checkMenu}"/>
+                                      IsCheckable="True" IsChecked="{Binding ColumnNumberVisible, Mode=TwoWay}"
+                                      Style="{StaticResource checkMenu}"/>
                             <MenuItem Header="Show Word Count"
-                                      IsCheckable="True" IsChecked="{Binding WordCountVisible, Mode=TwoWay}" Style="{StaticResource checkMenu}"/>
+                                      IsCheckable="True" IsChecked="{Binding WordCountVisible, Mode=TwoWay}"
+                                      Style="{StaticResource checkMenu}"/>
                             <MenuItem Header="Show Character Count"
-                                      IsCheckable="True" IsChecked="{Binding CharCountVisible, Mode=TwoWay}" Style="{StaticResource checkMenu}"/>
+                                      IsCheckable="True" IsChecked="{Binding CharCountVisible, Mode=TwoWay}"
+                                      Style="{StaticResource checkMenu}"/>
                         </MenuItem>
                         <MenuItem Header="Show Line Numbers" Name="showLineNumbersDropdown" InputGestureText="Alt+L"
                                   IsCheckable="True" IsChecked="{Binding ElementName=textbox, Path=ShowLineNumbers, Mode=TwoWay}"/>
@@ -202,11 +211,14 @@
                             <TextBlock Text="Help" VerticalAlignment="Center"/>
                         </MenuItem.Header>
                         <MenuItem Header="Licenses">
-                            <MenuItem Header="Pad# License" Click="help_Click" Tag="https://github.com/collenirwin/PadSharp/blob/master/LICENSE"
+                            <MenuItem Header="Pad# License" Click="help_Click"
+                                      Tag="https://github.com/collenirwin/PadSharp/blob/master/LICENSE"
                                       Style="{StaticResource checkMenu}"/>
-                            <MenuItem Header="Inno Setup License" Click="help_Click" Tag="http://www.jrsoftware.org/files/is/license.txt"
+                            <MenuItem Header="Inno Setup License" Click="help_Click"
+                                      Tag="http://www.jrsoftware.org/files/is/license.txt"
                                       Style="{StaticResource checkMenu}"/>
-                            <MenuItem Header="Dictionary License" Click="help_Click" Tag="https://github.com/adambom/dictionary/blob/master/LICENSE.md"
+                            <MenuItem Header="Dictionary License" Click="help_Click"
+                                      Tag="https://github.com/adambom/dictionary/blob/master/LICENSE.md"
                                       Style="{StaticResource checkMenu}"/>
                         </MenuItem>
                         <MenuItem Header="Date &amp; Time Format Guide" 
@@ -227,11 +239,13 @@
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding FileSaved}" Value="True">
                                         <Setter Property="FontStyle" Value="Normal"/>
-                                        <Setter Property="Text" Value="{Binding OpenFile.Name, StringFormat={}{0}, FallbackValue='Not Saved'}"/>
+                                        <Setter Property="Text"
+                                                Value="{Binding OpenFile.Name, StringFormat={}{0}, FallbackValue='Not Saved'}"/>
                                     </DataTrigger>
                                     <DataTrigger Binding="{Binding FileSaved}" Value="False">
                                         <Setter Property="FontStyle" Value="Italic"/>
-                                        <Setter Property="Text" Value="{Binding OpenFile.Name, StringFormat={}*{0}, FallbackValue='Not Saved'}"/>
+                                        <Setter Property="Text"
+                                                Value="{Binding OpenFile.Name, StringFormat={}*{0}, FallbackValue='Not Saved'}"/>
                                     </DataTrigger>
                                 </Style.Triggers>
                             </Style>
@@ -242,7 +256,8 @@
 
             <StackPanel Name="findPanelParent" Orientation="Horizontal" HorizontalAlignment="Right" Visibility="Collapsed">
 
-                <CheckBox Name="matchCase" Foreground="{DynamicResource foreColorDark}" FlowDirection="RightToLeft" IsTabStop="False" Margin="9">
+                <CheckBox Name="matchCase" Foreground="{DynamicResource foreColorDark}"
+                          FlowDirection="RightToLeft" IsTabStop="False" Margin="9">
                     Match Case
                 </CheckBox>
 
@@ -430,7 +445,7 @@
                        ShowLineNumbers="True"
                        Background="{DynamicResource backColorDark}"
                        Foreground="{DynamicResource foreColorDark}"
-					   BorderBrush="{DynamicResource backColorLight}"
+                       BorderBrush="{DynamicResource backColorLight}"
                        BorderThickness="0,1,0,0"
                        Margin="0"
                        GotFocus="textbox_GotFocus"

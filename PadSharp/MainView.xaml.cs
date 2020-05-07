@@ -1518,7 +1518,7 @@ namespace PadSharp
 
         #endregion
 
-        #region IO helpers
+        #region IO Helpers
 
         /// <summary>
         /// Attempts to open the file specified by path in the editor.

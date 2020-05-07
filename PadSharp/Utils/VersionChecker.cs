@@ -24,7 +24,7 @@ namespace PadSharp.Utils
         /// </summary>
         public static string NewVersion { get; private set; }
 
-        private static Random _random = new Random();
+        private static readonly Random _random = new Random();
 
         /// <summary>
         /// Fetches a version number from a file at <see cref="VersionUrl"/>

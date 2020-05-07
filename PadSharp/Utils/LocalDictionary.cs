@@ -13,11 +13,11 @@ namespace PadSharp.Utils
     /// </summary>
     public static class LocalDictionary
     {
-        public const string FileName = "dictionary.json";
-        public const string FileUrl = "https://raw.githubusercontent.com/collenirwin/PadSharp/master/dictionary/dictionary.json";
+        private const string FileName = "dictionary.json";
+        private const string FileUrl = "https://raw.githubusercontent.com/collenirwin/PadSharp/master/dictionary/dictionary.json";
 
         // c:/users/<user>/appdata/roaming/pad#/dictionary.json
-        public static readonly string FilePath = Path.Combine(Global.DataPath, FileName);
+        private static readonly string FilePath = Path.Combine(Global.DataPath, FileName);
 
         /// <summary>
         /// Dictionary containing the contents of dictionary.json
@@ -27,20 +27,17 @@ namespace PadSharp.Utils
         /// <summary>
         /// Has <see cref="Dictionary"/> been initialized?
         /// </summary>
-        public static bool Loaded
-        {
-            get { return Dictionary != null; }
-        }
+        public static bool Loaded => Dictionary != null;
 
+        /// <summary>
+        /// Is <see cref="TryLoadAsync"/> running?
+        /// </summary>
         public static bool Loading { get; private set; }
 
         /// <summary>
         /// Is there a file at <see cref="FilePath"/>?
         /// </summary>
-        public static bool Downloaded
-        {
-            get { return File.Exists(FilePath); }
-        }
+        public static bool Downloaded => File.Exists(FilePath);
 
         /// <summary>
         /// Are we in the middle of downloading the file?
@@ -55,7 +52,6 @@ namespace PadSharp.Utils
         {
             try
             {
-                // avoid collisions
                 if (Loading)
                 {
                     return false;
@@ -70,14 +66,16 @@ namespace PadSharp.Utils
                 Dictionary = await Task.Run(() => 
                     JsonConvert.DeserializeObject<Dictionary<string, string>>(json));
 
-                Loading = false;
                 return true;
             }
             catch (Exception ex)
             {
-                Loading = false;
                 Logger.Log(typeof(LocalDictionary), ex, "Loading dictionary");
                 return false;
+            }
+            finally
+            {
+                Loading = false;
             }
         }
 
@@ -88,7 +86,6 @@ namespace PadSharp.Utils
         {
             try
             {
-                // avoid collisions
                 if (Downloading)
                 {
                     return false;
@@ -108,14 +105,16 @@ namespace PadSharp.Utils
                     await client.DownloadFileTaskAsync(FileUrl, FilePath);
                 }
 
-                Downloading = false;
                 return true;
             }
             catch (Exception ex)
             {
-                Downloading = false;
                 Logger.Log(typeof(LocalDictionary), ex, "Downloading dictionary");
                 return false;
+            }
+            finally
+            {
+                Downloading = false;
             }
         }
 
@@ -142,7 +141,7 @@ namespace PadSharp.Utils
                 return Dictionary[word]; // found!
             }
 
-            var endings = new string[] { "S", "ED", "ES", "ING", "IES" };
+            var endings = new[] { "S", "ED", "ES", "ING", "IES" };
 
             // it wasn't. let's try taking off common word endings and looking for those variations
             foreach (string ending in endings)
