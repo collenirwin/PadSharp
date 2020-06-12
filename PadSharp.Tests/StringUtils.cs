@@ -223,5 +223,61 @@ namespace PadSharp.Tests
         }
 
         #endregion
+
+        #region ToTitleCase
+
+        [Fact]
+        public void ToTitleCase_EmptyString_ReturnsSameString()
+        {
+            // arrange
+            string expected = "";
+
+            // act
+            string actual = expected.ToTitleCase();
+
+            // assert
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public void ToTitleCase_SingleWord_ReturnsWordInTitleCase()
+        {
+            // arrange
+            string input = "hELlo";
+
+            // act
+            string actual = input.ToTitleCase();
+
+            // assert
+            Assert.Equal("Hello", actual);
+        }
+
+        [Theory]
+        [InlineData("hello world", "Hello World")]
+        [InlineData("i aM cool", "I Am Cool")]
+        [InlineData("1 is not A LETTER", "1 Is Not A Letter")]
+        public void ToTitleCase_MultipleWords_ReturnsWordsInTitleCase(string input, string expected)
+        {
+            // arrange, act
+            string actual = input.ToTitleCase();
+
+            // assert
+            Assert.Equal(expected, actual);
+        }
+
+        [Theory]
+        [InlineData("'hello world!'", "'Hello World!'")]
+        [InlineData("new.sentence", "New.Sentence")]
+        [InlineData("split-word", "Split-Word")]
+        public void ToTitleCase_WordsWithSymbols_ReturnsWordsInTitleCaseIgnoringSymbols(string input, string expected)
+        {
+            // arrange, act
+            string actual = input.ToTitleCase();
+
+            // assert
+            Assert.Equal(expected, actual);
+        }
+
+        #endregion
     }
 }

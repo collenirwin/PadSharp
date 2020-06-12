@@ -61,8 +61,8 @@ namespace PadSharp.Utils
                 // we go through the .remove.insert ordeal here in order to preserve the whitespace between the words
                 newText = newText
                     .Remove(match.Index, match.Length)
-                    .Insert(match.Index, match.Value.Length == 1 // 1-length word: don't try to do anything with chars after first
-                        ? match.Value.ToUpper()
+                    .Insert(match.Index, match.Value.Length == 1 // 1-length word:
+                        ? match.Value.ToUpper()                  // don't try to do anything with chars after first
                         : match.Value.Substring(0, 1).ToUpper() + match.Value.Substring(1).ToLower());
             }
 
