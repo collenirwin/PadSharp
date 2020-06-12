@@ -1,5 +1,4 @@
 using PadSharp.Utils;
-using System.Linq;
 using Xunit;
 
 namespace PadSharp.Tests
@@ -56,6 +55,58 @@ namespace PadSharp.Tests
 
             // assert
             Assert.Equal(expected, actual.Length);
+        }
+
+        [Fact]
+        public void ReverseLines_OneLine_ReturnsSameString()
+        {
+            // arrange
+            string expected = "Hello.";
+
+            // act
+            string actual = expected.ReverseLines();
+
+            // assert
+            Assert.Equal(expected, actual);
+        }
+
+        [Theory]
+        [InlineData("Line 1\nLine 2", "Line 2\r\nLine 1")]
+        [InlineData("Line 1\nLine 2\n", "\r\nLine 2\r\nLine 1")]
+        [InlineData("\n\n\n", "\r\n\r\n\r\n")]
+        public void ReverseLines_MultiLineLFEndings_ReturnsReverseCRLF(string input, string expected)
+        {
+            // arrange, act
+            string actual = input.ReverseLines();
+
+            // assert
+            Assert.Equal(expected, actual);
+        }
+
+        [Theory]
+        [InlineData("Line 1\r\nLine 2", "Line 2\r\nLine 1")]
+        [InlineData("Line 1\r\nLine 2\r\n", "\r\nLine 2\r\nLine 1")]
+        [InlineData("\r\n\r\n\r\n", "\r\n\r\n\r\n")]
+        public void ReverseLines_MultiLineCRLFEndings_ReturnsReverseCRLF(string input, string expected)
+        {
+            // arrange, act
+            string actual = input.ReverseLines();
+
+            // assert
+            Assert.Equal(expected, actual);
+        }
+
+        [Theory]
+        [InlineData("Line 1\r\nLine 2\n", "\r\nLine 2\r\nLine 1")]
+        [InlineData("Line 1\nLine 2\r\n", "\r\nLine 2\r\nLine 1")]
+        [InlineData("\r\n\n\r\n", "\r\n\r\n\r\n")]
+        public void ReverseLines_MultiLineMixedLineEndings_ReturnsReverseCRLF(string input, string expected)
+        {
+            // arrange, act
+            string actual = input.ReverseLines();
+
+            // assert
+            Assert.Equal(expected, actual);
         }
     }
 }
