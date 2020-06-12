@@ -62,32 +62,26 @@ namespace PadSharp.Utils
             var textBytes = Encoding.UTF8.GetBytes(text);
 
             // use PBKDF2 to generate a key
-            using (var key = new Rfc2898DeriveBytes(password, saltBytes, _pbkdf2Iterations))
-            {
-                var keyBytes = key.GetBytes(_keyByteCount);
+            using var key = new Rfc2898DeriveBytes(password, saltBytes, _pbkdf2Iterations);
+            var keyBytes = key.GetBytes(_keyByteCount);
 
-                using (var aes = CreateAes())
-                {
-                    using (var encryptor = aes.CreateEncryptor(keyBytes, ivBytes))
-                    using (var memoryStream = new MemoryStream())
-                    using (var cryptoStream = new CryptoStream(memoryStream, encryptor, CryptoStreamMode.Write))
-                    {
-                        // encrypt all text
-                        cryptoStream.Write(textBytes, 0, textBytes.Length);
+            using var aes = CreateAes();
+            using var encryptor = aes.CreateEncryptor(keyBytes, ivBytes);
+            using var memoryStream = new MemoryStream();
+            using var cryptoStream = new CryptoStream(memoryStream, encryptor, CryptoStreamMode.Write);
+            // encrypt all text
+            cryptoStream.Write(textBytes, 0, textBytes.Length);
 
-                        // clear the buffer
-                        cryptoStream.FlushFinalBlock();
+            // clear the buffer
+            cryptoStream.FlushFinalBlock();
 
-                        // prepend the salt and iv to the encrypted bytes
-                        var finalBytes = saltBytes; // salt
-                        finalBytes = finalBytes.Concat(ivBytes).ToArray(); // IV
-                        finalBytes = finalBytes.Concat(memoryStream.ToArray()).ToArray(); // the rest
+            // prepend the salt and iv to the encrypted bytes
+            var finalBytes = saltBytes; // salt
+            finalBytes = finalBytes.Concat(ivBytes).ToArray(); // IV
+            finalBytes = finalBytes.Concat(memoryStream.ToArray()).ToArray(); // the rest
 
-                        // convert our byte array to string and return
-                        return Convert.ToBase64String(finalBytes);
-                    }
-                }
-            }
+            // convert our byte array to string and return
+            return Convert.ToBase64String(finalBytes);
         }
 
         /// <summary>
@@ -110,27 +104,23 @@ namespace PadSharp.Utils
             // get the encrypted text, which comes after the salt and the bytes
             var encryptedBytes = allBytes.Skip(_keyByteCount * 2).ToArray();
 
-            using (var key = new Rfc2898DeriveBytes(password, saltBytes, _pbkdf2Iterations))
-            {
-                byte[] keyBytes = key.GetBytes(_keyByteCount);
+            using var key = new Rfc2898DeriveBytes(password, saltBytes, _pbkdf2Iterations);
 
-                using (var aes = CreateAes())
-                {
-                    using (var decryptor = aes.CreateDecryptor(keyBytes, ivBytes))
-                    using (var memoryStream = new MemoryStream(encryptedBytes))
-                    using (var cryptoStream = new CryptoStream(memoryStream, decryptor, CryptoStreamMode.Read))
-                    {
-                        // a byte array to hold the unencrypted text
-                        var textBytes = new byte[encryptedBytes.Length];
+            byte[] keyBytes = key.GetBytes(_keyByteCount);
 
-                        // decrypt all text, throw it into textBytes, get the length of the actual decrpyted bytes
-                        int count = cryptoStream.Read(textBytes, 0, textBytes.Length);
+            using var aes = CreateAes();
+            using var decryptor = aes.CreateDecryptor(keyBytes, ivBytes);
+            using var memoryStream = new MemoryStream(encryptedBytes);
+            using var cryptoStream = new CryptoStream(memoryStream, decryptor, CryptoStreamMode.Read);
 
-                        // convert to string using the length we found (otherise there could be unneeded null characters)
-                        return Encoding.UTF8.GetString(textBytes, 0, count);
-                    }
-                }
-            }
+            // a byte array to hold the unencrypted text
+            var textBytes = new byte[encryptedBytes.Length];
+
+            // decrypt all text, throw it into textBytes, get the length of the actual decrpyted bytes
+            int count = cryptoStream.Read(textBytes, 0, textBytes.Length);
+
+            // convert to string using the length we found (otherise there could be unneeded null characters)
+            return Encoding.UTF8.GetString(textBytes, 0, count);
         }
 
         /// <summary>

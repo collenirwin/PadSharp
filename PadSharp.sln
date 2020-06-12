@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30204.135
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PadSharp", "PadSharp\PadSharp.csproj", "{BD8DDC80-DDDD-4C93-8856-11E3098C13FA}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PadSharpTest", "PadSharpTest\PadSharpTest.csproj", "{410E6BEF-1811-46CA-A79A-CAFB78D2E1E8}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BoinWPF", "BoinWPF\BoinWPF.csproj", "{FB61290F-FB57-4C2A-9A8C-7FF1B582DDD0}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PadSharp", "PadSharp\PadSharp.csproj", "{FDAC826F-564C-4085-83FF-EA5480EF04A5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,10 +15,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{BD8DDC80-DDDD-4C93-8856-11E3098C13FA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{BD8DDC80-DDDD-4C93-8856-11E3098C13FA}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{BD8DDC80-DDDD-4C93-8856-11E3098C13FA}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{BD8DDC80-DDDD-4C93-8856-11E3098C13FA}.Release|Any CPU.Build.0 = Release|Any CPU
 		{410E6BEF-1811-46CA-A79A-CAFB78D2E1E8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{410E6BEF-1811-46CA-A79A-CAFB78D2E1E8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{410E6BEF-1811-46CA-A79A-CAFB78D2E1E8}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -27,6 +23,10 @@ Global
 		{FB61290F-FB57-4C2A-9A8C-7FF1B582DDD0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FB61290F-FB57-4C2A-9A8C-7FF1B582DDD0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FB61290F-FB57-4C2A-9A8C-7FF1B582DDD0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FDAC826F-564C-4085-83FF-EA5480EF04A5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FDAC826F-564C-4085-83FF-EA5480EF04A5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FDAC826F-564C-4085-83FF-EA5480EF04A5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FDAC826F-564C-4085-83FF-EA5480EF04A5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

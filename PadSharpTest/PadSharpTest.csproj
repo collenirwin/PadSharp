@@ -55,12 +55,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StringUtilsTest.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\PadSharp\PadSharp.csproj">
-      <Project>{bd8ddc80-dddd-4c93-8856-11e3098c13fa}</Project>
-      <Name>PadSharp</Name>
-    </ProjectReference>
-  </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>

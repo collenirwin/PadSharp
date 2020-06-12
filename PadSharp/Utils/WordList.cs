@@ -23,14 +23,13 @@ namespace PadSharp.Utils
                 if (_words.Count == 0)
                 {
                     // read the word list in from words.txt resource
-                    using (var file = Assembly.GetExecutingAssembly().GetManifestResourceStream("PadSharp.words.txt"))
-                    using (var reader = new StreamReader(file))
+                    using var file = Assembly.GetExecutingAssembly().GetManifestResourceStream("PadSharp.words.txt");
+                    using var reader = new StreamReader(file);
+
+                    string line;
+                    while ((line = reader.ReadLine()) != null)
                     {
-                        string line;
-                        while ((line = reader.ReadLine()) != null)
-                        {
-                            _words.Add(line);
-                        }
+                        _words.Add(line);
                     }
                 }
 

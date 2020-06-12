@@ -498,9 +498,9 @@ namespace PadSharp
             // set theme
             _theme = settings.Theme;
             Application.Current.Resources.
-                MergedDictionaries[0].Source = ThemeManager.themeUri(_theme);
+                MergedDictionaries[0].Source = ThemeManager.GetThemeUri(_theme);
 
-            CheckIfSameValue(themeMenu, _theme == Theme.light ? "Light" : "Dark");
+            CheckIfSameValue(themeMenu, _theme == Theme.Light ? "Light" : "Dark");
 
             // font
             textbox.FontFamily = settings.FontFamily;
@@ -596,9 +596,9 @@ namespace PadSharp
         private void New_Command()
         {
             // text not saved, promt them: are you sure?
-            if (textbox.Text != _savedText && Alert.showDialog(
+            if (textbox.Text != _savedText && Alert.ShowDialog(
                 "Are you sure you want to make a new file? Your unsaved changes to the current file will be lost.",
-                Global.AppName, "Yes", "Cancel") != AlertResult.button1Clicked)
+                Global.AppName, "Yes", "Cancel") != AlertResult.Button1Clicked)
             {
                 return;
             }
@@ -630,9 +630,9 @@ namespace PadSharp
         private void Open_Command()
         {
             // text not saved, promt them: are you sure?
-            if (textbox.Text != _savedText && Alert.showDialog(
+            if (textbox.Text != _savedText && Alert.ShowDialog(
                 "Are you sure you want to open a file? Your unsaved changes to the current file will be lost.",
-                Global.AppName, "Yes", "Cancel") != AlertResult.button1Clicked)
+                Global.AppName, "Yes", "Cancel") != AlertResult.Button1Clicked)
             {
                 return;
             }
@@ -671,7 +671,7 @@ namespace PadSharp
             }
             else
             {
-                Alert.showDialog("No file is open.", Global.AppName);
+                Alert.ShowDialog("No file is open.", Global.AppName);
             }
         }
 
@@ -762,10 +762,10 @@ namespace PadSharp
                     var location = textbox.Document.GetLocation(word.Index);
                     textbox.ScrollTo(location.Line, location.Column);
 
-                    var result = Alert.showDialog($"'{word.Value}' isn't in Pad#'s dictionary.",
+                    var result = Alert.ShowDialog($"'{word.Value}' isn't in Pad#'s dictionary.",
                         title: Global.AppName, button1Text: "Next", button2Text: "Stop Spelling Check");
 
-                    if (result == AlertResult.button2Clicked)
+                    if (result == AlertResult.Button2Clicked)
                     {
                         // user clicked "Stop Spelling Check"
                         return;
@@ -789,7 +789,7 @@ namespace PadSharp
             textbox.NormalizeLineEndings(windows: true);
 
             // give the user some feedback - this change won't be obvious
-            Alert.showDialog("Done. All line endings have been converted to the Windows format (CRLF).",
+            Alert.ShowDialog("Done. All line endings have been converted to the Windows format (CRLF).",
                 Global.AppName);
         }
 
@@ -880,7 +880,7 @@ namespace PadSharp
             // no text selected
             if (text == "")
             {
-                Alert.showDialog("Please select a word to define.", Global.AppName);
+                Alert.ShowDialog("Please select a word to define.", Global.AppName);
                 return;
             }
 
@@ -892,7 +892,7 @@ namespace PadSharp
 
                 if (!successful)
                 {
-                    Alert.showDialog("Couldn't download the dictionary. " +
+                    Alert.ShowDialog("Couldn't download the dictionary. " +
                         "Please ensure that you are connected to the internet and try again.",
                         Global.AppName);
                     return;
@@ -907,11 +907,11 @@ namespace PadSharp
 
                 if (!successful)
                 {
-                    var result = Alert.showDialog($"Couldn't load the local dictionary. " +
+                    var result = Alert.ShowDialog($"Couldn't load the local dictionary. " +
                         "Would you like to view the log?",
                         title: Global.AppName, button1Text: "Yes", button2Text: "No");
 
-                    if (result == AlertResult.button1Clicked)
+                    if (result == AlertResult.Button1Clicked)
                     {
                         try
                         {
@@ -972,13 +972,13 @@ namespace PadSharp
             var item = sender as MenuItem;
 
             // select theme
-            _theme = item.Header.ToString() == "Light" ? Theme.light : Theme.dark;
+            _theme = item.Header.ToString() == "Light" ? Theme.Light : Theme.Dark;
 
             // uncheck other themes
             UncheckSiblings(item);
 
             // set theme for app
-            Application.Current.Resources.MergedDictionaries[0].Source = ThemeManager.themeUri(_theme);
+            Application.Current.Resources.MergedDictionaries[0].Source = ThemeManager.GetThemeUri(_theme);
         }
 
         private void theme_Unchecked(object sender, RoutedEventArgs e)
@@ -1086,11 +1086,11 @@ namespace PadSharp
 
             if (definition != null)
             {
-                Alert.showDialog($"{word}: {definition}", Global.AppName);
+                Alert.ShowDialog($"{word}: {definition}", Global.AppName);
             }
             else
             {
-                Alert.showDialog($"Couldn't find a definition for '{word}'", Global.AppName);
+                Alert.ShowDialog($"Couldn't find a definition for '{word}'", Global.AppName);
             }
         }
 
@@ -1252,8 +1252,8 @@ namespace PadSharp
             textbox.ReplaceAll(txtFind.Text, txtReplace.Text, 
                 matchCase.IsChecked.GetValueOrDefault(), count =>
                 // this determines whether or not to run the replace
-                count > 0 && Alert.showDialog($"Replace {count} instances of {txtFind.Text} with {txtReplace.Text}?",
-                    title: Global.AppName, button1Text: "OK", button2Text: "Cancel") == AlertResult.button1Clicked);
+                count > 0 && Alert.ShowDialog($"Replace {count} instances of {txtFind.Text} with {txtReplace.Text}?",
+                    title: Global.AppName, button1Text: "OK", button2Text: "Cancel") == AlertResult.Button1Clicked);
 
             // run find again to update the ui
             FindHelper(start: 0);
@@ -1271,7 +1271,7 @@ namespace PadSharp
             }
             else
             {
-                Alert.showDialog("Line number must be an integer.", Global.AppName);
+                Alert.ShowDialog("Line number must be an integer.", Global.AppName);
                 txtGoto.Focus();
                 txtGoto.SelectAll();
             }
@@ -1311,12 +1311,12 @@ namespace PadSharp
                         _savedText = fileText;
 
                         // want to reload it?
-                        var result = Alert.showDialog($"'{OpenFile.Name}' has been modified by another program. " +
+                        var result = Alert.ShowDialog($"'{OpenFile.Name}' has been modified by another program. " +
                             "Would you like to reload it?",
                             title: Global.AppName, button1Text: "Reload from file", button2Text: "Keep my changes");
 
                         // yes i do
-                        if (result == AlertResult.button1Clicked)
+                        if (result == AlertResult.Button1Clicked)
                         {
                             Open(OpenFile.FullName);
                         }
@@ -1343,13 +1343,13 @@ namespace PadSharp
                 if (newVersion != null && newVersion != Global.Version)
                 {
                     // new version available: download it?
-                    var result = Alert.showDialog(
+                    var result = Alert.ShowDialog(
                         $"A new version of {Global.AppName} is available (version {newVersion}). " +
                         "Would you like to download it?",
                         title: "Pad#", button1Text: "Yes", button2Text: "No");
 
                     // go to the link to the setup file in the repo if the user clicked Yes
-                    if (result == AlertResult.button1Clicked)
+                    if (result == AlertResult.Button1Clicked)
                     {
                         Global.Launch(
                             "https://github.com/collenirwin/PadSharp/blob/master/setup/pad_sharp_setup.exe");
@@ -1379,8 +1379,8 @@ namespace PadSharp
         {
             // if the user has not saved their changes, but they wish to
             if (textbox.Text != _savedText &&
-                Alert.showDialog("Close without saving?",
-                Global.AppName, "Close", "Cancel") == AlertResult.button2Clicked)
+                Alert.ShowDialog("Close without saving?",
+                Global.AppName, "Close", "Cancel") == AlertResult.Button2Clicked)
             {
                 e.Cancel = true; // don't close
             }

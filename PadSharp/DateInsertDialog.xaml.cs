@@ -70,7 +70,7 @@ namespace PadSharp
             }
             else
             {
-                Alert.showDialog("Please select a date to insert.", Global.AppName);
+                Alert.ShowDialog("Please select a date to insert.", Global.AppName);
             }
         }
     }

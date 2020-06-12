@@ -35,7 +35,7 @@ namespace PadSharp.Utils
         /// <param name="details">What more is there to say about this?</param>
         public static void ActionMessage(string action, string details)
         {
-            Alert.showMoreInfoDialog(action, details, AppName);
+            Alert.ShowMoreInfoDialog(action, details, AppName);
         }
 
         /// <summary>
@@ -46,7 +46,11 @@ namespace PadSharp.Utils
         {
             try
             {
-                Process.Start(path);
+                Process.Start(new ProcessStartInfo
+                {
+                    FileName = path,
+                    UseShellExecute = true
+                });
             }
             catch (Exception ex)
             {
@@ -71,10 +75,8 @@ namespace PadSharp.Utils
 
             if (!File.Exists(path))
             {
-                using (var writer = File.CreateText(path))
-                {
-                    writer.Write("");
-                }
+                using var writer = File.CreateText(path);
+                writer.Write("");
             }
         }
     }

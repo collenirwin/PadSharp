@@ -34,7 +34,7 @@ namespace PadSharp
         #region Colors and fonts
 
         [JsonProperty("theme")]
-        public Theme Theme { get; set; } = Theme.light;
+        public Theme Theme { get; set; } = Theme.Light;
 
         [JsonProperty("fontFamily")]
         public FontFamily FontFamily { get; set; } = new FontFamily("Segoe UI");
@@ -162,10 +162,8 @@ namespace PadSharp
                 }
 
                 // serialize to JSON, write to FULL_PATH
-                using (var writer = File.CreateText(FilePath))
-                {
-                    writer.Write(JsonConvert.SerializeObject(this));
-                }
+                using var writer = File.CreateText(FilePath);
+                writer.Write(JsonConvert.SerializeObject(this));
             }
             catch (Exception ex)
             {

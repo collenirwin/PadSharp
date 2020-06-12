@@ -34,15 +34,14 @@ namespace PadSharp.Utils
         {
             try
             {
-                using (var client = new WebClient())
-                {
-                    // fetch new version from the repo
-                    // add a random number to the end to avoid caching
-                    var newVersion = await client.DownloadStringTaskAsync($"{VersionUrl}?r={_random.Next(100000)}");
-                    NewVersion = newVersion;
+                using var client = new WebClient();
 
-                    return newVersion;
-                }
+                // fetch new version from the repo
+                // add a random number to the end to avoid caching
+                var newVersion = await client.DownloadStringTaskAsync($"{VersionUrl}?r={_random.Next(100000)}");
+                NewVersion = newVersion;
+
+                return newVersion;
             }
             catch (Exception ex)
             {

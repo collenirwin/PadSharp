@@ -23,10 +23,8 @@ namespace PadSharp.Utils
             {
                 Global.CreateDirectoryAndFile(FilePath);
 
-                using (var writer = new StreamWriter(FilePath, true))
-                {
-                    writer.WriteLine(DateTime.Now.ToString("MM/dd/yyyy hh:mm:ss tt") + ": " + text);
-                }
+                using var writer = new StreamWriter(FilePath, true);
+                writer.WriteLine(DateTime.Now.ToString("MM/dd/yyyy hh:mm:ss tt") + ": " + text);
             }
             catch { }
         }
