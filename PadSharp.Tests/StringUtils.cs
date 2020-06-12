@@ -442,5 +442,66 @@ namespace PadSharp.Tests
         }
 
         #endregion
+
+        #region ToggleStartAndEnd
+
+        [Theory]
+        [InlineData("")]
+        [InlineData("text")]
+        public void ToggleStartAndEnd_EmptyString_ReturnsSameString(string input)
+        {
+            // arrange, act
+            string actual = input.ToggleStartAndEnd(start: "", end: "");
+
+            // assert
+            Assert.Equal(input, actual);
+        }
+
+        [Theory]
+        [InlineData("", "a", "a")]
+        [InlineData("a", "a", "")]
+        [InlineData("aa", "a", "a")]
+        [InlineData("abc", "a", "bc")]
+        [InlineData("bc", "a", "abc")]
+        public void ToggleStartAndEnd_StartOnly_ReturnsStartToggled(string input, string start, string expected)
+        {
+            // arrange, act
+            string actual = input.ToggleStartAndEnd(start, end: "");
+
+            // assert
+            Assert.Equal(expected, actual);
+        }
+
+        [Theory]
+        [InlineData("", "a", "a")]
+        [InlineData("a", "a", "")]
+        [InlineData("aa", "a", "a")]
+        [InlineData("abc", "c", "ab")]
+        [InlineData("abc", "a", "abca")]
+        public void ToggleStartAndEnd_EndOnly_ReturnsEndToggled(string input, string end, string expected)
+        {
+            // arrange, act
+            string actual = input.ToggleStartAndEnd(start: "", end);
+
+            // assert
+            Assert.Equal(expected, actual);
+        }
+
+        [Theory]
+        [InlineData("abc", "a", "c", "b")]
+        [InlineData("b", "a", "c", "abc")]
+        [InlineData("bc", "a", "c", "abc")]
+        [InlineData("ab", "a", "c", "abc")]
+        public void ToggleStartAndEnd_StartAndEnd_ReturnsStartAndEndToggled(string input,
+            string start, string end, string expected)
+        {
+            // arrange, act
+            string actual = input.ToggleStartAndEnd(start, end);
+
+            // assert
+            Assert.Equal(expected, actual);
+        }
+
+        #endregion
     }
 }
