@@ -1,6 +1,5 @@
 ﻿using ICSharpCode.AvalonEdit;
 using System;
-using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace PadSharp.Utils
