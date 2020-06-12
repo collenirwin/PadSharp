@@ -5,6 +5,8 @@ namespace PadSharp.Tests
 {
     public class StringUtils
     {
+        #region SplitIntoLines
+
         [Fact]
         public void SplitIntoLines_OneLine_ReturnsSingle()
         {
@@ -57,6 +59,10 @@ namespace PadSharp.Tests
             Assert.Equal(expected, actual.Length);
         }
 
+        #endregion
+
+        #region ReverseLines
+
         [Fact]
         public void ReverseLines_OneLine_ReturnsSameString()
         {
@@ -108,5 +114,114 @@ namespace PadSharp.Tests
             // assert
             Assert.Equal(expected, actual);
         }
+
+        #endregion
+
+        #region SortLines
+
+        [Fact]
+        public void SortLines_OneLine_ReturnsSameString()
+        {
+            // arrange
+            string expected = "Hello.";
+
+            // act
+            string actual = expected.SortLines();
+
+            // assert
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public void SortLines_OneLineDescending_ReturnsSameString()
+        {
+            // arrange
+            string expected = "Hello.";
+
+            // act
+            string actual = expected.SortLines(descending: true);
+
+            // assert
+            Assert.Equal(expected, actual);
+        }
+
+        [Theory]
+        [InlineData("b\na", "a\r\nb")]
+        [InlineData("a\nb\n", "\r\na\r\nb")]
+        [InlineData("\n\n\n", "\r\n\r\n\r\n")]
+        public void SortLines_MultiLineLFEndings_ReturnsSortedCRLF(string input, string expected)
+        {
+            // arrange, act
+            string actual = input.SortLines();
+
+            // assert
+            Assert.Equal(expected, actual);
+        }
+
+        [Theory]
+        [InlineData("b\r\na", "a\r\nb")]
+        [InlineData("a\r\nb\r\n", "\r\na\r\nb")]
+        [InlineData("\r\n\r\n\r\n", "\r\n\r\n\r\n")]
+        public void SortLines_MultiLineCRLFEndings_ReturnsSortedCRLF(string input, string expected)
+        {
+            // arrange, act
+            string actual = input.SortLines();
+
+            // assert
+            Assert.Equal(expected, actual);
+        }
+
+        [Theory]
+        [InlineData("b\na\r\n", "\r\na\r\nb")]
+        [InlineData("a\r\nb\n", "\r\na\r\nb")]
+        [InlineData("\r\n\n\r\n", "\r\n\r\n\r\n")]
+        public void SortLines_MultiLineMixedLineEndings_ReturnsSortedCRLF(string input, string expected)
+        {
+            // arrange, act
+            string actual = input.SortLines();
+
+            // assert
+            Assert.Equal(expected, actual);
+        }
+
+        [Theory]
+        [InlineData("a\nA", "a\r\nA")]
+        [InlineData("A\na", "a\r\nA")]
+        public void SortLines_MixedCase_ReturnsSortedLowercaseFirst(string input, string expected)
+        {
+            // arrange, act
+            string actual = input.SortLines();
+
+            // assert
+            Assert.Equal(expected, actual);
+        }
+
+        [Theory]
+        [InlineData("a\nb", "a\r\nb")]
+        [InlineData("b\na", "a\r\nb")]
+        [InlineData("3\na\n1\n_", "_\r\n1\r\n3\r\na")]
+        public void SortLines_General_ReturnsSortedDescending(string input, string expected)
+        {
+            // arrange, act
+            string actual = input.SortLines();
+
+            // assert
+            Assert.Equal(expected, actual);
+        }
+
+        [Theory]
+        [InlineData("a\nb", "b\r\na")]
+        [InlineData("b\na", "b\r\na")]
+        [InlineData("3\na\n1\n_", "a\r\n3\r\n1\r\n_")]
+        public void SortLines_GeneralDescending_ReturnsSortedDescending(string input, string expected)
+        {
+            // arrange, act
+            string actual = input.SortLines(descending: true);
+
+            // assert
+            Assert.Equal(expected, actual);
+        }
+
+        #endregion
     }
 }

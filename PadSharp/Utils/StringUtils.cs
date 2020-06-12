@@ -43,7 +43,6 @@ namespace PadSharp.Utils
 
             // sort 'em (ascending or descending based on passed param)
             var sortedlines = descending ? lines.OrderByDescending(x => x) : lines.OrderBy(x => x);
-
             return string.Join("\r\n", sortedlines);
         }
 
