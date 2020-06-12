@@ -1,11 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.40629.0
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30204.135
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PadSharp", "PadSharp\PadSharp.csproj", "{BD8DDC80-DDDD-4C93-8856-11E3098C13FA}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PadSharpTest", "PadSharpTest\PadSharpTest.csproj", "{410E6BEF-1811-46CA-A79A-CAFB78D2E1E8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BoinWPF", "BoinWPF\BoinWPF.csproj", "{BD9EB17B-F547-40FD-8FB2-3D1F34971A2E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,8 +23,15 @@ Global
 		{410E6BEF-1811-46CA-A79A-CAFB78D2E1E8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{410E6BEF-1811-46CA-A79A-CAFB78D2E1E8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{410E6BEF-1811-46CA-A79A-CAFB78D2E1E8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BD9EB17B-F547-40FD-8FB2-3D1F34971A2E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BD9EB17B-F547-40FD-8FB2-3D1F34971A2E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BD9EB17B-F547-40FD-8FB2-3D1F34971A2E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BD9EB17B-F547-40FD-8FB2-3D1F34971A2E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {31995B55-FF9C-463C-A322-B67BA4FFC3C6}
 	EndGlobalSection
 EndGlobal
