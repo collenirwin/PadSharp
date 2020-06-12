@@ -332,5 +332,73 @@ namespace PadSharp.Tests
         }
 
         #endregion
+
+        #region PrependLines
+
+        [Fact]
+        public void PrependLines_EmptyString_ReturnsSameString()
+        {
+            // arrange
+            string expected = "";
+
+            // act
+            string actual = expected.PrependLines("");
+
+            // assert
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public void PrependLines_EmptyStringWithText_ReturnsText()
+        {
+            // arrange
+            string input = "";
+
+            // act
+            string actual = input.PrependLines("text");
+
+            // assert
+            Assert.Equal("text", actual);
+        }
+
+        [Fact]
+        public void PrependLines_TextWithEmptyString_ReturnsText()
+        {
+            // arrange
+            string expected = "text";
+
+            // act
+            string actual = expected.PrependLines("");
+
+            // assert
+            Assert.Equal(expected, actual);
+        }
+
+        [Theory]
+        [InlineData("a", "b", "ba")]
+        [InlineData("input", "prepend ", "prepend input")]
+        public void PrependLines_SingleLine_ReturnsLinePrepended(string input, string prepend, string expected)
+        {
+            // arrange, act
+            string actual = input.PrependLines(prepend);
+
+            // assert
+            Assert.Equal(expected, actual);
+        }
+
+        [Theory]
+        [InlineData("A\nB", "pre", "preA\r\npreB")]
+        [InlineData("A\n", "pre", "preA\r\npre")]
+        [InlineData("1\r\n2\n3", "pre", "pre1\r\npre2\r\npre3")]
+        public void PrependLines_MultiLine_ReturnsLinesPrepended(string input, string prepend, string expected)
+        {
+            // arrange, act
+            string actual = input.PrependLines(prepend);
+
+            // assert
+            Assert.Equal(expected, actual);
+        }
+
+        #endregion
     }
 }
