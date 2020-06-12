@@ -76,14 +76,8 @@ namespace PadSharp.Utils
         /// <returns>textToConvert in with each letter's case toggled</returns>
         public static string ToggleCase(this string textToConvert)
         {
-            string toggledText = "";
-
-            foreach (char c in textToConvert)
-            {
-                toggledText += char.IsUpper(c) ? char.ToLower(c) : char.ToUpper(c);
-            }
-
-            return toggledText;
+            return string.Join("", textToConvert
+                .Select(c => char.IsUpper(c) ? char.ToLower(c) : char.ToUpper(c)));
         }
 
         /// <summary>

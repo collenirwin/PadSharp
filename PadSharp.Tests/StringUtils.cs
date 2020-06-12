@@ -279,5 +279,58 @@ namespace PadSharp.Tests
         }
 
         #endregion
+
+        #region ToggleCase
+
+        [Fact]
+        public void ToggleCase_EmptyString_ReturnsSameString()
+        {
+            // arrange
+            string expected = "";
+
+            // act
+            string actual = expected.ToggleCase();
+
+            // assert
+            Assert.Equal(expected, actual);
+        }
+
+        [Theory]
+        [InlineData("a", "A")]
+        [InlineData("A", "a")]
+        public void ToggleCase_SingleLetter_ReturnsOppositeCase(string input, string expected)
+        {
+            // arrange, act
+            string actual = input.ToggleCase();
+
+            // assert
+            Assert.Equal(expected, actual);
+        }
+
+        [Theory]
+        [InlineData("hELLO wORLD", "Hello World")]
+        [InlineData("a b c D", "A B C d")]
+        public void ToggleCase_MixedCase_ReturnsOppositeCase(string input, string expected)
+        {
+            // arrange, act
+            string actual = input.ToggleCase();
+
+            // assert
+            Assert.Equal(expected, actual);
+        }
+
+        [Theory]
+        [InlineData("0123456789")]
+        [InlineData("_^&*/\\\n\r$@!(){}-=+~`,.<>?")]
+        public void ToggleCase_NumbersAndSymbols_ReturnsSameString(string input)
+        {
+            // arrange, act
+            string actual = input.ToggleCase();
+
+            // assert
+            Assert.Equal(input, actual);
+        }
+
+        #endregion
     }
 }
