@@ -134,6 +134,11 @@ namespace PadSharp.Utils
         /// <returns>The number of matches, or null if an Exception was thrown.</returns>
         public static async Task<int?> TryCountMatchesAsync(this string text, string regex, bool matchCase)
         {
+            if (string.IsNullOrEmpty(text) || string.IsNullOrEmpty(regex))
+            {
+                return null;
+            }
+
             try
             {
                 var options = RegexOptions.Multiline;

@@ -1,4 +1,5 @@
 using PadSharp.Utils;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace PadSharp.Tests
@@ -500,6 +501,67 @@ namespace PadSharp.Tests
 
             // assert
             Assert.Equal(expected, actual);
+        }
+
+        #endregion
+
+        #region TryCountMatchesAsync
+
+        [Fact]
+        public async Task TryCountMatchesAsync_EmptyString_ReturnsNull()
+        {
+            // arrange
+            string input = "";
+
+            // act
+            var actual = await input.TryCountMatchesAsync(@"\d", matchCase: false);
+
+            // assert
+            Assert.Null(actual);
+        }
+
+        [Fact]
+        public async Task TryCountMatchesAsync_EmptyRegex_ReturnsNull()
+        {
+            // arrange
+            string input = "test";
+
+            // act
+            var actual = await input.TryCountMatchesAsync("", matchCase: false);
+
+            // assert
+            Assert.Null(actual);
+        }
+
+        [Theory]
+        [InlineData("1", @"\d", true, 1)]
+        [InlineData("1", @"\d", false, 1)]
+        [InlineData("123abc456", @"\d", true, 6)]
+        [InlineData("123abc456", @"\d", false, 6)]
+        [InlineData("123abc456", @"\w+", true, 1)]
+        [InlineData("123abc456", @"\w+", false, 1)]
+        [InlineData("aaaAA", "a", true, 3)]
+        [InlineData("aaaAA", "a", false, 5)]
+        public async Task TryCountMatchesAsync_GoodInput_ReturnsCorrectMatchCount(string input,
+            string regex, bool matchCase, int? expected)
+        {
+            // arrange, act
+            var actual = await input.TryCountMatchesAsync(regex, matchCase);
+
+            // assert
+            Assert.Equal(expected, actual);
+        }
+
+        [Theory]
+        [InlineData("1", true)]
+        [InlineData("1", false)]
+        public async Task TryCountMatchesAsync_InvalidRegex_ReturnsNull(string input, bool matchCase)
+        {
+            // arrange, act
+            var actual = await input.TryCountMatchesAsync(@"\", matchCase);
+
+            // assert
+            Assert.Null(actual);
         }
 
         #endregion
