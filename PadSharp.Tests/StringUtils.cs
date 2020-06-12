@@ -400,5 +400,47 @@ namespace PadSharp.Tests
         }
 
         #endregion
+
+        #region ToggleLineStart
+
+        [Theory]
+        [InlineData("")]
+        [InlineData("text")]
+        public void ToggleLineStart_EmptyString_ReturnsSameString(string input)
+        {
+            // arrange, act
+            string actual = input.ToggleLineStart("");
+
+            // assert
+            Assert.Equal(input, actual);
+        }
+
+        [Theory]
+        [InlineData("", "a", "a")]
+        [InlineData("a", "a", "")]
+        [InlineData("aa", "a", "a")]
+        public void ToggleLineStart_SingleLine_ReturnsStartToggled(string input, string toggle, string expected)
+        {
+            // arrange, act
+            string actual = input.ToggleLineStart(toggle);
+
+            // assert
+            Assert.Equal(expected, actual);
+        }
+
+        [Theory]
+        [InlineData("a\nb", "a", "\r\nab")]
+        [InlineData("a\nab", "a", "\r\nb")]
+        [InlineData("a\na\r\nb", "a", "\r\n\r\nab")]
+        public void ToggleLineStart_MultiLine_ReturnsLineStartToggled(string input, string toggle, string expected)
+        {
+            // arrange, act
+            string actual = input.ToggleLineStart(toggle);
+
+            // assert
+            Assert.Equal(expected, actual);
+        }
+
+        #endregion
     }
 }
