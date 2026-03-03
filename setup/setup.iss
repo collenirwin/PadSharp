@@ -13,7 +13,7 @@
 ; (To generate a new GUID, click Tools | Generate GUID inside the IDE.)
 AppId={{D0D04B0B-3C2F-47BD-A850-566DE9C4C648}
 AppName=Pad#
-AppCopyright=Copyright (C) Collen Irwin 2020
+AppCopyright=Copyright (C) Collen Irwin 2026
 AppVersion={#AppVer}
 ;AppVerName=Pad# 1.0.1
 AppPublisher=Collen Irwin
@@ -37,13 +37,17 @@ Name: "english"; MessagesFile: "compiler:Default.isl"
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
 
 [Files]
-Source: "..\PadSharp\bin\Release\PadSharp.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\PadSharp\bin\Release\BoinWPF.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\PadSharp\bin\Release\ICSharpCode.AvalonEdit.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\PadSharp\bin\Release\inno_license.txt"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\PadSharp\bin\Release\dictionary_license.txt"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\PadSharp\bin\Release\Newtonsoft.Json.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\PadSharp\bin\Release\RegularExtensions.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\PadSharp\bin\Release\net10.0-windows\PadSharp.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\PadSharp\bin\Release\net10.0-windows\PadSharp.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\PadSharp\bin\Release\net10.0-windows\PadSharp.dll.config"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\PadSharp\bin\Release\net10.0-windows\PadSharp.deps.json"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\PadSharp\bin\Release\net10.0-windows\PadSharp.runtimeconfig.json"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\PadSharp\bin\Release\net10.0-windows\BoinWPF.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\PadSharp\bin\Release\net10.0-windows\ICSharpCode.AvalonEdit.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\PadSharp\bin\Release\net10.0-windows\inno_license.txt"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\PadSharp\bin\Release\net10.0-windows\dictionary_license.txt"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\PadSharp\bin\Release\net10.0-windows\Newtonsoft.Json.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\PadSharp\bin\Release\net10.0-windows\RegularExtensions.dll"; DestDir: "{app}"; Flags: ignoreversion
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Registry]
