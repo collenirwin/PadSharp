@@ -3,52 +3,51 @@ using System.ComponentModel;
 using System.Windows;
 using System.Windows.Documents;
 
-namespace PadSharp
+namespace PadSharp;
+
+/// <summary>
+/// Interaction logic for AboutWindow.xaml
+/// </summary>
+public partial class AboutWindow : Window
 {
+    private static AboutWindow _instance;
+
     /// <summary>
-    /// Interaction logic for AboutWindow.xaml
+    /// Singleton instance of <see cref="AboutWindow"/>
     /// </summary>
-    public partial class AboutWindow : Window
+    public static AboutWindow Instance => _instance ??= new AboutWindow();
+
+    private AboutWindow()
     {
-        private static AboutWindow _instance;
+        InitializeComponent();
 
-        /// <summary>
-        /// Singleton instance of <see cref="AboutWindow"/>
-        /// </summary>
-        public static AboutWindow Instance => _instance ?? (_instance = new AboutWindow());
+        VersionDisplay.Text = $"Version {VersionChecker.Version}";
 
-        private AboutWindow()
+        // show the new version button if there's a newer version available on GitHub
+        if (VersionChecker.NewVersion != null && VersionChecker.NewVersion != VersionChecker.Version)
         {
-            InitializeComponent();
-
-            VersionDisplay.Text = $"Version {VersionChecker.Version}";
-
-            // show the new version button if there's a newer version available on GitHub
-            if (VersionChecker.NewVersion != null && VersionChecker.NewVersion != VersionChecker.Version)
-            {
-                NewVersionButton.Visibility = Visibility.Visible;
-            }
+            NewVersionButton.Visibility = Visibility.Visible;
         }
+    }
 
-        private void Hyperlink_Click(object sender, RoutedEventArgs e)
-        {
-            Global.Launch((sender as Hyperlink).NavigateUri.ToString());
-        }
+    private void Hyperlink_Click(object sender, RoutedEventArgs e)
+    {
+        Global.Launch((sender as Hyperlink).NavigateUri.ToString());
+    }
 
-        private void NewVersionButton_Click(object sender, RoutedEventArgs e)
-        {
-            Global.Launch("https://github.com/collenirwin/PadSharp/blob/master/setup/pad_sharp_setup.exe");
-        }
+    private void NewVersionButton_Click(object sender, RoutedEventArgs e)
+    {
+        Global.Launch("https://github.com/collenirwin/PadSharp/blob/master/setup/pad_sharp_setup.exe");
+    }
 
-        private void Close_Click(object sender, RoutedEventArgs e)
-        {
-            Close();
-        }
+    private void Close_Click(object sender, RoutedEventArgs e)
+    {
+        Close();
+    }
 
-        private void Window_Closing(object sender, CancelEventArgs e)
-        {
-            // make sure our singleton instance is null so that this window is re-instantiated next time
-            _instance = null;
-        }
+    private void Window_Closing(object sender, CancelEventArgs e)
+    {
+        // make sure our singleton instance is null so that this window is re-instantiated next time
+        _instance = null;
     }
 }

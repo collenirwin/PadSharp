@@ -36,7 +36,7 @@ namespace BoinWPF
         /// <param name="title">Titlebar text</param>
         /// <param name="button1Text">Text for the first button</param>
         /// <param name="button2Text">Text for the second button</param>
-        public static AlertResult ShowMoreInfoDialog(string message, string moreInfo, string title = "", 
+        public static AlertResult ShowMoreInfoDialog(string message, string moreInfo, string title = "",
             string button1Text = "OK", string button2Text = null)
         {
             return GetAlertResult(new Alert(message, moreInfo, title, button1Text, button2Text));
@@ -97,7 +97,7 @@ namespace BoinWPF
         /// <param name="title">Titlebar text</param>
         /// <param name="button1Text">Text for the first button</param>
         /// <param name="button2Text">Text for the second button</param>
-        public Alert(string message, string title, string button1Text, string button2Text) 
+        public Alert(string message, string title, string button1Text, string button2Text)
             : this(message, null, title, button1Text, button2Text) { }
 
         private void Button1_Click(object sender, RoutedEventArgs e)
