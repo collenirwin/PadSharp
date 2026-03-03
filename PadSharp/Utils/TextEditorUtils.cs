@@ -192,6 +192,10 @@ public static class TextEditorUtils
 
             // select the new text
             textbox.Select(start, replacement.Length);
+
+            // scroll to the start of the selection - avoids strange scroll jumping behavior
+            var line = textbox.Document.GetLineByOffset(start);
+            textbox.ScrollToLine(line.LineNumber);
         }
     }
 
